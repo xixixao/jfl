@@ -1,0 +1,24 @@
+{
+  "name": "jfl",
+  "version": "0.0.1",
+  "description": "JavaScript Standard Functional Library",
+  "main": "index.js",
+  "author": "xixixao <xixixao@seznam.cz>",
+  "license": "MIT",
+  "devDependencies": {
+    "flow-bin": "^0.69.0",
+    "flow-remove-types": "^1.2.3",
+    "jest": "^22.4.3"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      ".*": "<rootDir>/test/jest-preprocessor.js"
+    }
+  },
+  "dependencies": {
+    "core-js": "^2.5.4"
+  }
+}
