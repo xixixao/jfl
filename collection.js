@@ -2,11 +2,13 @@
 
 'use strict';
 
-import type {Collection, KeyedCollection} from './types.flow';
+import type {Collection, KeyedCollection, $Array} from './types.flow';
 
-import St from './set';
+const Ar = require('./array');
+const Mp = require('./map');
+const St = require('./set');
 
-const Cl = {};
+const Cl = exports;
 
 // Get the size of given `collection`.
 //
@@ -28,6 +30,49 @@ Cl.count = function count<V>(collection: Collection<V>): number {
 // @see Cl.count
 Cl.isEmpty = function isEmpty<V>(collection: Collection<V>): boolean {
   return Cl.count(collection) === 0;
+};
+
+Cl.shallowEquals = function shallowEquals<K, V>(
+  first: KeyedCollection<K, V>,
+  ...rest: $Array<KeyedCollection<K, V>>
+): boolean {
+  const isArray = Ar.isArray(first);
+  const isSet = St.isSet(first);
+  const isMap = Mp.isMap(first);
+  for (const compared of rest) {
+    if (
+      (isArray && !Ar.isArray(compared)) ||
+      (isSet && !St.isSet(compared)) ||
+      (isMap && !Mp.isMap(compared)) ||
+      compared !== first
+    ) {
+      return false;
+    }
+  }
+  const args = [(first: any), ...(rest: any)];
+  return isArray
+    ? Ar.shallowEquals(...args)
+    : isMap ? Mp.shallowEquals(...args) : St.shallowEquals(...args);
+};
+
+Cl.deepEquals = function deepEquals(first: any, ...rest: any): boolean {
+  const isArray = Ar.isArray(first);
+  const isSet = St.isSet(first);
+  const isMap = Mp.isMap(first);
+  for (const compared of rest) {
+    if (
+      (isArray && !Ar.isArray(compared)) ||
+      (isSet && !St.isSet(compared)) ||
+      (isMap && !Mp.isMap(compared)) ||
+      (!isArray && !isSet && !isMap && compared !== first)
+    ) {
+      return false;
+    }
+  }
+  const args = [(first: any), ...(rest: any)];
+  return isArray
+    ? Ar.deepEquals(...args)
+    : isMap ? Mp.deepEquals(...args) : isSet ? St.deepEquals(...args) : true;
 };
 
 // Execute `fn` for every value and key in `collection`.

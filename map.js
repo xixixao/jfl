@@ -27,11 +27,13 @@ function mp<K, V>(): $Map<K, V> {
 // @ex Mp({a: 1, b: 2, c: 3})
 // @alias create, constructor, new
 // @see Mp.of
-function Mp<K: string, V>(object: {[key: K]: V}): $Map<K, V> {
+function Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
   const map = mp();
-  for (const key in object) {
-    if (object.hasOwnProperty(key)) {
-      map.set(key, object[(key: any)]);
+  if (object != null) {
+    for (const key in object) {
+      if (object.hasOwnProperty(key)) {
+        map.set(key, object[(key: any)]);
+      }
     }
   }
   return m((map: any));
@@ -41,8 +43,8 @@ function Mp<K: string, V>(object: {[key: K]: V}): $Map<K, V> {
 //
 // @ex Mp.isMap([1, 2, 3])
 // @see St.isSet, Ar.isArray
-Mp.isMap = function isMap(argument: Collection<any>): boolean {
-  return (argument: any).set !== undefined;
+Mp.isMap = function isMap(argument: any): boolean {
+  return argument instanceof Map;
 };
 
 // Returns whether given Maps are equal.

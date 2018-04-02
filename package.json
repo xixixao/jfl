@@ -18,6 +18,12 @@
       ".*": "<rootDir>/test/jest-preprocessor.js"
     }
   },
+  "prettier": {
+    "bracketSpacing": false,
+    "jsxBracketSameLine": true,
+    "trailingComma": "all",
+    "singleQuote": true
+  },
   "dependencies": {
     "core-js": "^2.5.4"
   }

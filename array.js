@@ -15,10 +15,6 @@ function m<V>(array: $Array<V>): $Array<V> {
   return array.length === 0 ? EMPTY : array;
 }
 
-function mutable<V>(array: $Array<V>): Array<V> {
-  return (array: any);
-}
-
 // Create an array.
 //
 // Prefer array literal `[1, 2, 3]` unless you need a function, or you want
@@ -35,7 +31,7 @@ function Ar<V>(...args: $Array<V>): $Array<V> {
 //
 // @ex Ar.isArray([1, 2, 3])
 // @see St.isSet, Mp.isMap
-Ar.isArray = function isArray(argument: any): boolean {
+Ar.isArray = exports.isArray = function isArray(argument: any): boolean {
   return Array.isArray(argument);
 };
 
@@ -45,12 +41,11 @@ Ar.isArray = function isArray(argument: any): boolean {
 //
 // @ex Ar.shallowEquals([1, 2], [1, 2])
 // @see St.shallowEquals, Mp.shallowEquals
-Ar.shallowEquals = function shallowEquals<V>(
+Ar.shallowEquals = exports.shallowEquals = function shallowEquals<V>(
   array: $Array<V>,
   ...arrays: $Array<$Array<V>>
 ): boolean {
-  for (let ai = 0; ai < arrays.length; ai++) {
-    const compared = arrays[ai];
+  for (const compared of arrays) {
     if (compared === array) {
       continue;
     }
@@ -60,6 +55,34 @@ Ar.shallowEquals = function shallowEquals<V>(
     for (let i = 0; i < array.length; i++) {
       const value = array[i];
       if (compared[i] !== value) {
+        return false;
+      }
+    }
+  }
+  return true;
+};
+
+// Returns whether given Arrays and any nested collections are equal.
+//
+// Any contained collections must deeply equals, all other items must be
+// strictly equal.
+//
+// @ex Ar.deepEquals([[1], [2], 3], [[1], [2], 3])
+// @see St.deepEquals, Mp.deepEquals, Cl.deepEquals
+Ar.deepEquals = exports.deepEquals = function deepEquals<V>(
+  array: $Array<V>,
+  ...arrays: $Array<$Array<V>>
+): boolean {
+  for (const compared of arrays) {
+    if (compared === array) {
+      continue;
+    }
+    if (compared.length !== array.length) {
+      return false;
+    }
+    for (let i = 0; i < array.length; i++) {
+      const value = array[i];
+      if (!Cl.deepEquals(compared[i], value)) {
         return false;
       }
     }
@@ -149,7 +172,7 @@ Ar.asyncMap = function asyncMap<VFrom, VTo>(
 // Create a new array by filtering out values for which  `fn` returns false.
 //
 // @ex Ar.filter([1, 2, 3], Mth.isOdd)
-// @see Ar.map, Ar.filterNulls
+// @see Ar.map, Ar.filterNulls, Ar.findIndices
 Ar.filter = function filter<V>(
   collection: Collection<V>,
   fn: V => boolean,
@@ -177,6 +200,25 @@ Ar.filterNulls = function filterNulls<V>(
     if (item != null) {
       result.push(item);
     }
+  }
+  return m(result);
+};
+
+// Create an array of indices of values passing given `predicateFn`.
+//
+// @ex Ar.findIndices([1, 2, 3], Mth.isOdd)
+// @see Ar.filter
+Ar.findIndices = function findIndices<V>(
+  collection: Collection<V>,
+  predicateFn: V => boolean,
+): $Array<number> {
+  const result = [];
+  let i = 0;
+  for (const item of collection.values()) {
+    if (predicateFn(item)) {
+      result.push(i);
+    }
+    i++;
   }
   return m(result);
 };
@@ -298,7 +340,7 @@ Ar.rangeDescending = function rangeDescending(
 ): $Array<number> {
   if (step < 0) {
     throw new Error(
-      `\`step\` must be a negative number, got \`${step}\` instead`,
+      `\`step\` must be a positive number, got \`${step}\` instead`,
     );
   }
   const result = [];
@@ -325,15 +367,14 @@ Ar.rangeDynamic = function rangeDynamic(
 ): $Array<number> {
   if (step < 0) {
     throw new Error(
-      `\`step\` must be a negative number, got \`${step}\` instead`,
+      `\`step\` must be a positive number, got \`${step}\` instead`,
     );
   }
   const result = [];
   const ascending = fromInclusive < toInclusive;
-  const start = ascending ? fromInclusive : toInclusive;
-  const end = ascending ? toInclusive : fromInclusive;
+  let current = fromInclusive;
+  const end = toInclusive;
   const dynamicStep = ascending ? step : -step;
-  let current = start;
   while ((ascending && current <= end) || (!ascending && current >= end)) {
     result.push(current);
     current += dynamicStep;
@@ -343,15 +384,29 @@ Ar.rangeDynamic = function rangeDynamic(
 
 // Create an array filled with a number of given `value`s.
 //
-// The `value` will be refernced, not cloned.
+// The `value` will be referenced, not cloned.
 //
 // @ex Ar.repeat("value", 4)
-// @alias fill
 // @see Ar.range, Seq.repeat
 Ar.repeat = function repeat<V>(value: V, times: number): $Array<V> {
   const result = [];
   for (let i = 0; i < times; i++) {
     result.push(value);
+  }
+  return m(result);
+};
+
+// Create an array filled with results of `fn`.
+//
+// `fn` take as the first argument the index where the current invocation's
+// result will be placed.
+//
+// @ex Ar.fill(4, i => i)
+// @see Ar.repeat, Ar.range, Seq.fill
+Ar.fill = function fill<V>(times: number, fn: number => V): $Array<V> {
+  const result = [];
+  for (let i = 0; i < times; i++) {
+    result.push(fn(i));
   }
   return m(result);
 };
@@ -381,7 +436,7 @@ Ar.drop = function drop<V>(collection: Collection<V>, n: number): $Array<V> {
   let i = 0;
   const result = [];
   for (const item of collection.values()) {
-    if (i > n) {
+    if (i >= n) {
       result.push(item);
     }
     i++;
@@ -468,7 +523,7 @@ Ar.generate = function generate<V, S>(seed: S, fn: S => ?[V, S]): $Array<V> {
   const result = [];
   let acc = seed;
   while (true) {
-    const maybeIteration = fn(seed);
+    const maybeIteration = fn(acc);
     if (maybeIteration == null) {
       break;
     }
@@ -608,15 +663,21 @@ Ar.slice = function slice<V>(
     }
     return collection.slice(startIndexInclusive, endIndexExclusive);
   }
+  const end =
+    endIndexExclusive != null && endIndexExclusive < 0
+      ? Cl.count(collection) + endIndexExclusive
+      : endIndexExclusive;
   const result = [];
   let i = 0;
   for (const item of collection.values()) {
+    if (end != null && i >= end) {
+      break;
+    }
     if (i >= startIndexInclusive) {
       result.push(item);
     }
-    if (endIndexExclusive != null && i >= endIndexExclusive) {
-      break;
-    }
+
+    i++;
   }
   return m(result);
 };
@@ -624,8 +685,8 @@ Ar.slice = function slice<V>(
 // Create an array containing a subset of values in `collection` with any given
 // `item`s added.
 //
-// Note that this is not a way to clone an array, if given an array and
-// arguments corresponding to no changes it returns the original array.
+// Note that unlikely Array.prototype.splice this function returns the new
+// array, not the deleted items.
 //
 // @ex Ar.slice([1, 2, 3, 4], 1, 3)
 // @see Ar.splice
@@ -635,14 +696,12 @@ Ar.splice = function splice<V>(
   deleteCount?: number,
   ...items: $Array<V>
 ): $Array<V> {
-  if (Array.isArray(collection) && (deleteCount == null || deleteCount === 0)) {
-    return collection;
-  }
   const result = [];
   for (const item of collection.values()) {
     result.push(item);
   }
-  return m(result.splice(startIndex, deleteCount, ...items));
+  result.splice(startIndex, deleteCount, ...items);
+  return m(result);
 };
 
 // Create an array containing all the items of `collection` preceding the item
@@ -676,7 +735,7 @@ Ar.dropWhile = function dropWhile<V>(
   const result = [];
   let taking = false;
   for (const item of collection.values()) {
-    taking = taking || fn(item);
+    taking = taking || !fn(item);
     if (taking) {
       result.push(item);
     }
@@ -729,11 +788,11 @@ Ar.zip = function zip<V, Cs: $Array<Collection<V>>>(
   for (const collection of collections) {
     zippedLength = Math.min(zippedLength, Cl.count(collection));
   }
-  const result = mutable(Ar.repeat([], zippedLength));
+  const result = Ar.fill(zippedLength, _ => []);
   for (const collection of collections) {
     let i = 0;
     for (const item of collection.values()) {
-      result[i].push(item);
+      (result[i]: any).push(item);
       i++;
     }
   }
@@ -754,21 +813,6 @@ Ar.zipWith = function zipWith<I, Cs: $Array<Collection<I>>, O>(
   ...collections: Cs
 ): $Array<O> {
   return Ar.map(Ar.zip(...collections), tuple => fn(...tuple));
-};
-
-Ar.findIndices = function findIndices<V>(
-  collection: Collection<V>,
-  predicateFn: V => boolean,
-): $Array<number> {
-  const result = [];
-  let i = 0;
-  for (const item of collection.values()) {
-    if (predicateFn(item)) {
-      result.push(i);
-    }
-    i++;
-  }
-  return m(result);
 };
 
 module.exports = Ar;

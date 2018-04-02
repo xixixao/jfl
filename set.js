@@ -29,14 +29,12 @@ function St<V>(...args: $Array<V>): $Set<V> {
   return m((new Set(args): any));
 }
 
-// Returns whether given collection is a Set.
-//
-// Doesn't work for any object, only pass in Arrays, Maps and Sets.
+// Returns whether given argument is a Set.
 //
 // @ex St.isSet(St(1, 2, 3))
 // @see Ar.isArray, Mp.isMap
-St.isSet = function isSet(argument: Collection<any>): boolean {
-  return (argument: any).add !== undefined;
+St.isSet = function isSet(argument: any): boolean {
+  return argument instanceof Set;
 };
 
 // Returns whether given Sets are equal.
