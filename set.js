@@ -210,9 +210,6 @@ St.diff = function diff<V>(
   return m(result);
 };
 
-// St.diff
-// St.map(a, x => Mth.abs(x))
-
 // Create a new set by calling given `fn` on each value of `collection`.
 //
 // @ex St.map([1, 2], x => x * 2)

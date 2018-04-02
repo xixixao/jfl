@@ -21,4 +21,12 @@ Mth.isEven = function isEven(n: number): boolean {
   return n % 2 === 0;
 };
 
+Mth.squared = function squared(n: number): number {
+  return n * n;
+};
+
+Mth.cubed = function cubed(n: number): number {
+  return n * n * n;
+};
+
 module.exports = Mth;

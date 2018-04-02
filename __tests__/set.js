@@ -8,7 +8,7 @@ const Cl = require('../collection.js');
 const {setup} = require('../test/test-util.js');
 
 const {expect, test, tru, eq, eqq, eqqq, not} = setup(
-  Ar.shallowEquals,
+  St.shallowEquals,
   Cl.deepEquals,
 );
 
@@ -38,12 +38,12 @@ test('St', async () => {
   not.tru(St.isSet([]));
   not.tru(St.isSet(Mp()));
 
-  eq(St.from([2, 1, 2, 3]), St(1, 2, 3));
+  eq(St.from([2, 1, 2, 3]), St(2, 1, 3));
   eq(St.from(Mp({a: 1, b: 2, c: 3})), St(1, 2, 3));
 
   eq(St.union(St(1, 2, 3), St(2, 4), St(1, 4)), St(1, 2, 3, 4));
 
-  eq(St.intersect(St(1, 2, 3), St(2, 4), St(1, 4)), St(2));
+  eq(St.intersect(St(1, 2, 3), St(2, 4), St(1, 4, 2)), St(2));
 
   eq(St.diff(St(1, 2, 3), St(2, 4), St(1, 4)), St(3));
 

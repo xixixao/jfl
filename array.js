@@ -118,7 +118,9 @@ Ar.from = exports.from = function from<V>(
 // its indices.
 //
 // @see Ar.from
-Ar.keys = function keys<K>(collection: KeyedCollection<K, any>): $Array<K> {
+Ar.keys = exports.keys = function keys<K>(
+  collection: KeyedCollection<K, any>,
+): $Array<K> {
   const result = [];
   for (const item of collection.keys()) {
     result.push(item);
