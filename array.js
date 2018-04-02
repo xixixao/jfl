@@ -64,7 +64,7 @@ Ar.shallowEquals = exports.shallowEquals = function shallowEquals<V>(
 
 // Returns whether given Arrays and any nested collections are equal.
 //
-// Any contained collections must deeply equals, all other items must be
+// Any contained collections must deeply equal, all other items must be
 // strictly equal.
 //
 // @ex Ar.deepEquals([[1], [2], 3], [[1], [2], 3])
@@ -99,7 +99,9 @@ Ar.deepEquals = exports.deepEquals = function deepEquals<V>(
 // @ex Ar.from(Mp({a: 1, b: 2, c: 3}))
 // @alias values, fromValues
 // @see Ar
-Ar.from = function from<V>(collection: Collection<V>): $Array<V> {
+Ar.from = exports.from = function from<V>(
+  collection: Collection<V>,
+): $Array<V> {
   if (Ar.isArray(collection)) {
     return (collection: any);
   }

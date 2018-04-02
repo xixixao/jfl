@@ -47,6 +47,7 @@ St.shallowEquals = function shallowEquals<V>(
   set: Set<V>,
   ...sets: $Array<$Set<V>>
 ): boolean {
+  const inOrder = Ar.from(set);
   for (let ai = 0; ai < sets.length; ai++) {
     const compared = sets[ai];
     if (compared === set) {
@@ -55,10 +56,70 @@ St.shallowEquals = function shallowEquals<V>(
     if (compared.size !== set.size) {
       return false;
     }
-    for (const item of set) {
+    let i = 0;
+    for (const item of compared) {
+      if (item !== inOrder[i]) {
+        return false;
+      }
+      i++;
+    }
+  }
+  return true;
+};
+
+// Returns whether given Sets contain the same values.
+//
+// All items must be strictly equal.
+//
+// @ex St.unorderdEquals([1, 2], [1, 2])
+// @see Sr.shallowEquals
+St.unorderedEquals = function unorderedEquals<V>(
+  set: Set<V>,
+  ...sets: $Array<$Set<V>>
+): boolean {
+  for (let ai = 0; ai < sets.length; ai++) {
+    const compared = sets[ai];
+    if (compared === set) {
+      continue;
+    }
+    if (compared.size !== set.size) {
+      return false;
+    }
+    for (const item of compared) {
       if (!compared.has(item)) {
         return false;
       }
+    }
+  }
+  return true;
+};
+
+// Returns whether given Sets and any nested collections are equal.
+//
+// Any contained collections must deeply equal, all other items must be
+// strictly equal.
+//
+// @ex Ar.deepEquals([[1], [2], 3], [[1], [2], 3])
+// @see St.deepEquals, Mp.deepEquals, Cl.deepEquals
+St.deepEquals = exports.deepEquals = function deepEquals<V>(
+  set: $Set<V>,
+  ...sets: $Array<$Set<V>>
+): boolean {
+  const inOrder = Ar.from(set);
+  for (let ai = 0; ai < sets.length; ai++) {
+    const compared = sets[ai];
+    if (compared === set) {
+      continue;
+    }
+    if (compared.size !== set.size) {
+      return false;
+    }
+    let i = 0;
+    for (const item of compared) {
+      if (!Cl.deepEquals(item, inOrder[i])) {
+        return false;
+      }
+      i++;
     }
   }
   return true;
