@@ -29,4 +29,8 @@ Mth.cubed = function cubed(n: number): number {
   return n * n * n;
 };
 
+Mth.neg = function neg(n: number): number {
+  return -n;
+};
+
 module.exports = Mth;
