@@ -211,7 +211,7 @@ Mp.fromEntries = function fromEntries<K, V>(
 //
 // @alias listsToMap
 // @see Mp.fromEntries
-Mp.fromZip = function fromZip<K, V>(
+Mp.zip = function fromZip<K, V>(
   keys: Collection<K>,
   values: Collection<V>,
 ): $Map<K, V> {
@@ -261,10 +261,21 @@ Mp.set = function set<K, V>(
   return result;
 };
 
+// Create a new Map by merging all given `collections`. Later values will
+// override earlier values.
+//
+// @ex Mp.merge(Mp({a: 1, b: 2}), Mp({a: 2, c: 3}))
+// @see Mp.merge
 Mp.merge = function merge<K, V>(
   ...collections: $Array<KeyedCollection<K, V>>
 ): $Map<K, V> {
-  return mp();
+  const result = mp();
+  for (const collection of collections) {
+    for (const [key, value] of collection.entries()) {
+      result.set(key, value);
+    }
+  }
+  return m(result);
 };
 
 // Create a new map by calling given `fn` on each key and value of `collection`.
