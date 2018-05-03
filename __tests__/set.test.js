@@ -41,6 +41,8 @@ test('St', async () => {
   eq(St.from([2, 1, 2, 3]), St(2, 1, 3));
   eq(St.from(Mp({a: 1, b: 2, c: 3})), St(1, 2, 3));
 
+  eq(await St.asyncFrom(St((async () => 1)(), (async () => 2)())), St(1, 2));
+
   eq(St.union(St(1, 2, 3), St(2, 4), St(1, 4)), St(1, 2, 3, 4));
 
   eq(St.intersect(St(1, 2, 3), St(2, 4), St(1, 4, 2)), St(2));
@@ -55,6 +57,8 @@ test('St', async () => {
   eq(await St.asyncMap(St(1, 2, -2), async x => Math.abs(x)), St(1, 2));
 
   eq(St.filter(St(1, 2, 3), Mth.isOdd), St(1, 3));
+
+  eq(await St.asyncFilter([1, 2, 3], async x => Mth.isOdd(x)), St(1, 3));
 
   eq(St.filterNulls(St(1, 2, null)), St(1, 2));
 });

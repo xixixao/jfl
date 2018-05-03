@@ -168,6 +168,24 @@ Mp.from = function from<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
   return m(result);
 };
 
+// Convert any keyed `collection` of promises to a Map.
+//
+// @ex Mp.asyncFrom([(async () => 1)(), (async () => 2)()])
+// @see Mp.from, Ar.asyncFrom
+Mp.asyncFrom = async function asyncFrom<K, V>(
+  collection: KeyedCollection<K, Promise<V>>,
+): Promise<$Map<K, V>> {
+  const values = await Ar.asyncFrom(collection);
+  const result = mp();
+  let i = 0;
+  for (const [key, _] of collection.entries()) {
+    result.set(key, values[i]);
+    i++;
+  }
+  return m(result);
+};
+
+// TODO:
 // @ex Mp.fromValues()
 // @see Mp.fromKeys
 Mp.fromValues = function fromValues<K, V>(
@@ -181,6 +199,7 @@ Mp.fromValues = function fromValues<K, V>(
   return m(result);
 };
 
+// TODO:
 // @see Mp.fromValues
 Mp.fromKeys = function fromKeys<K, V>(
   collection: Collection<K>,
@@ -189,6 +208,22 @@ Mp.fromKeys = function fromKeys<K, V>(
   const result = mp();
   for (const key of collection.values()) {
     result.set(key, getValue(key));
+  }
+  return m(result);
+};
+
+// TODO:
+// @see Mp.fromKeys
+Mp.asyncFromKeys = async function asyncFromKeys<K, V>(
+  collection: Collection<K>,
+  getValue: K => Promise<V>,
+): Promise<$Map<K, V>> {
+  const values = await Ar.asyncMap(collection, getValue);
+  const result = mp();
+  let i = 0;
+  for (const key of collection.values()) {
+    result.set(key, values[i]);
+    i++;
   }
   return m(result);
 };
@@ -209,9 +244,9 @@ Mp.fromEntries = function fromEntries<K, V>(
 // If there are more `keys` than `values` or vice versa, ignores the
 // excess items.
 //
-// @alias listsToMap
+// @alias listsToMap, fromZip, associate
 // @see Mp.fromEntries
-Mp.zip = function fromZip<K, V>(
+Mp.unzip = function unzip<K, V>(
   keys: Collection<K>,
   values: Collection<V>,
 ): $Map<K, V> {
@@ -293,6 +328,9 @@ Mp.map = function map<KFrom, VFrom, VTo>(
   return m(result);
 };
 
+// TODO: mapKeys
+// TODO: asyncMap
+
 // Create a new map by calling given `fn` on each key and value of
 // `collection`.
 //
@@ -337,5 +375,44 @@ Mp.group = function group<V, KTo>(
   }
   return m(result);
 };
+
+// TODO: diffByKey
+
+// TODO: drop
+
+// TODO: take
+
+// TODO: filter
+
+// TODO: asyncFilter
+
+// TODO: filterKeys
+
+// TODO: filterNulls
+
+// TODO: selectKeys
+
+// TODO: unique
+
+// TODO: uniqueBy
+
+// TODO: partition
+
+// TODO: reverse
+
+// TODO: sort
+// TODO: sortBy
+
+// TODO: numericalSort
+// TODO: numericalSortBy
+
+// TODO: chunk
+
+// TODO: countBy
+// TODO: flatten
+
+// TODO: fill
+// TODO: flip
+// TODO: pull
 
 module.exports = Mp;

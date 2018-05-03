@@ -18,6 +18,11 @@ function st<V>(): $Set<V> {
   return (new Set(): any);
 }
 
+// internal for performance
+function fromArray<V>(array: $Array<V>): $Set<V> {
+  return (new Set(array): any);
+}
+
 // Create a set.
 //
 // Can contain any JS value. Maintains uniqueness.
@@ -145,6 +150,18 @@ St.from = function from<V>(collection: Collection<V>): $Set<V> {
   return m(result);
 };
 
+// Convert any `collection` of awaitable promises of values to a single
+// promise of a Set of values.
+//
+// @ex St.fromAsync([(async () => 1)(), (async () => 2)()])
+// @alias all
+// @see St.from, Ar.asyncFrom
+St.asyncFrom = async function asyncFrom<V>(
+  collection: Collection<Promise<V>>,
+): Promise<$Set<V>> {
+  return m(fromArray(await Ar.asyncFrom(collection)));
+};
+
 // Create a Set which is a union of all values in given `collections`.
 //
 // @ex St.union(St(1, 2, 3), St(1, 4, 5))
@@ -232,13 +249,12 @@ St.map = function map<VFrom, VTo>(
 //
 // @ex await St.asyncMap([1, 2], async x => x * 2)
 // @alias Promise.all, genMap
-St.asyncMap = function asyncMap<VFrom, VTo>(
+// @see St.map, Ar.asyncMap
+St.asyncMap = async function asyncMap<VFrom, VTo>(
   collection: Collection<VFrom>,
   fn: VFrom => Promise<VTo>,
 ): Promise<$Set<VTo>> {
-  return Promise.all(Array.from(St.map(collection, fn))).then(result =>
-    St.from(result),
-  );
+  return m(fromArray(await Promise.all(Array.from(St.map(collection, fn)))));
 };
 
 // Create a new set by filtering out values for which `fn` returns false.
@@ -254,6 +270,29 @@ St.filter = function filter<V>(
     if (fn(item)) {
       result.add(item);
     }
+  }
+  return m(result);
+};
+
+// Create a promise of an array by filtering out values in `collection`
+// for which async `fn` returns false.
+//
+// Executes `predicate` on all items in `collection` concurrently.
+//
+// @ex Ar.asyncFilter([1, 2, 3], async x => Mth.isOdd(x))
+// @see St.filter, Ar.asyncFilter
+St.asyncFilter = async function asyncFilter<V>(
+  collection: Collection<V>,
+  predicate: V => Promise<boolean>,
+): Promise<$Set<V>> {
+  const filter = await Ar.asyncMap(collection, predicate);
+  const result = st();
+  let i = 0;
+  for (const item of collection.values()) {
+    if (filter[i]) {
+      result.add(item);
+    }
+    i++;
   }
   return m(result);
 };

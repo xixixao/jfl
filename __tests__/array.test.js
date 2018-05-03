@@ -36,6 +36,8 @@ test('Ar', async () => {
   eq(Ar.from([1, 2, 3]), [1, 2, 3]);
   eq(Ar.from(St(1, 2, 3)), [1, 2, 3]);
 
+  eq(await Ar.asyncFrom(St((async () => 1)(), (async () => 2)())), [1, 2]);
+
   eq(Ar.keys(St(1, 2, 3)), [1, 2, 3]);
   eq(Ar.keys(Mp({a: 1, b: 2, c: 3})), ['a', 'b', 'c']);
 
@@ -49,6 +51,8 @@ test('Ar', async () => {
   eq(await Ar.asyncMap([1, 2, 3], async x => x * 2), [2, 4, 6]);
 
   eq(Ar.filter([1, 2, 3], Mth.isOdd), [1, 3]);
+
+  eq(await Ar.asyncFilter([1, 2, 3], async x => Mth.isOdd(x)), [1, 3]);
 
   eq(Ar.filterNulls([1, 2, null]), [1, 2]);
 

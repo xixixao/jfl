@@ -44,6 +44,11 @@ test('Mp', async () => {
   eq(Mp.from([1, 1]), Mp.of([0, 1], [1, 1]));
   eq(Mp.from(St(1, 2)), Mp.of([1, 1], [2, 2]));
 
+  eq(
+    await Mp.asyncFrom([(async () => 1)(), (async () => 2)()]),
+    Mp.of([0, 1], [1, 2]),
+  );
+
   eq(Mp.fromValues([1, 2], value => `${value}`), Mp({'1': 1, '2': 2}));
 
   eq(Mp.fromKeys([1, 2], key => key * 2), Mp.of([1, 2], [2, 4]));
@@ -51,7 +56,7 @@ test('Mp', async () => {
   eq(Mp.fromEntries([[1, 2], [3, 4]]), Mp.of([1, 2], [3, 4]));
   eq(Mp.fromEntries(St([1, 2], [3, 4])), Mp.of([1, 2], [3, 4]));
 
-  eq(Mp.zip([1, 2], [3, 4]), Mp.of([1, 3], [2, 4]));
+  eq(Mp.unzip([1, 2], [3, 4]), Mp.of([1, 3], [2, 4]));
 
   eq(Mp(Mp.toObject(Mp({a: 1, b: 2}))), Mp({a: 1, b: 2}));
 

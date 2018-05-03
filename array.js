@@ -112,6 +112,18 @@ Ar.from = exports.from = function from<V>(
   return m(result);
 };
 
+// Convert any `collection` of awaitable promises of values to a single
+// promise of an Array of values.
+//
+// @ex Ar.fromAsync([(async () => 1)(), (async () => 2)()])
+// @alias all
+// @see Ar.from
+Ar.asyncFrom = exports.asyncFrom = function asyncFrom<V>(
+  collection: Collection<Promise<V>>,
+): Promise<$Array<V>> {
+  return Promise.all(Ar.from(collection));
+};
+
 // Convert any `collection` with keys to an Array of keys.
 //
 // Notably the keys of a Set are just its values. The keys of an Array are
@@ -166,26 +178,49 @@ Ar.map = function map<VFrom, VTo>(
 //
 // @ex await Ar.asyncMap([1, 2], async x => x * 2)
 // @alias Promise.all, genMap
-Ar.asyncMap = function asyncMap<VFrom, VTo>(
+Ar.asyncMap = exports.asyncMap = function asyncMap<VFrom, VTo>(
   collection: Collection<VFrom>,
   fn: VFrom => Promise<VTo>,
 ): Promise<$Array<VTo>> {
   return Promise.all(Ar.map(collection, fn));
 };
 
-// Create a new array by filtering out values for which  `fn` returns false.
+// Create a new array by filtering out values for which `fn` returns false.
 //
 // @ex Ar.filter([1, 2, 3], Mth.isOdd)
 // @see Ar.map, Ar.filterNulls, Ar.findIndices
 Ar.filter = function filter<V>(
   collection: Collection<V>,
-  fn: V => boolean,
+  predicate: V => boolean,
 ): $Array<V> {
   const result = [];
   for (const item of collection.values()) {
-    if (fn(item)) {
+    if (predicate(item)) {
       result.push(item);
     }
+  }
+  return m(result);
+};
+
+// Create a promise of an array by filtering out values in `collection`
+// for which async `fn` returns false.
+//
+// Executes `predicate` on all items in `collection` concurrently.
+//
+// @ex Ar.asyncFilter([1, 2, 3], async x => Mth.isOdd(x))
+// @see Ar.filter, Ar.asyncMap
+Ar.asyncFilter = async function asyncFilter<V>(
+  collection: Collection<V>,
+  predicate: V => Promise<boolean>,
+): Promise<$Array<V>> {
+  const filter = await Ar.asyncMap(collection, predicate);
+  const result = [];
+  let i = 0;
+  for (const item of collection.values()) {
+    if (filter[i]) {
+      result.push(item);
+    }
+    i++;
   }
   return m(result);
 };
@@ -415,6 +450,10 @@ Ar.fill = function fill<V>(times: number, fn: number => V): $Array<V> {
   return m(result);
 };
 
+// TODO: unique
+
+// TODO: uniqueBy
+
 // Create an array containing the first `n` items of `collection`.
 //
 // @ex Ar.take([1, 2, 3], 2)
@@ -594,6 +633,8 @@ function defaultCompareFn(a: any, b: any): number {
   return a > b ? 1 : a < b ? -1 : 0;
 }
 
+// TODO: sortBy
+
 // Create an array of numbers from `collection` sorted in ascending order.
 //
 // @ex Ar.numericalSort([3, 2, 4, 1])
@@ -607,6 +648,8 @@ Ar.numericalSort = function numericalSort(
   }
   return m(result.sort((a, b) => a - b));
 };
+
+// TODO: numericalSortBy (not fast)
 
 // Create an array of values in `collection` sorted.
 //
@@ -624,6 +667,8 @@ Ar.fastSort = function fastSort<V>(
   }
   return m(result.sort(compareFn));
 };
+
+// TODO: fastSortBy
 
 // Create an array of values based on a reduction of given `collection`.
 //
