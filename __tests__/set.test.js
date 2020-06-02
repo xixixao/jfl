@@ -1,10 +1,6 @@
 // @flow
 
-const Ar = require('../array.js');
-const St = require('../set.js');
-const Mp = require('../map.js');
-const Mth = require('../math.js');
-const Cl = require('../collection.js');
+const {Ar, Cl, St, Mp, Mth} = require('..');
 const {setup} = require('../test/test-util.js');
 
 const {expect, test, tru, eq, eqq, eqqq, not} = setup(
