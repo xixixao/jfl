@@ -23,6 +23,8 @@ function fromArray<V>(array: $Array<V>): $Set<V> {
   return (new Set(array): any);
 }
 
+/// Construction
+
 // Create a set.
 //
 // Can contain any JS value. Maintains uniqueness.
@@ -33,6 +35,42 @@ function fromArray<V>(array: $Array<V>): $Set<V> {
 function St<V>(...args: $Array<V>): $Set<V> {
   return m((new Set(args): any));
 }
+
+// Convert any `collection` of values to a Set of values.
+//
+// Note that this is not a way to clone a set, if passed a set, the same
+// set will be returned.
+//
+// @ex St.from([1, 2, 3])
+// @ex St.from(Mp({a: 1, b: 2, c: 3}))
+// @alias values, fromValues
+// @see St
+St.from = function from<V>(collection: Collection<V>): $Set<V> {
+  if (St.isSet(collection)) {
+    return (collection: any);
+  }
+  const result = st();
+  for (const item of collection.values()) {
+    result.add(item);
+  }
+  return m(result);
+};
+
+// Convert any `collection` of awaitable promises of values to a single
+// promise of a Set of values.
+//
+// @ex St.fromAsync([(async () => 1)(), (async () => 2)()])
+// @alias all
+// @see St.from, Ar.fromAsync
+St.fromAsync = async function fromAsync<V>(
+  collection: Collection<Promise<V>>,
+): Promise<$Set<V>> {
+  return m(fromArray(await Ar.fromAsync(collection)));
+};
+
+// TODO: keys
+
+/// Checks
 
 // Returns whether given argument is a Set.
 //
@@ -130,43 +168,13 @@ St.deepEquals = exports.deepEquals = function deepEquals<V>(
   return true;
 };
 
-// Convert any `collection` of values to a Set of values.
-//
-// Note that this is not a way to clone a set, if passed a set, the same
-// set will be returned.
-//
-// @ex St.from([1, 2, 3])
-// @ex St.from(Mp({a: 1, b: 2, c: 3}))
-// @alias values, fromValues
-// @see St
-St.from = function from<V>(collection: Collection<V>): $Set<V> {
-  if (St.isSet(collection)) {
-    return (collection: any);
-  }
-  const result = st();
-  for (const item of collection.values()) {
-    result.add(item);
-  }
-  return m(result);
-};
-
-// Convert any `collection` of awaitable promises of values to a single
-// promise of a Set of values.
-//
-// @ex St.fromAsync([(async () => 1)(), (async () => 2)()])
-// @alias all
-// @see St.from, Ar.fromAsync
-St.fromAsync = async function fromAsync<V>(
-  collection: Collection<Promise<V>>,
-): Promise<$Set<V>> {
-  return m(fromArray(await Ar.fromAsync(collection)));
-};
+/// Combine
 
 // Create a Set which is a union of all values in given `collections`.
 //
 // @ex St.union(St(1, 2, 3), St(1, 4, 5))
-// @alias join
-// @see St.intersect
+// @alias join, flatten
+// @see St.intersect, St.flatten
 St.union = function union<V>(...collections: $Array<Collection<V>>): $Set<V> {
   const result = st();
   for (const collection of collections) {
@@ -227,35 +235,7 @@ St.diff = function diff<V>(
   return m(result);
 };
 
-// Create a new set by calling given `fn` on each value of `collection`.
-//
-// @ex St.map([1, 2], x => x * 2)
-// @see St.mapAsync
-St.map = function map<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => VTo,
-): $Set<VTo> {
-  const result = st();
-  for (const item of collection.values()) {
-    result.add(fn(item));
-  }
-  return m(result);
-};
-
-// Create a promise of a set by calling given async `fn` on each value of
-// `collection`.
-//
-// Executes `fn` on all items in `collection` concurrently.
-//
-// @ex await St.mapAsync([1, 2], async x => x * 2)
-// @alias Promise.all, genMap
-// @see St.map, Ar.mapAsync
-St.mapAsync = async function mapAsync<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => Promise<VTo>,
-): Promise<$Set<VTo>> {
-  return m(fromArray(await Promise.all(Array.from(St.map(collection, fn)))));
-};
+// Select
 
 // Create a new set by filtering out values for which `fn` returns false.
 //
@@ -312,5 +292,54 @@ St.filterNulls = function filterNulls<V>(collection: Collection<?V>): $Set<V> {
   }
   return m(result);
 };
+
+// TODO: filterWithKeys (possibly combine with filter, using swapped order)
+// TODO:
+// drop
+// take
+
+/// Transform
+
+// Create a new set by calling given `fn` on each value of `collection`.
+//
+// @ex St.map([1, 2], x => x * 2)
+// @see St.mapAsync
+St.map = function map<VFrom, VTo>(
+  collection: Collection<VFrom>,
+  fn: VFrom => VTo,
+): $Set<VTo> {
+  const result = st();
+  for (const item of collection.values()) {
+    result.add(fn(item));
+  }
+  return m(result);
+};
+
+// Create a promise of a set by calling given async `fn` on each value of
+// `collection`.
+//
+// Executes `fn` on all items in `collection` concurrently.
+//
+// @ex await St.mapAsync([1, 2], async x => x * 2)
+// @alias Promise.all, genMap
+// @see St.map, Ar.mapAsync
+St.mapAsync = async function mapAsync<VFrom, VTo>(
+  collection: Collection<VFrom>,
+  fn: VFrom => Promise<VTo>,
+): Promise<$Set<VTo>> {
+  return m(fromArray(await Promise.all(Array.from(St.map(collection, fn)))));
+};
+
+// TODO:
+// mapWithKey
+
+
+/// Partition
+
+// TODO:
+// chunk
+// partition
+
+
 
 module.exports = St;
