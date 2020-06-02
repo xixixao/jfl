@@ -2,7 +2,7 @@
   "name": "jfl",
   "version": "0.0.1",
   "description": "JavaScript Standard Functional Library",
-  "main": "index.js",
+  "main": "src/index.js",
   "author": "xixixao <xixixao@seznam.cz>",
   "license": "MIT",
   "devDependencies": {
