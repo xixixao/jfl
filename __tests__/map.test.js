@@ -41,7 +41,7 @@ test('Mp', async () => {
   eq(Mp.from(St(1, 2)), Mp.of([1, 1], [2, 2]));
 
   eq(
-    await Mp.asyncFrom([(async () => 1)(), (async () => 2)()]),
+    await Mp.fromAsync([(async () => 1)(), (async () => 2)()]),
     Mp.of([0, 1], [1, 2]),
   );
 

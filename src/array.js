@@ -118,7 +118,7 @@ Ar.from = exports.from = function from<V>(
 // @ex Ar.fromAsync([(async () => 1)(), (async () => 2)()])
 // @alias all
 // @see Ar.from
-Ar.asyncFrom = exports.asyncFrom = function asyncFrom<V>(
+Ar.fromAsync = exports.fromAsync = function fromAsync<V>(
   collection: Collection<Promise<V>>,
 ): Promise<$Array<V>> {
   return Promise.all(Ar.from(collection));
@@ -159,7 +159,7 @@ Ar.entries = function entries<K, V>(
 // Create a new array by calling given `fn` on each value of `collection`.
 //
 // @ex Ar.map([1, 2], x => x * 2)
-// @see Ar.asyncMap
+// @see Ar.mapAsync
 Ar.map = function map<VFrom, VTo>(
   collection: Collection<VFrom>,
   fn: VFrom => VTo,
@@ -176,9 +176,9 @@ Ar.map = function map<VFrom, VTo>(
 //
 // Executes `fn` on all items in `collection` concurrently.
 //
-// @ex await Ar.asyncMap([1, 2], async x => x * 2)
+// @ex await Ar.mapAsync([1, 2], async x => x * 2)
 // @alias Promise.all, genMap
-Ar.asyncMap = exports.asyncMap = function asyncMap<VFrom, VTo>(
+Ar.mapAsync = exports.mapAsync = function mapAsync<VFrom, VTo>(
   collection: Collection<VFrom>,
   fn: VFrom => Promise<VTo>,
 ): Promise<$Array<VTo>> {
@@ -207,13 +207,13 @@ Ar.filter = function filter<V>(
 //
 // Executes `predicate` on all items in `collection` concurrently.
 //
-// @ex Ar.asyncFilter([1, 2, 3], async x => Mth.isOdd(x))
-// @see Ar.filter, Ar.asyncMap
-Ar.asyncFilter = async function asyncFilter<V>(
+// @ex Ar.filterAsync([1, 2, 3], async x => Mth.isOdd(x))
+// @see Ar.filter, Ar.mapAsync
+Ar.filterAsync = async function filterAsync<V>(
   collection: Collection<V>,
   predicate: V => Promise<boolean>,
 ): Promise<$Array<V>> {
-  const filter = await Ar.asyncMap(collection, predicate);
+  const filter = await Ar.mapAsync(collection, predicate);
   const result = [];
   let i = 0;
   for (const item of collection.values()) {
@@ -297,7 +297,7 @@ Ar.flatten = function flatten<V>(
 // performance.
 //
 // @ex Ar.flatMap([1, 2], x => [x - 1, x + 1])
-// @see Ar.asyncMap
+// @see Ar.mapAsync
 Ar.flatMap = function flatMap<VFrom, VTo>(
   collection: Collection<VFrom>,
   fn: VFrom => Collection<VTo>,

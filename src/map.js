@@ -170,12 +170,12 @@ Mp.from = function from<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
 
 // Convert any keyed `collection` of promises to a Map.
 //
-// @ex Mp.asyncFrom([(async () => 1)(), (async () => 2)()])
-// @see Mp.from, Ar.asyncFrom
-Mp.asyncFrom = async function asyncFrom<K, V>(
+// @ex Mp.fromAsync([(async () => 1)(), (async () => 2)()])
+// @see Mp.from, Ar.fromAsync
+Mp.fromAsync = async function fromAsync<K, V>(
   collection: KeyedCollection<K, Promise<V>>,
 ): Promise<$Map<K, V>> {
-  const values = await Ar.asyncFrom(collection);
+  const values = await Ar.fromAsync(collection);
   const result = mp();
   let i = 0;
   for (const [key, _] of collection.entries()) {
@@ -214,11 +214,11 @@ Mp.fromKeys = function fromKeys<K, V>(
 
 // TODO:
 // @see Mp.fromKeys
-Mp.asyncFromKeys = async function asyncFromKeys<K, V>(
+Mp.fromKeysAsync = async function fromKeysAsync<K, V>(
   collection: Collection<K>,
   getValue: K => Promise<V>,
 ): Promise<$Map<K, V>> {
-  const values = await Ar.asyncMap(collection, getValue);
+  const values = await Ar.mapAsync(collection, getValue);
   const result = mp();
   let i = 0;
   for (const key of collection.values()) {
@@ -329,7 +329,7 @@ Mp.map = function map<KFrom, VFrom, VTo>(
 };
 
 // TODO: mapKeys
-// TODO: asyncMap
+// TODO: mapAsync
 
 // Create a new map by calling given `fn` on each key and value of
 // `collection`.
@@ -337,7 +337,7 @@ Mp.map = function map<KFrom, VFrom, VTo>(
 // `fn` must return new entries to populate the map.
 //
 // @ex Mp.mapToEntries(['a', 'b'], (x, i) => [x, i])
-// @see St.asyncMap
+// @see St.mapAsync
 Mp.mapToEntries = function mapToEntries<KFrom, VFrom, KTo, VTo>(
   collection: KeyedCollection<KFrom, VFrom>,
   fn: (VFrom, KFrom) => [KTo, VTo],
@@ -384,7 +384,7 @@ Mp.group = function group<V, KTo>(
 
 // TODO: filter
 
-// TODO: asyncFilter
+// TODO: filterAsync
 
 // TODO: filterKeys
 

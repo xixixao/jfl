@@ -155,11 +155,11 @@ St.from = function from<V>(collection: Collection<V>): $Set<V> {
 //
 // @ex St.fromAsync([(async () => 1)(), (async () => 2)()])
 // @alias all
-// @see St.from, Ar.asyncFrom
-St.asyncFrom = async function asyncFrom<V>(
+// @see St.from, Ar.fromAsync
+St.fromAsync = async function fromAsync<V>(
   collection: Collection<Promise<V>>,
 ): Promise<$Set<V>> {
-  return m(fromArray(await Ar.asyncFrom(collection)));
+  return m(fromArray(await Ar.fromAsync(collection)));
 };
 
 // Create a Set which is a union of all values in given `collections`.
@@ -230,7 +230,7 @@ St.diff = function diff<V>(
 // Create a new set by calling given `fn` on each value of `collection`.
 //
 // @ex St.map([1, 2], x => x * 2)
-// @see St.asyncMap
+// @see St.mapAsync
 St.map = function map<VFrom, VTo>(
   collection: Collection<VFrom>,
   fn: VFrom => VTo,
@@ -247,10 +247,10 @@ St.map = function map<VFrom, VTo>(
 //
 // Executes `fn` on all items in `collection` concurrently.
 //
-// @ex await St.asyncMap([1, 2], async x => x * 2)
+// @ex await St.mapAsync([1, 2], async x => x * 2)
 // @alias Promise.all, genMap
-// @see St.map, Ar.asyncMap
-St.asyncMap = async function asyncMap<VFrom, VTo>(
+// @see St.map, Ar.mapAsync
+St.mapAsync = async function mapAsync<VFrom, VTo>(
   collection: Collection<VFrom>,
   fn: VFrom => Promise<VTo>,
 ): Promise<$Set<VTo>> {
@@ -279,13 +279,13 @@ St.filter = function filter<V>(
 //
 // Executes `predicate` on all items in `collection` concurrently.
 //
-// @ex Ar.asyncFilter([1, 2, 3], async x => Mth.isOdd(x))
-// @see St.filter, Ar.asyncFilter
-St.asyncFilter = async function asyncFilter<V>(
+// @ex Ar.filterAsync([1, 2, 3], async x => Mth.isOdd(x))
+// @see St.filter, Ar.filterAsync
+St.filterAsync = async function filterAsync<V>(
   collection: Collection<V>,
   predicate: V => Promise<boolean>,
 ): Promise<$Set<V>> {
-  const filter = await Ar.asyncMap(collection, predicate);
+  const filter = await Ar.mapAsync(collection, predicate);
   const result = st();
   let i = 0;
   for (const item of collection.values()) {
