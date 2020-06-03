@@ -2,7 +2,7 @@
 
 'use strict';
 
-import type {Collection, KeyedCollection, $Array} from './types.flow';
+import type {Collection, KeyedCollection, $Array, $Map} from './types.flow';
 
 const Ar = require('./array');
 const Cl = require('./collection');
@@ -13,8 +13,8 @@ function m<K, V>(map: $Map<K, V>): $Map<K, V> {
   return map.size === 0 ? (EMPTY: any) : map;
 }
 
-// non-memoized for internal implementation
-function mp<K, V>(): $Map<K, V> {
+// non-memoized, mutable for internal implementation
+function mp<K, V>(): Map<K, V> {
   return (new Map(): any);
 }
 
