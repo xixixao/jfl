@@ -826,7 +826,7 @@ type $GetValue = <V>(Collection<V>) => V;
 // @ex Ar.zip([1, 2, 3], ['a', 'b', 'c'], [5, 6, 7])
 // @alias zipAll
 // @see Ar.zipWith
-Ar.zip = function zip<V, Cs: $Array<Collection<V>>>(
+Ar.zip = function zip<V, Cs: $Array<Collection<mixed>>>(
   ...collections: Cs
 ): $Array<$TupleMap<Cs, $GetValue>> {
   if (collections.length < 1) {
