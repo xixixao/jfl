@@ -11,3 +11,4 @@ export interface KeyedCollection<+K, +V> extends Collection<V> {
 }
 
 export type $Array<V> = $ReadOnlyArray<V>;
+export type $Set<V> = $ReadOnlySet<V>;

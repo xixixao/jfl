@@ -2,7 +2,7 @@
 
 'use strict';
 
-import type {Collection, KeyedCollection, $Array} from './types.flow';
+import type {Collection, KeyedCollection, $Array, $Set} from './types.flow';
 
 const Cl = require('./collection');
 const Ar = require('./array');
@@ -13,9 +13,9 @@ function m<V>(set: $Set<V>): $Set<V> {
   return set.size === 0 ? (EMPTY: any) : set;
 }
 
-// non-memoized for internal implementation
-function st<V>(): $Set<V> {
-  return (new Set(): any);
+// non-memoized, mutable for internal implementation
+function st<V>(): Set<V> {
+  return new Set();
 }
 
 // internal for performance
@@ -87,7 +87,7 @@ St.isSet = function isSet(argument: any): boolean {
 // @ex St.shallowEquals([1, 2], [1, 2])
 // @see Ar.shallowEquals, Mp.shallowEquals
 St.shallowEquals = function shallowEquals<V>(
-  set: Set<V>,
+  set: $Set<V>,
   ...sets: $Array<$Set<V>>
 ): boolean {
   const inOrder = Ar.from(set);
@@ -117,7 +117,7 @@ St.shallowEquals = function shallowEquals<V>(
 // @ex St.unorderdEquals([1, 2], [1, 2])
 // @see Sr.shallowEquals
 St.unorderedEquals = function unorderedEquals<V>(
-  set: Set<V>,
+  set: $Set<V>,
   ...sets: $Array<$Set<V>>
 ): boolean {
   for (let ai = 0; ai < sets.length; ai++) {
