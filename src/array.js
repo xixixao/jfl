@@ -29,9 +29,12 @@ function Ar<V>(...args: $Array<V>): $Array<V> {
 
 // Returns whether given value is an Array.
 //
+// Use `Array.isArray()` directly if you need the type system to pick up
+// the refinement.
+//
 // @ex Ar.isArray([1, 2, 3])
 // @see St.isSet, Mp.isMap
-Ar.isArray = exports.isArray = function isArray(argument: any): boolean {
+Ar.isArray = exports.isArray = function isArray(argument: mixed): boolean {
   return Array.isArray(argument);
 };
 

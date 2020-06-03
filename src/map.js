@@ -39,9 +39,12 @@ function Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
 
 // Returns whether given value is a Map.
 //
+// Use `instanceof Map` directly if you need the type system to pick up
+// the refinement.
+//
 // @ex Mp.isMap([1, 2, 3])
 // @see St.isSet, Ar.isArray
-Mp.isMap = function isMap(argument: any): boolean {
+Mp.isMap = function isMap(argument: mixed): boolean {
   return argument instanceof Map;
 };
 
