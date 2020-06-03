@@ -238,7 +238,7 @@ St.diff = function diff<V>(
   return m(result);
 };
 
-// Select
+/// Select
 
 // Create a new set by filtering out values for which `fn` returns false.
 //
@@ -337,7 +337,7 @@ St.mapAsync = async function mapAsync<VFrom, VTo>(
 // mapWithKey
 
 
-/// Partition
+/// Divide
 
 // TODO:
 // chunk
