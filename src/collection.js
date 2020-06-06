@@ -12,30 +12,6 @@ const Cl = exports;
 
 /// Checks
 
-// Get the size of given `collection`.
-//
-// @time O(1)
-// @space O(1)
-// @ex Cl.count([1, 2, 3]) // 3
-// @ex Cl.count(Mp({a: 1, b: 3})) // 2
-// @alias length, size
-// @see Cl.isEmpty
-Cl.count = function count<V>(collection: Collection<V>): number {
-  return (collection: any).size || (collection: any).length;
-};
-
-// Returns true when `collection` is empty.
-//
-// @time O(1)
-// @space O(1)
-// @ex Cl.isEmpty(Ar()) // true
-// @ex Cl.isEmpty(Mp()) // true
-// @ex Cl.isEmpty(St()) // true
-// @see Cl.count
-Cl.isEmpty = function isEmpty<V>(collection: Collection<V>): boolean {
-  return Cl.count(collection) === 0;
-};
-
 Cl.shallowEquals = function shallowEquals<K, V>(
   first: KeyedCollection<K, V>,
   ...rest: $Array<KeyedCollection<K, V>>
@@ -47,8 +23,7 @@ Cl.shallowEquals = function shallowEquals<K, V>(
     if (
       (isArray && !Ar.isArray(compared)) ||
       (isSet && !St.isSet(compared)) ||
-      (isMap && !Mp.isMap(compared)) ||
-      compared !== first
+      (isMap && !Mp.isMap(compared))
     ) {
       return false;
     }
@@ -77,6 +52,31 @@ Cl.deepEquals = function deepEquals(first: any, ...rest: any): boolean {
   return isArray
     ? Ar.deepEquals(...args)
     : isMap ? Mp.deepEquals(...args) : isSet ? St.deepEquals(...args) : true;
+};
+
+// Returns true when `collection` is empty.
+//
+// @time O(1)
+// @space O(1)
+// @ex Cl.isEmpty(Ar()) // true
+// @ex Cl.isEmpty(Mp()) // true
+// @ex Cl.isEmpty(St()) // true
+// @see Cl.count
+Cl.isEmpty = function isEmpty<V>(collection: Collection<V>): boolean {
+  return Cl.count(collection) === 0;
+};
+
+// Get the size of given `collection`.
+//
+// @time O(1)
+// @space O(1)
+// @ex Cl.count([1, 2, 3]) // 3
+// @ex Cl.count(Mp({a: 1, b: 3})) // 2
+// @alias length, size
+// @see Cl.isEmpty
+Cl.count = function count<V>(collection: Collection<V>): number {
+  const size = (collection: any).size;
+  return size != null ? size : (collection: any).length;
 };
 
 // Returns whether given `collection` contains given `value`.
@@ -121,24 +121,6 @@ Cl.containsKey = function containsKey<K, V>(
   }
 };
 
-// Returns whether all values satisfy `predicateFn`.
-//
-// @time O(n)
-// @space O(1)
-// @ex Cl.every([1, 5, 3], n => Mth.isOdd(n)) // true
-// @see Cl.any
-Cl.every = function every<K, V>(
-  collection: KeyedCollection<K, V>,
-  predicateFn: (V, K, KeyedCollection<K, V>) => boolean,
-): boolean {
-  for (const [key, item] of collection.entries()) {
-    if(!predicateFn(item, key, collection)) {
-      return false;
-    }
-  }
-  return true;
-};
-
 // Returns whether some values satisfy `predicateFn`.
 //
 // @time O(n)
@@ -155,6 +137,24 @@ Cl.any = function any<K, V>(
     }
   }
   return false;
+};
+
+// Returns whether all values satisfy `predicateFn`.
+//
+// @time O(n)
+// @space O(1)
+// @ex Cl.every([1, 5, 3], n => Mth.isOdd(n)) // true
+// @see Cl.any
+Cl.every = function every<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K, KeyedCollection<K, V>) => boolean,
+): boolean {
+  for (const [key, item] of collection.entries()) {
+    if(!predicateFn(item, key, collection)) {
+      return false;
+    }
+  }
+  return true;
 };
 
 /// Select
