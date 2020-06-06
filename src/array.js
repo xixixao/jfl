@@ -261,14 +261,12 @@ Ar.generate = function generate<V, S>(seed: S, fn: S => ?[V, S]): $Array<V> {
 
 // Returns whether given value is an Array.
 //
-// Use `Array.isArray()` directly if you need the type system to pick up
-// the refinement.
-//
 // @ex Ar.isArray([1, 2, 3])
 // @see St.isSet, Mp.isMap
-Ar.isArray = exports.isArray = function isArray(argument: mixed): boolean {
+function isArray(argument: mixed): %checks {
   return Array.isArray(argument);
-};
+}
+Ar.isArray = exports.isArray = isArray;
 
 // Returns whether given Arrays are equal.
 //
@@ -404,6 +402,20 @@ Ar.zipWith = function zipWith<I, Cs: $Array<Collection<I>>, O>(
 };
 
 /// Select
+
+// Return element at given index.
+//
+// Use this if you care about accurate typing (until JS type systems
+// fix the typing of the built-in). Otherwise use `array[index]`.
+//
+// @ex Ar.get([], 1) // undefined
+// @see Cl.at
+Ar.get = function get<V>(
+  array: $Array<V>,
+  index: number,
+): ?V {
+  return array[index];
+}
 
 // Create a new array by filtering out values for which `fn` returns false.
 //

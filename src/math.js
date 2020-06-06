@@ -29,8 +29,24 @@ Mth.cubed = function cubed(n: number): number {
   return n * n * n;
 };
 
-Mth.neg = function neg(n: number): number {
-  return -n;
+// Returns the sum of all values in `collection`.
+//
+// @ex Mth.sum([1, 2, 3])
+// @see Mth.product
+Mth.sum = function sum<K>(collection: KeyedCollection<K, number>): number {
+  return Mth.reduce(collection, (a, b, i) => a + b, 0);
 };
+
+// Returns the product of all values in `collection`.
+//
+// @ex Mth.product([1, 2, 3])
+// @see Mth.sum
+Mth.sum = function sum<K>(collection: KeyedCollection<K, number>): number {
+  return Mth.reduce(collection, (a, b, i) => a * b, 1);
+};
+
+// Mth.mean
+// Mth.max
+// Mth.min
 
 module.exports = Mth;

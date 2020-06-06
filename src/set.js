@@ -74,14 +74,12 @@ St.fromAsync = async function fromAsync<V>(
 
 // Returns whether given argument is a Set.
 //
-// Use `instanceof Set` directly if you need the type system to pick up
-// the refinement.
-//
 // @ex St.isSet(St(1, 2, 3))
 // @see Ar.isArray, Mp.isMap
-St.isSet = function isSet(argument: mixed): boolean {
+function isSet(argument: mixed): %checks {
   return argument instanceof Set;
 };
+St.isSet = isSet;
 
 // Returns whether given Sets are equal.
 //

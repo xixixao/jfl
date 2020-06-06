@@ -44,9 +44,10 @@ function Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
 //
 // @ex Mp.isMap([1, 2, 3])
 // @see St.isSet, Ar.isArray
-Mp.isMap = function isMap(argument: mixed): boolean {
+function isMap(argument: mixed): %checks {
   return argument instanceof Map;
 };
+Mp.isMap = isMap;
 
 // Returns whether given Maps are equal.
 //
@@ -359,7 +360,7 @@ Mp.mapToEntries = function mapToEntries<KFrom, VFrom, KTo, VTo>(
 // The new map has Arrays of original values as its values.
 // Values for which `fn` returns null or undefined are ommited.
 //
-// @ex Mp.group([1, 2, 3], Mth.isOdd)
+// @ex Mp.group([1, 2, 3], n => Mth.isOdd(n))
 // @see Ar.partition
 Mp.group = function group<V, KTo>(
   collection: Collection<V>,
