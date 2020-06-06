@@ -14,10 +14,16 @@ exports.setup = (shallowMatcher, deepMatcher) => {
     eqqq(_, a, b) {
       return format(this, a === b, `expected $0r to $not === $1e`, a, b);
     },
+    nil(_, a) {
+      return format(this, a == null, `expected $0r to be null`, a);
+    },
   });
   const exp = expect();
   exp.test = test;
   exp.expect = expect;
+  exp.throws = (fn) => {
+    expect(fn).toThrow();
+  }
   return exp;
 };
 

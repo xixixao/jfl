@@ -23,7 +23,8 @@ Cl.shallowEquals = function shallowEquals<K, V>(
     if (
       (isArray && !Ar.isArray(compared)) ||
       (isSet && !St.isSet(compared)) ||
-      (isMap && !Mp.isMap(compared))
+      (isMap && !Mp.isMap(compared)) ||
+      (!isArray && !isSet && !isMap && compared !== first)
     ) {
       return false;
     }
@@ -185,7 +186,7 @@ Cl.find = function find<V>(
 // @space O(1)
 // @ex Cl.find([2, 4, 3], n => Mth.isOdd(n)) // 2
 // @see Cl.find, Cl.findKey, Cl.findKeyX
-Cl.findX = function find<V>(
+Cl.findX = function findX<V>(
   collection: Collection<V>,
   predicateFn: V => boolean,
 ): V {
@@ -272,7 +273,7 @@ Cl.firstX = function firstX<V>(collection: Collection<V>): V {
 // @space O(1)
 // @ex Cl.firstX([1]) // 1
 // @see Cl.firstX
-Cl.onlyX = function firstX<V>(collection: Collection<V>): V {
+Cl.onlyX = function onlyX<V>(collection: Collection<V>): V {
   let result = null;
   let foundFirst = false;
   for (const item of collection.values()) {
@@ -474,11 +475,25 @@ type Reduce<
 // @ex Cl.reduce([2, 4, 3], (acc, x) => acc + x) // 9
 // @see Ar.scan
 Cl.reduce = ((function reduce(collection, fn, initialValue) {
-  let acc =
-    initialValue === undefined
-      ? Cl.firstX(collection)
-      : initialValue;
+  const noInitialValue = arguments.length < 3;
+  if (Ar.isArray(collection)) {
+    if (noInitialValue) {
+      return collection.reduce(fn);
+    } else {
+      return collection.reduce(fn, initialValue);
+    }
+  }
+  let acc;
+  let isFirst = true;
+  if (!noInitialValue) {
+    acc = initialValue;
+  }
   for (const [key, item] of collection.entries()) {
+    if (noInitialValue && isFirst) {
+      acc = item;
+      isFirst = false;
+      continue;
+    }
     acc = fn(acc, item, key, collection);
   }
   return acc;
