@@ -1,4 +1,23 @@
-exports.setup = (shallowMatcher, deepMatcher) => {
+// @flow
+
+declare var expect: any;
+declare var test: any;
+
+exports.setup = <T1, T2>(
+  shallowMatcher: (T1, T2) => boolean,
+  deepMatcher: (T1, T2) => boolean,
+): {
+  test: (name: string, fn: () => void | Promise<void>) => void,
+  tru: (value: boolean) => void,
+  eq: <V>(a: V, B: V) => void,
+  eqq: <V>(a: V, B: V) => void,
+  eqqq: <V>(a: V, B: V) => void,
+  nil: <V>(a: V) => void,
+  throws: (() => mixed) => void,
+  not: {
+    tru: (value: boolean) => void,
+  }
+} => {
   expect.extend({
     tru(_, b) {
       return format(this, b === true, 'expected $0e to $not be true', b);

@@ -3,7 +3,7 @@
 const {Ar, Cl, St, Mp, Mth} = require('..');
 const {setup} = require('../test/test-util.js');
 
-const {expect, test, tru, eq, eqq, eqqq, not} = setup(
+const {test, tru, eq, eqq, eqqq, not, throws} = setup(
   St.shallowEquals,
   Cl.deepEquals,
 );
