@@ -251,7 +251,41 @@ test('Cl', async () => {
   eqqq(Cl.reduce(St('a', 'b', 'c'), (word, letter) => word + letter), 'abc');
   eqqq(
     Cl.reduce(Mp({k: 'adam', m: 'boris', n: 'cecil'}),
-    (word, letter) => word + letter),
-    'adamboriscecil',
+    (phrase, word) => phrase + ' ' + word),
+    'adam boris cecil',
+  );
+
+  eq(
+    Cl.reduce(['a', 'b', 'b'], (set, letter) => St.add(set, letter), St()),
+    St('a', 'b'),
+  );
+  eq(
+    Cl.reduce(St('a', 'b', 'c'), (map, letter) => Mp.set(map, letter, 0), Mp()),
+    Mp({'a': 0, 'b': 0, 'c': 0}),
+  );
+  eq(
+    Cl.reduce(
+      Mp({k: 'adam', m: 'boris', n: 'cecil'}),
+      (map, word) => Mp.set(map, word, 0),
+      Mp(),
+    ),
+    Mp({'adam': 0, 'boris': 0, 'cecil': 0}),
+  );
+
+  eq(
+    Cl.reduce(
+      ['a', 'b', 'c'],
+      (map, letter, index) => Mp.set(map, letter, index),
+      Mp(),
+    ),
+    Mp({'a': 0, 'b': 1, 'c': 2}),
+  );
+  eq(
+    Cl.reduce(
+      Mp({k: 'adam', m: 'boris', n: 'cecil'}),
+      (map, letter, key) => Mp.set(map, letter, key),
+      Mp(),
+    ),
+    Mp({'adam': 'k', 'boris': 'm', 'cecil': 'n'}),
   );
 });

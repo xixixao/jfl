@@ -53,8 +53,10 @@ Mp.isMap = isMap;
 //
 // All values and keys must be strictly equal.
 //
+// @time O(n)
+// @space O(1)
 // @ex Mp.shallowEquals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2}))
-// @see Mp.unorderedEquals, St.shallowEquals, Ar.shallowEquals
+// @see Mp.unorderedEquals, St.shallowEquals, Ar.shallowEquals, Cl.shallowEquals
 Mp.shallowEquals = function shallowEquals<K, V>(
   map: $Map<K, V>,
   ...maps: $Array<$Map<K, V>>
@@ -83,6 +85,8 @@ Mp.shallowEquals = function shallowEquals<K, V>(
 //
 // All values and keys must be strictly equal.
 //
+// @time O(n)
+// @space O(1)
 // @ex Mp.unorderedEquals(Mp({a: 1, b: 2}), Mp({b: 2, a: 1}))
 // @see Mp.shallowEquals
 Mp.unorderedEquals = function unorderedEquals<K, V>(
@@ -111,6 +115,8 @@ Mp.unorderedEquals = function unorderedEquals<K, V>(
 // Any collection values or keys must deeply equal, all other values
 // and keys must be strictly equal.
 //
+// @time O(n)
+// @space O(1)
 // @ex Mp.deepEquals(Mp.of([[0], [1]]]), Mp.of([[0], [1]]]))
 // @see Mp.shallowEquals, Cl.deepEquals
 Mp.deepEquals = function deepEquals<K, V>(

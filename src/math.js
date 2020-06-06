@@ -2,6 +2,8 @@
 
 'use strict';
 
+import type {Collection, KeyedCollection, $Array} from './types.flow';
+
 const Mth = exports;
 
 // Returns true when `n` is an odd integer.

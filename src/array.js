@@ -272,8 +272,10 @@ Ar.isArray = exports.isArray = isArray;
 //
 // All items must be strictly equal.
 //
+// @time O(n)
+// @space O(1)
 // @ex Ar.shallowEquals([1, 2], [1, 2])
-// @see St.shallowEquals, Mp.shallowEquals
+// @see St.shallowEquals, Mp.shallowEquals, Cl.shallowEquals
 Ar.shallowEquals = exports.shallowEquals = function shallowEquals<V>(
   array: $Array<V>,
   ...arrays: $Array<$Array<V>>
@@ -300,6 +302,8 @@ Ar.shallowEquals = exports.shallowEquals = function shallowEquals<V>(
 // Any contained collections must deeply equal, all other items must be
 // strictly equal.
 //
+// @time O(n)
+// @space O(1)
 // @ex Ar.deepEquals([[1], [2], 3], [[1], [2], 3])
 // @see St.deepEquals, Mp.deepEquals, Cl.deepEquals
 Ar.deepEquals = exports.deepEquals = function deepEquals<V>(

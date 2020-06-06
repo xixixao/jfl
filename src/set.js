@@ -13,14 +13,9 @@ function m<V>(set: $Set<V>): $Set<V> {
   return set.size === 0 ? (EMPTY: any) : set;
 }
 
-// non-memoized, mutable for internal implementation
-function st<V>(): Set<V> {
-  return new Set();
-}
-
 // internal for performance
 function fromArray<V>(array: $Array<V>): $Set<V> {
-  return (new Set(array): any);
+  return new Set(array);
 }
 
 /// Construction
@@ -49,7 +44,7 @@ St.from = function from<V>(collection: Collection<V>): $Set<V> {
   if (St.isSet(collection)) {
     return (collection: any);
   }
-  const result = st();
+  const result = new Set();
   for (const item of collection.values()) {
     result.add(item);
   }
@@ -85,8 +80,10 @@ St.isSet = isSet;
 //
 // All items must be strictly equal.
 //
+// @time O(n)
+// @space O(1)
 // @ex St.shallowEquals([1, 2], [1, 2])
-// @see Ar.shallowEquals, Mp.shallowEquals
+// @see Ar.shallowEquals, Mp.shallowEquals, Cl.shallowEquals
 St.shallowEquals = function shallowEquals<V>(
   set: $Set<V>,
   ...sets: $Array<$Set<V>>
@@ -115,6 +112,8 @@ St.shallowEquals = function shallowEquals<V>(
 //
 // All items must be strictly equal.
 //
+// @time O(n)
+// @space O(1)
 // @ex St.unorderdEquals([1, 2], [1, 2])
 // @see Sr.shallowEquals
 St.unorderedEquals = function unorderedEquals<V>(
@@ -143,6 +142,8 @@ St.unorderedEquals = function unorderedEquals<V>(
 // Any contained collections must deeply equal, all other items must be
 // strictly equal.
 //
+// @time O(n)
+// @space O(1)
 // @ex Ar.deepEquals([[1], [2], 3], [[1], [2], 3])
 // @see St.deepEquals, Mp.deepEquals, Cl.deepEquals
 St.deepEquals = exports.deepEquals = function deepEquals<V>(
@@ -177,13 +178,24 @@ St.deepEquals = exports.deepEquals = function deepEquals<V>(
 // @alias join, flatten
 // @see St.intersect, St.flatten
 St.union = function union<V>(...collections: $Array<Collection<V>>): $Set<V> {
-  const result = st();
+  const result = new Set();
   for (const collection of collections) {
     for (const item of collection.values()) {
       result.add(item);
     }
   }
   return m(result);
+};
+
+// Create a Set which is a union of all values in given `collections`.
+//
+// @ex St.union(St(1, 2, 3), St(1, 4, 5))
+// @alias join, flatten
+// @see St.intersect, St.flatten
+St.add = function add<V>(collection: Collection<V>, value: V): $Set<V> {
+  const result = new Set(collection.values());
+  result.add(value);
+  return result;
 };
 
 // Create a Set which is an intersection of all values in given `collections`.
@@ -203,7 +215,7 @@ St.intersect = function intersect<V>(
       i++;
       continue;
     }
-    const nextIntersection = st();
+    const nextIntersection = new Set();
     for (const item of collection.values()) {
       if (intersection.has(item)) {
         nextIntersection.add(item);
@@ -227,7 +239,7 @@ St.diff = function diff<V>(
     return St.from(collection);
   }
   const filter = St.union(...collections);
-  const result = st();
+  const result = new Set();
   for (const item of collection.values()) {
     if (!filter.has(item)) {
       result.add(item);
@@ -246,7 +258,7 @@ St.filter = function filter<V>(
   collection: Collection<V>,
   fn: V => boolean,
 ): $Set<V> {
-  const result = st();
+  const result = new Set();
   for (const item of collection.values()) {
     if (fn(item)) {
       result.add(item);
@@ -267,7 +279,7 @@ St.filterAsync = async function filterAsync<V>(
   predicate: V => Promise<boolean>,
 ): Promise<$Set<V>> {
   const filter = await Ar.mapAsync(collection, predicate);
-  const result = st();
+  const result = new Set();
   let i = 0;
   for (const item of collection.values()) {
     if (filter[i]) {
@@ -285,7 +297,7 @@ St.filterAsync = async function filterAsync<V>(
 // @ex St.filterNulls([1, null, 3])
 // @see St.filter
 St.filterNulls = function filterNulls<V>(collection: Collection<?V>): $Set<V> {
-  const result = st();
+  const result = new Set();
   for (const item of collection.values()) {
     if (item != null) {
       result.add(item);
@@ -309,7 +321,7 @@ St.map = function map<VFrom, VTo>(
   collection: Collection<VFrom>,
   fn: VFrom => VTo,
 ): $Set<VTo> {
-  const result = st();
+  const result = new Set();
   for (const item of collection.values()) {
     result.add(fn(item));
   }
