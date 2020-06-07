@@ -18,11 +18,42 @@ const Cl = exports;
 //
 // @time O(n)
 // @space O(1)
-// @ex Cl.shallowEquals([1, 2], [1, 2]) // true
-// @see Ar.shallowEquals, St.shallowEquals, Mp.shallowEquals
-Cl.shallowEquals = function shallowEquals<K, V>(
-  first: KeyedCollection<K, V>,
-  ...rest: $Array<KeyedCollection<K, V>>
+// @ex Cl.equals([1, 2], [1, 2]) // true
+// @see Ar.equals, St.equals, Mp.equals
+Cl.equals = function equals<V, C: Collection<V>>(
+  first: C,
+  ...rest: $Array<C>
+): boolean {
+  const isArray = Ar.isArray(first);
+  const isSet = St.isSet(first);
+  const isMap = Mp.isMap(first);
+  for (const compared of rest) {
+    if (
+      (isArray && !Ar.isArray(compared)) ||
+      (isSet && !St.isSet(compared)) ||
+      (isMap && !Mp.isMap(compared))
+    ) {
+      return false;
+    }
+  }
+  const args: any = [first, ...rest];
+  return isArray
+    ? Ar.equals(...args)
+    : isMap ? Mp.equals(...args) : St.equals(...args);
+};
+
+// Returns whether given collections and any nested collections are equal.
+//
+// Any contained collections must deeply equal, all other items must be
+// strictly equal.
+//
+// @time O(n)
+// @space O(1)
+// @ex Cl.equalsNested([[1], [2], 3], [[1], [2], 3]) // true
+// @see Ar.equalsNested, St.equalsNested, Mp.equalsNested
+Cl.equalsNested = function equalsNested<V, C: mixed>(
+  first: C,
+  ...rest: $Array<C>
 ): boolean {
   const isArray = Ar.isArray(first);
   const isSet = St.isSet(first);
@@ -37,39 +68,10 @@ Cl.shallowEquals = function shallowEquals<K, V>(
       return false;
     }
   }
-  const args = [(first: any), ...(rest: any)];
+  const args: any = [first, ...rest];
   return isArray
-    ? Ar.shallowEquals(...args)
-    : isMap ? Mp.shallowEquals(...args) : St.shallowEquals(...args);
-};
-
-// Returns whether given collections and any nested collections are equal.
-//
-// Any contained collections must deeply equal, all other items must be
-// strictly equal.
-//
-// @time O(n)
-// @space O(1)
-// @ex Cl.deepEquals([[1], [2], 3], [[1], [2], 3]) // true
-// @see Ar.deepEquals, St.deepEquals, Mp.deepEquals
-Cl.deepEquals = function deepEquals(first: any, ...rest: any): boolean {
-  const isArray = Ar.isArray(first);
-  const isSet = St.isSet(first);
-  const isMap = Mp.isMap(first);
-  for (const compared of rest) {
-    if (
-      (isArray && !Ar.isArray(compared)) ||
-      (isSet && !St.isSet(compared)) ||
-      (isMap && !Mp.isMap(compared)) ||
-      (!isArray && !isSet && !isMap && compared !== first)
-    ) {
-      return false;
-    }
-  }
-  const args = [(first: any), ...(rest: any)];
-  return isArray
-    ? Ar.deepEquals(...args)
-    : isMap ? Mp.deepEquals(...args) : isSet ? St.deepEquals(...args) : true;
+    ? Ar.equalsNested(...args)
+    : isMap ? Mp.equalsNested(...args) : isSet ? St.equalsNested(...args) : true;
 };
 
 // Returns true when `collection` is empty.

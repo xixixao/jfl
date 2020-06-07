@@ -55,9 +55,9 @@ Mp.isMap = isMap;
 //
 // @time O(n)
 // @space O(1)
-// @ex Mp.shallowEquals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2}))
-// @see Mp.unorderedEquals, St.shallowEquals, Ar.shallowEquals, Cl.shallowEquals
-Mp.shallowEquals = function shallowEquals<K, V>(
+// @ex Mp.equals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2}))
+// @see Mp.equalsOrderIgnored, St.equals, Ar.equals, Cl.equals
+Mp.equals = function equals<K, V>(
   map: $Map<K, V>,
   ...maps: $Array<$Map<K, V>>
 ): boolean {
@@ -87,9 +87,9 @@ Mp.shallowEquals = function shallowEquals<K, V>(
 //
 // @time O(n)
 // @space O(1)
-// @ex Mp.unorderedEquals(Mp({a: 1, b: 2}), Mp({b: 2, a: 1}))
-// @see Mp.shallowEquals
-Mp.unorderedEquals = function unorderedEquals<K, V>(
+// @ex Mp.equalsOrderIgnored(Mp({a: 1, b: 2}), Mp({b: 2, a: 1}))
+// @see Mp.equals
+Mp.equalsOrderIgnored = function equalsOrderIgnored<K, V>(
   map: $Map<K, V>,
   ...maps: $Array<$Map<K, V>>
 ): boolean {
@@ -117,9 +117,9 @@ Mp.unorderedEquals = function unorderedEquals<K, V>(
 //
 // @time O(n)
 // @space O(1)
-// @ex Mp.deepEquals(Mp.of([[0], [1]]]), Mp.of([[0], [1]]]))
-// @see Mp.shallowEquals, Cl.deepEquals
-Mp.deepEquals = function deepEquals<K, V>(
+// @ex Mp.equalsNested(Mp.of([[0], [1]]]), Mp.of([[0], [1]]]))
+// @see Mp.equals, Cl.equalsNested
+Mp.equalsNested = function equalsNested<K, V>(
   map: $Map<K, V>,
   ...maps: $Array<$Map<K, V>>
 ): boolean {
@@ -136,8 +136,8 @@ Mp.deepEquals = function deepEquals<K, V>(
     for (const key of compared.keys()) {
       const keyInOrder = keysInOrder[i];
       if (
-        !Cl.deepEquals(keyInOrder, key) ||
-        !Cl.deepEquals(compared.get(key), map.get(keyInOrder))
+        !Cl.equalsNested(keyInOrder, key) ||
+        !Cl.equalsNested(compared.get(key), map.get(keyInOrder))
       ) {
         return false;
       }

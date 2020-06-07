@@ -4,27 +4,27 @@ const {Ar, Cl, St, Mp, Mth} = require('..');
 const {setup} = require('../test/test-util.js');
 
 const {test, tru, eq, eqq, eqqq, not, throws} = setup(
-  Mp.shallowEquals,
-  Cl.deepEquals,
+  Mp.equals,
+  Cl.equalsNested,
 );
 
-test('shallowEquals', () => {
-  tru(Mp.shallowEquals(Mp({a: 1, b: 2, c: 3}), Mp({a: 1, b: 2, c: 3})));
-  not.tru(Mp.shallowEquals(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3})));
-  not.tru(Mp.shallowEquals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2, c: 3})));
+test('equals', () => {
+  tru(Mp.equals(Mp({a: 1, b: 2, c: 3}), Mp({a: 1, b: 2, c: 3})));
+  not.tru(Mp.equals(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3})));
+  not.tru(Mp.equals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2, c: 3})));
 });
 
-test('unorderedEquals', () => {
-  tru(Mp.unorderedEquals(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3, a: 1})));
-  not.tru(Mp.unorderedEquals(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3})));
-  not.tru(Mp.unorderedEquals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2, c: 3})));
+test('equalsOrderIgnored', () => {
+  tru(Mp.equalsOrderIgnored(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3, a: 1})));
+  not.tru(Mp.equalsOrderIgnored(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3})));
+  not.tru(Mp.equalsOrderIgnored(Mp({a: 1, b: 2}), Mp({a: 1, b: 2, c: 3})));
 });
 
-test('deepEquals', () => {
-  tru(Mp.deepEquals(Mp({a: [1, 2], b: 3}), Mp({a: [1, 2], b: 3})));
-  tru(Mp.deepEquals(Mp.of([[1, 2], [3, 4]]), Mp.of([[1, 2], [3, 4]])));
-  not.tru(Mp.deepEquals(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3})));
-  not.tru(Mp.deepEquals(Mp({a: [1, 2]}), Mp({a: [1, 2], b: 3})));
+test('equalsNested', () => {
+  tru(Mp.equalsNested(Mp({a: [1, 2], b: 3}), Mp({a: [1, 2], b: 3})));
+  tru(Mp.equalsNested(Mp.of([[1, 2], [3, 4]]), Mp.of([[1, 2], [3, 4]])));
+  not.tru(Mp.equalsNested(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3})));
+  not.tru(Mp.equalsNested(Mp({a: [1, 2]}), Mp({a: [1, 2], b: 3})));
 });
 
 test('Mp', async () => {

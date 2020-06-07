@@ -4,26 +4,26 @@ const {Ar, Cl, St, Mp, Mth} = require('..');
 const {setup} = require('../test/test-util.js');
 
 const {test, tru, eq, eqq, eqqq, not, throws} = setup(
-  St.shallowEquals,
-  Cl.deepEquals,
+  St.equals,
+  Cl.equalsNested,
 );
 
-test('shallowEquals', () => {
-  tru(St.shallowEquals(St(1, 2, 3), St(1, 2, 3)));
-  not.tru(St.shallowEquals(St(1, 2, 3), St(2, 3)));
-  not.tru(St.shallowEquals(St(1, 2), St(1, 2, 3)));
+test('equals', () => {
+  tru(St.equals(St(1, 2, 3), St(1, 2, 3)));
+  not.tru(St.equals(St(1, 2, 3), St(2, 3)));
+  not.tru(St.equals(St(1, 2), St(1, 2, 3)));
 });
 
-test('unorderedEquals', () => {
-  tru(St.unorderedEquals(St(1, 2, 3), St(2, 3, 1)));
-  not.tru(St.unorderedEquals(St(1, 2, 3), St(2, 3)));
-  not.tru(St.unorderedEquals(St(1, 2), St(1, 2, 3)));
+test('equalsOrderIgnored', () => {
+  tru(St.equalsOrderIgnored(St(1, 2, 3), St(2, 3, 1)));
+  not.tru(St.equalsOrderIgnored(St(1, 2, 3), St(2, 3)));
+  not.tru(St.equalsOrderIgnored(St(1, 2), St(1, 2, 3)));
 });
 
-test('deepEquals', () => {
-  tru(St.deepEquals(St([1, 2], 3), St([1, 2], 3)));
-  not.tru(St.deepEquals(St([1, 2, 3]), St([2, 3])));
-  not.tru(St.deepEquals(St([1, 2]), St([1, 2], 3)));
+test('equalsNested', () => {
+  tru(St.equalsNested(St([1, 2], 3), St([1, 2], 3)));
+  not.tru(St.equalsNested(St([1, 2, 3]), St([2, 3])));
+  not.tru(St.equalsNested(St([1, 2]), St([1, 2], 3)));
 });
 
 test('St', async () => {

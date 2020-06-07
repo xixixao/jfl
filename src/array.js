@@ -274,9 +274,9 @@ Ar.isArray = exports.isArray = isArray;
 //
 // @time O(n)
 // @space O(1)
-// @ex Ar.shallowEquals([1, 2], [1, 2])
-// @see St.shallowEquals, Mp.shallowEquals, Cl.shallowEquals
-Ar.shallowEquals = exports.shallowEquals = function shallowEquals<V>(
+// @ex Ar.equals([1, 2], [1, 2])
+// @see St.equals, Mp.equals, Cl.equals
+Ar.equals = exports.equals = function equals<V>(
   array: $Array<V>,
   ...arrays: $Array<$Array<V>>
 ): boolean {
@@ -304,9 +304,9 @@ Ar.shallowEquals = exports.shallowEquals = function shallowEquals<V>(
 //
 // @time O(n)
 // @space O(1)
-// @ex Ar.deepEquals([[1], [2], 3], [[1], [2], 3])
-// @see St.deepEquals, Mp.deepEquals, Cl.deepEquals
-Ar.deepEquals = exports.deepEquals = function deepEquals<V>(
+// @ex Ar.equalsNested([[1], [2], 3], [[1], [2], 3])
+// @see St.equalsNested, Mp.equalsNested, Cl.equalsNested
+Ar.equalsNested = exports.equalsNested = function equalsNested<V>(
   array: $Array<V>,
   ...arrays: $Array<$Array<V>>
 ): boolean {
@@ -319,7 +319,7 @@ Ar.deepEquals = exports.deepEquals = function deepEquals<V>(
     }
     for (let i = 0; i < array.length; i++) {
       const value = array[i];
-      if (!Cl.deepEquals(compared[i], value)) {
+      if (!Cl.equalsNested(compared[i], value)) {
         return false;
       }
     }

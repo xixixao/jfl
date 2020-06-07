@@ -4,33 +4,33 @@ const {Ar, Cl, St, Mp, Mth} = require('..');
 const {setup} = require('../test/test-util.js');
 
 const {test, tru, eq, eqq, eqqq, not, nil, throws} = setup(
-  Cl.shallowEquals,
-  Cl.deepEquals,
+  Cl.equals,
+  Cl.equalsNested,
 );
 
-test('shallowEquals', () => {
-  tru(Cl.shallowEquals([1, 2, 3], [1, 2, 3]));
-  not.tru(Cl.shallowEquals([1, 2, 3], [2, 3]));
-  not.tru(Cl.shallowEquals([1, 2], [1, 2, 3]));
-  tru(Cl.shallowEquals(St(1, 2, 3), St(1, 2, 3)));
-  not.tru(Cl.shallowEquals(St(1, 2, 3), St(2, 3)));
-  not.tru(Cl.shallowEquals(St(1, 2), St(1, 2, 3)));
-  tru(Cl.shallowEquals(Mp({a: 1, b: 2, c: 3}), Mp({a: 1, b: 2, c: 3})));
-  not.tru(Cl.shallowEquals(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3})));
-  not.tru(Cl.shallowEquals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2, c: 3})));
+test('equals', () => {
+  tru(Cl.equals([1, 2, 3], [1, 2, 3]));
+  not.tru(Cl.equals([1, 2, 3], [2, 3]));
+  not.tru(Cl.equals([1, 2], [1, 2, 3]));
+  tru(Cl.equals(St(1, 2, 3), St(1, 2, 3)));
+  not.tru(Cl.equals(St(1, 2, 3), St(2, 3)));
+  not.tru(Cl.equals(St(1, 2), St(1, 2, 3)));
+  tru(Cl.equals(Mp({a: 1, b: 2, c: 3}), Mp({a: 1, b: 2, c: 3})));
+  not.tru(Cl.equals(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3})));
+  not.tru(Cl.equals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2, c: 3})));
 });
 
-test('deepEquals', () => {
-  tru(Cl.deepEquals([[1, 2], 3], [[1, 2], 3]));
-  not.tru(Cl.deepEquals([[1, 2, 3]], [[2, 3]]));
-  not.tru(Cl.deepEquals([[1, 2]], [[1, 2], 3]));
-  tru(Cl.deepEquals(St([1, 2], 3), St([1, 2], 3)));
-  not.tru(Cl.deepEquals(St([1, 2, 3]), St([2, 3])));
-  not.tru(Cl.deepEquals(St([1, 2]), St([1, 2], 3)));
-  tru(Cl.deepEquals(Mp({a: [1, 2], b: 3}), Mp({a: [1, 2], b: 3})));
-  tru(Cl.deepEquals(Mp.of([[1, 2], [3, 4]]), Mp.of([[1, 2], [3, 4]])));
-  not.tru(Cl.deepEquals(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3})));
-  not.tru(Cl.deepEquals(Mp({a: [1, 2]}), Mp({a: [1, 2], b: 3})));
+test('equalsNested', () => {
+  tru(Cl.equalsNested([[1, 2], 3], [[1, 2], 3]));
+  not.tru(Cl.equalsNested([[1, 2, 3]], [[2, 3]]));
+  not.tru(Cl.equalsNested([[1, 2]], [[1, 2], 3]));
+  tru(Cl.equalsNested(St([1, 2], 3), St([1, 2], 3)));
+  not.tru(Cl.equalsNested(St([1, 2, 3]), St([2, 3])));
+  not.tru(Cl.equalsNested(St([1, 2]), St([1, 2], 3)));
+  tru(Cl.equalsNested(Mp({a: [1, 2], b: 3}), Mp({a: [1, 2], b: 3})));
+  tru(Cl.equalsNested(Mp.of([[1, 2], [3, 4]]), Mp.of([[1, 2], [3, 4]])));
+  not.tru(Cl.equalsNested(Mp({a: 1, b: 2, c: 3}), Mp({b: 2, c: 3})));
+  not.tru(Cl.equalsNested(Mp({a: [1, 2]}), Mp({a: [1, 2], b: 3})));
 });
 
 test('Cl', async () => {

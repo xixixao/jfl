@@ -82,9 +82,9 @@ St.isSet = isSet;
 //
 // @time O(n)
 // @space O(1)
-// @ex St.shallowEquals([1, 2], [1, 2])
-// @see Ar.shallowEquals, Mp.shallowEquals, Cl.shallowEquals
-St.shallowEquals = function shallowEquals<V>(
+// @ex St.equals([1, 2], [1, 2])
+// @see Ar.equals, Mp.equals, Cl.equals
+St.equals = function equals<V>(
   set: $Set<V>,
   ...sets: $Array<$Set<V>>
 ): boolean {
@@ -115,8 +115,8 @@ St.shallowEquals = function shallowEquals<V>(
 // @time O(n)
 // @space O(1)
 // @ex St.unorderdEquals([1, 2], [1, 2])
-// @see Sr.shallowEquals
-St.unorderedEquals = function unorderedEquals<V>(
+// @see Sr.equals
+St.equalsOrderIgnored = function equalsOrderIgnored<V>(
   set: $Set<V>,
   ...sets: $Array<$Set<V>>
 ): boolean {
@@ -144,9 +144,9 @@ St.unorderedEquals = function unorderedEquals<V>(
 //
 // @time O(n)
 // @space O(1)
-// @ex Ar.deepEquals([[1], [2], 3], [[1], [2], 3])
-// @see St.deepEquals, Mp.deepEquals, Cl.deepEquals
-St.deepEquals = exports.deepEquals = function deepEquals<V>(
+// @ex Ar.equalsNested([[1], [2], 3], [[1], [2], 3])
+// @see St.equalsNested, Mp.equalsNested, Cl.equalsNested
+St.equalsNested = exports.equalsNested = function equalsNested<V>(
   set: $Set<V>,
   ...sets: $Array<$Set<V>>
 ): boolean {
@@ -161,7 +161,7 @@ St.deepEquals = exports.deepEquals = function deepEquals<V>(
     }
     let i = 0;
     for (const item of compared) {
-      if (!Cl.deepEquals(item, inOrder[i])) {
+      if (!Cl.equalsNested(item, inOrder[i])) {
         return false;
       }
       i++;

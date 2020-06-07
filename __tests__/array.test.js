@@ -4,20 +4,20 @@ const {Ar, Cl, St, Mp, Mth} = require('..');
 const {setup} = require('../test/test-util.js');
 
 const {test, tru, eq, eqq, eqqq, not, throws} = setup(
-  Ar.shallowEquals,
-  Cl.deepEquals,
+  Ar.equals,
+  Cl.equalsNested,
 );
 
-test('shallowEquals', () => {
-  tru(Ar.shallowEquals([1, 2, 3], [1, 2, 3]));
-  not.tru(Ar.shallowEquals([1, 2, 3], [2, 3]));
-  not.tru(Ar.shallowEquals([1, 2], [1, 2, 3]));
+test('equals', () => {
+  tru(Ar.equals([1, 2, 3], [1, 2, 3]));
+  not.tru(Ar.equals([1, 2, 3], [2, 3]));
+  not.tru(Ar.equals([1, 2], [1, 2, 3]));
 });
 
-test('deepEquals', () => {
-  tru(Ar.deepEquals([[1, 2], 3], [[1, 2], 3]));
-  not.tru(Ar.deepEquals([[1, 2, 3]], [[2, 3]]));
-  not.tru(Ar.deepEquals([[1, 2]], [[1, 2], 3]));
+test('equalsNested', () => {
+  tru(Ar.equalsNested([[1, 2], 3], [[1, 2], 3]));
+  not.tru(Ar.equalsNested([[1, 2, 3]], [[2, 3]]));
+  not.tru(Ar.equalsNested([[1, 2]], [[1, 2], 3]));
 });
 
 test('Ar', async () => {
