@@ -18,7 +18,7 @@
     "prettier": "2.0.5"
   },
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "babel src -d lib; npx prettier --write lib/*",
     "test": "jest"
   },
   "prettier": {
