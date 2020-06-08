@@ -73,7 +73,7 @@ St.fromAsync = async function fromAsync<V>(
 // @see Ar.isArray, Mp.isMap
 function isSet(argument: mixed): %checks {
   return argument instanceof Set;
-};
+}
 St.isSet = isSet;
 
 // Returns whether given Sets are equal.
@@ -346,13 +346,10 @@ St.mapAsync = async function mapAsync<VFrom, VTo>(
 // TODO:
 // mapWithKey
 
-
 /// Divide
 
 // TODO:
 // chunk
 // partition
-
-
 
 module.exports = St;

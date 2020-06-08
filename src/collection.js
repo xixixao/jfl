@@ -39,7 +39,9 @@ Cl.equals = function equals<V, C: Collection<V>>(
   const args: any = [first, ...rest];
   return isArray
     ? Ar.equals(...args)
-    : isMap ? Mp.equals(...args) : St.equals(...args);
+    : isMap
+    ? Mp.equals(...args)
+    : St.equals(...args);
 };
 
 // Returns whether given collections and any nested collections are equal.
@@ -71,7 +73,11 @@ Cl.equalsNested = function equalsNested<V, C: mixed>(
   const args: any = [first, ...rest];
   return isArray
     ? Ar.equalsNested(...args)
-    : isMap ? Mp.equalsNested(...args) : isSet ? St.equalsNested(...args) : true;
+    : isMap
+    ? Mp.equalsNested(...args)
+    : isSet
+    ? St.equalsNested(...args)
+    : true;
 };
 
 // Returns true when `collection` is empty.
@@ -152,7 +158,7 @@ Cl.any = function any<K, V>(
   predicateFn: (V, K, KeyedCollection<K, V>) => boolean,
 ): boolean {
   for (const [key, item] of collection.entries()) {
-    if(predicateFn(item, key, collection)) {
+    if (predicateFn(item, key, collection)) {
       return true;
     }
   }
@@ -170,7 +176,7 @@ Cl.every = function every<K, V>(
   predicateFn: (V, K, KeyedCollection<K, V>) => boolean,
 ): boolean {
   for (const [key, item] of collection.entries()) {
-    if(!predicateFn(item, key, collection)) {
+    if (!predicateFn(item, key, collection)) {
       return false;
     }
   }
@@ -215,7 +221,7 @@ Cl.findX = function findX<V>(
     }
   }
   throw new Error(
-    'Expected to find a value in collection matching given predicateFn, but didn\'t find one.',
+    "Expected to find a value in collection matching given predicateFn, but didn't find one.",
   );
 };
 
@@ -255,7 +261,7 @@ Cl.findKeyX = function findKeyX<K, V>(
     }
   }
   throw new Error(
-    'Expected to find a key in collection matching given predicateFn, but didn\'t find one.',
+    "Expected to find a key in collection matching given predicateFn, but didn't find one.",
   );
 };
 
@@ -476,13 +482,13 @@ type Reduce<
   NoInitialValue = <K, V, A>(
     collection: KeyedCollection<K, V>,
     fn: (V, V, K, KeyedCollection<K, V>) => V,
-    initialValue: void
+    initialValue: void,
   ) => V,
   WithInitialValue = <K, V, A>(
     collection: KeyedCollection<K, V>,
     fn: (A, V, K, KeyedCollection<K, V>) => A,
-    initialValue: A
-  ) => A
+    initialValue: A,
+  ) => A,
 > = NoInitialValue & WithInitialValue;
 
 // Reduce the collection to a single value using `fn`.

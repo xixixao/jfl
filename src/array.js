@@ -4,9 +4,6 @@
 
 import type {Collection, KeyedCollection, $Array} from './types.flow';
 
-// Temporary polyfill for Node.js
-require('core-js/fn/array/values');
-
 const Cl = require('./collection');
 
 const EMPTY = []; // Returned whenever we can return an empty array
@@ -94,7 +91,6 @@ Ar.entries = function entries<K, V>(
   }
   return m(result);
 };
-
 
 // Create an array of numbers.
 //
@@ -414,12 +410,9 @@ Ar.zipWith = function zipWith<I, Cs: $Array<Collection<I>>, O>(
 //
 // @ex Ar.get([], 1) // undefined
 // @see Cl.at
-Ar.get = function get<V>(
-  array: $Array<V>,
-  index: number,
-): ?V {
+Ar.get = function get<V>(array: $Array<V>, index: number): ?V {
   return array[index];
-}
+};
 
 // Create a new array by filtering out values for which `fn` returns false.
 //
@@ -681,7 +674,6 @@ Ar.partition = function partition<V>(
   }
   return [m(positives), m(negatives)];
 };
-
 
 // Create an array containing a subset of values in `collection`.
 //

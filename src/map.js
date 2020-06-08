@@ -46,7 +46,7 @@ function Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
 // @see St.isSet, Ar.isArray
 function isMap(argument: mixed): %checks {
   return argument instanceof Map;
-};
+}
 Mp.isMap = isMap;
 
 // Returns whether given Maps are equal.

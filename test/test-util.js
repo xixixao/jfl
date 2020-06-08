@@ -6,7 +6,7 @@ declare var test: any;
 exports.setup = <T1, T2>(
   shallowMatcher: (T1, T2) => boolean,
   deepMatcher: (T1, T2) => boolean,
-): {
+): ({
   test: (name: string, fn: () => void | Promise<void>) => void,
   tru: (value: boolean) => void,
   eq: <V>(a: V, B: V) => void,
@@ -16,8 +16,8 @@ exports.setup = <T1, T2>(
   throws: (() => mixed) => void,
   not: {
     tru: (value: boolean) => void,
-  }
-} => {
+  },
+}) => {
   expect.extend({
     tru(_, b) {
       return format(this, b === true, 'expected $0e to $not be true', b);
@@ -40,11 +40,11 @@ exports.setup = <T1, T2>(
   const exp = expect();
   exp.test = test;
   exp.expect = expect;
-  exp.throws = (fn) => {
+  exp.throws = fn => {
     expect(fn).toThrow();
-  }
+  };
   return exp;
-};
+}
 
 function format({utils}, pass, message, ...args) {
   return {
