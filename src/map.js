@@ -18,13 +18,15 @@ function mp<K, V>(): Map<K, V> {
   return (new Map(): any);
 }
 
-// Create a map.
-//
-// If your keys aren't strings, prefer `Mp.of`.
-//
-// @ex Mp({a: 1, b: 2, c: 3})
-// @alias create, constructor, new
-// @see Mp.of
+/**
+ * Create a map.
+ *
+ * If your keys aren't strings, prefer `Mp.of`.
+ *
+ * @ex Mp({a: 1, b: 2, c: 3})
+ * @alias create, constructor, new
+ * @see Mp.of
+ */
 export function $Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
   const map = mp();
   if (object != null) {
@@ -37,25 +39,29 @@ export function $Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
   return m((map: any));
 }
 
-// Returns whether given value is a Map.
-//
-// Use `instanceof Map` directly if you need the type system to pick up
-// the refinement.
-//
-// @ex Mp.isMap([1, 2, 3])
-// @see St.isSet, Ar.isArray
+/**
+ * Returns whether given value is a Map.
+ *
+ * Use `instanceof Map` directly if you need the type system to pick up
+ * the refinement.
+ *
+ * @ex Mp.isMap([1, 2, 3])
+ * @see St.isSet, Ar.isArray
+ */
 export function isMap(argument: mixed): %checks {
   return argument instanceof Map;
 }
 
-// Returns whether given Maps are equal.
-//
-// All values and keys must be strictly equal.
-//
-// @time O(n)
-// @space O(1)
-// @ex Mp.equals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2}))
-// @see Mp.equalsOrderIgnored, St.equals, Ar.equals, Cl.equals
+/**
+ * Returns whether given Maps are equal.
+ *
+ * All values and keys must be strictly equal.
+ *
+ * @time O(n)
+ * @space O(1)
+ * @ex Mp.equals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2}))
+ * @see Mp.equalsOrderIgnored, St.equals, Ar.equals, Cl.equals
+ */
 export function equals<K, V>(
   map: $Map<K, V>,
   ...maps: $Array<$Map<K, V>>
@@ -80,14 +86,16 @@ export function equals<K, V>(
   return true;
 }
 
-// Returns whether given Maps contain the same key/value pairs.
-//
-// All values and keys must be strictly equal.
-//
-// @time O(n)
-// @space O(1)
-// @ex Mp.equalsOrderIgnored(Mp({a: 1, b: 2}), Mp({b: 2, a: 1}))
-// @see Mp.equals
+/**
+ * Returns whether given Maps contain the same key/value pairs.
+ *
+ * All values and keys must be strictly equal.
+ *
+ * @time O(n)
+ * @space O(1)
+ * @ex Mp.equalsOrderIgnored(Mp({a: 1, b: 2}), Mp({b: 2, a: 1}))
+ * @see Mp.equals
+ */
 export function equalsOrderIgnored<K, V>(
   map: $Map<K, V>,
   ...maps: $Array<$Map<K, V>>
@@ -109,15 +117,17 @@ export function equalsOrderIgnored<K, V>(
   return true;
 }
 
-// Returns whether given Maps are equal.
-//
-// Any collection values or keys must deeply equal, all other values
-// and keys must be strictly equal.
-//
-// @time O(n)
-// @space O(1)
-// @ex Mp.equalsNested(Mp.of([[0], [1]]]), Mp.of([[0], [1]]]))
-// @see Mp.equals, Cl.equalsNested
+/**
+ * Returns whether given Maps are equal.
+ *
+ * Any collection values or keys must deeply equal, all other values
+ * and keys must be strictly equal.
+ *
+ * @time O(n)
+ * @space O(1)
+ * @ex Mp.equalsNested(Mp.of([[0], [1]]]), Mp.of([[0], [1]]]))
+ * @see Mp.equals, Cl.equalsNested
+ */
 export function equalsNested<K, V>(
   map: $Map<K, V>,
   ...maps: $Array<$Map<K, V>>
@@ -146,10 +156,12 @@ export function equalsNested<K, V>(
   return true;
 }
 
-// Create a map from given `pairs` of keys and values.
-//
-// @ex Mp.of([0, 2], [4, 2])
-// @see Mp, Mp.from, Mp.fromEntries
+/**
+ * Create a map from given `pairs` of keys and values.
+ *
+ * @ex Mp.of([0, 2], [4, 2])
+ * @see Mp, Mp.from, Mp.fromEntries
+ */
 export function of<K, V>(...pairs: $Array<[K, V]>): $Map<K, V> {
   const result = mp();
   for (const [key, item] of pairs) {
@@ -158,14 +170,16 @@ export function of<K, V>(...pairs: $Array<[K, V]>): $Map<K, V> {
   return m(result);
 }
 
-// Convert any keyed `collection` to a Map.
-//
-// Note that this is not a way to clone a map, if passed a map, the same
-// map will be returned.
-//
-// @ex Mp.from([1, 2, 3])
-// @ex Mp.from(Set(1, 2, 3))
-// @see Mp.of, Mp.fromEntries
+/**
+ * Convert any keyed `collection` to a Map.
+ *
+ * Note that this is not a way to clone a map, if passed a map, the same
+ * map will be returned.
+ *
+ * @ex Mp.from([1, 2, 3])
+ * @ex Mp.from(Set(1, 2, 3))
+ * @see Mp.of, Mp.fromEntries
+ */
 export function from<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
   if (isMap(collection)) {
     return (collection: any);
@@ -177,10 +191,12 @@ export function from<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
   return m(result);
 }
 
-// Convert any keyed `collection` of promises to a Map.
-//
-// @ex Mp.fromAsync([(async () => 1)(), (async () => 2)()])
-// @see Mp.from, Ar.fromAsync
+/**
+ * Convert any keyed `collection` of promises to a Map.
+ *
+ * @ex Mp.fromAsync([(async () => 1)(), (async () => 2)()])
+ * @see Mp.from, Ar.fromAsync
+ */
 export async function fromAsync<K, V>(
   collection: KeyedCollection<K, Promise<V>>,
 ): Promise<$Map<K, V>> {
@@ -194,9 +210,11 @@ export async function fromAsync<K, V>(
   return m(result);
 }
 
-// TODO:
-// @ex Mp.fromValues()
-// @see Mp.fromKeys
+/**
+ * TODO:
+ * @ex Mp.fromValues()
+ * @see Mp.fromKeys
+ */
 export function fromValues<K, V>(
   collection: Collection<V>,
   getKey: V => K,
@@ -208,8 +226,10 @@ export function fromValues<K, V>(
   return m(result);
 }
 
-// TODO:
-// @see Mp.fromValues
+/**
+ * TODO:
+ * @see Mp.fromValues
+ * */
 export function fromKeys<K, V>(
   collection: Collection<K>,
   getValue: K => V,
@@ -221,8 +241,10 @@ export function fromKeys<K, V>(
   return m(result);
 }
 
-// TODO:
-// @see Mp.fromKeys
+/**
+ * TODO:
+ * @see Mp.fromKeys
+ * */
 export async function fromKeysAsync<K, V>(
   collection: Collection<K>,
   getValue: K => Promise<V>,
@@ -237,7 +259,9 @@ export async function fromKeysAsync<K, V>(
   return m(result);
 }
 
-// @see Mp.fromKeys, Mp.mapToEntries
+/**
+  *@see Mp.fromKeys, Mp.mapToEntries
+  */
 export function fromEntries<K, V>(collection: Collection<[K, V]>): $Map<K, V> {
   const result = mp();
   for (const [key, value] of collection.values()) {
@@ -246,13 +270,15 @@ export function fromEntries<K, V>(collection: Collection<[K, V]>): $Map<K, V> {
   return m(result);
 }
 
-// Create a Map from given `keys` and `values`.
-//
-// If there are more `keys` than `values` or vice versa, ignores the
-// excess items.
-//
-// @alias listsToMap, fromZip, associate
-// @see Mp.fromEntries
+/**
+ * Create a Map from given `keys` and `values`.
+ *
+ * If there are more `keys` than `values` or vice versa, ignores the
+ * excess items.
+ *
+ * @alias listsToMap, fromZip, associate
+ * @see Mp.fromEntries
+ */
 export function unzip<K, V>(
   keys: Collection<K>,
   values: Collection<V>,
@@ -271,10 +297,12 @@ export function unzip<K, V>(
   return m(result);
 }
 
-// Create a JavaScript Object from a string-keyed Map.
-//
-// @ex Mp.toObject(Mp({a: 1, b: 2}))
-// @see Mp
+/**
+ * Create a JavaScript Object from a string-keyed Map.
+ *
+ * @ex Mp.toObject(Mp({a: 1, b: 2}))
+ * @see Mp
+ */
 export function toObject<K: string, V>(
   collection: KeyedCollection<K, V>,
 ): {[key: K]: V} {
@@ -285,11 +313,13 @@ export function toObject<K: string, V>(
   return result;
 }
 
-// Create a new Map by adding `value` under `key` to the set of key/value
-// pairs in `collection`.
-//
-// @ex Mp.set(Mp({a: 1}), 'b', 2)
-// @see Mp.merge
+/**
+ * Create a new Map by adding `value` under `key` to the set of key/value
+ * pairs in `collection`.
+ *
+ * @ex Mp.set(Mp({a: 1}), 'b', 2)
+ * @see Mp.merge
+ */
 export function set<K, V>(
   collection: KeyedCollection<K, V>,
   key: K,
@@ -303,11 +333,13 @@ export function set<K, V>(
   return result;
 }
 
-// Create a new Map by merging all given `collections`. Later values will
-// override earlier values.
-//
-// @ex Mp.merge(Mp({a: 1, b: 2}), Mp({a: 2, c: 3}))
-// @see Mp.merge
+/**
+ * Create a new Map by merging all given `collections`. Later values will
+ * override earlier values.
+ *
+ * @ex Mp.merge(Mp({a: 1, b: 2}), Mp({a: 2, c: 3}))
+ * @see Mp.merge
+ */
 export function merge<K, V>(
   ...collections: $Array<KeyedCollection<K, V>>
 ): $Map<K, V> {
@@ -320,10 +352,12 @@ export function merge<K, V>(
   return m(result);
 }
 
-// Create a new map by calling given `fn` on each key and value of `collection`.
-//
-// @ex Mp.map([1, 2], (x, i) => x * 2)
-// @see Mp.fromValues
+/**
+ * Create a new map by calling given `fn` on each key and value of `collection`.
+ *
+ * @ex Mp.map([1, 2], (x, i) => x * 2)
+ * @see Mp.fromValues
+ */
 export function map<KFrom, VFrom, VTo>(
   collection: KeyedCollection<KFrom, VFrom>,
   fn: (VFrom, KFrom) => VTo,
@@ -335,16 +369,19 @@ export function map<KFrom, VFrom, VTo>(
   return m(result);
 }
 
+
 // TODO: mapKeys
 // TODO: mapAsync
 
-// Create a new map by calling given `fn` on each key and value of
-// `collection`.
-//
-// `fn` must return new entries to populate the map.
-//
-// @ex Mp.mapToEntries(['a', 'b'], (x, i) => [x, i])
-// @see St.mapAsync
+/**
+ * Create a new map by calling given `fn` on each key and value of
+ * `collection`.
+ *
+ * `fn` must return new entries to populate the map.
+ *
+ * @ex Mp.mapToEntries(['a', 'b'], (x, i) => [x, i])
+ * @see St.mapAsync
+ */
 export function mapToEntries<KFrom, VFrom, KTo, VTo>(
   collection: KeyedCollection<KFrom, VFrom>,
   fn: (VFrom, KFrom) => [KTo, VTo],
@@ -357,14 +394,16 @@ export function mapToEntries<KFrom, VFrom, KTo, VTo>(
   return m(result);
 }
 
-// Create a new map by grouping values from `collection` for which `fn`
-// returns the same key.
-//
-// The new map has Arrays of original values as its values.
-// Values for which `fn` returns null or undefined are ommited.
-//
-// @ex Mp.group([1, 2, 3], n => Mth.isOdd(n))
-// @see Ar.partition
+/**
+ * Create a new map by grouping values from `collection` for which `fn`
+ * returns the same key.
+ *
+ * The new map has Arrays of original values as its values.
+ * Values for which `fn` returns null or undefined are ommited.
+ *
+ * @ex Mp.group([1, 2, 3], n => Mth.isOdd(n))
+ * @see Ar.partition
+ */
 export function group<V, KTo>(
   collection: Collection<V>,
   fn: V => ?KTo,
@@ -383,41 +422,26 @@ export function group<V, KTo>(
   return m(result);
 }
 
+
 // TODO: diffByKey
-
 // TODO: drop
-
 // TODO: take
-
 // TODO: filter
-
 // TODO: filterAsync
-
 // TODO: filterKeys
-
 // TODO: filterNulls
-
 // TODO: selectKeys
-
 // TODO: unique
-
 // TODO: uniqueBy
-
 // TODO: partition
-
 // TODO: reverse
-
 // TODO: sort
 // TODO: sortBy
-
 // TODO: numericalSort
 // TODO: numericalSortBy
-
 // TODO: chunk
-
 // TODO: countBy
 // TODO: flatten
-
 // TODO: fill
 // TODO: flip
 // TODO: pull
