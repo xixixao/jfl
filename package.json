@@ -5,7 +5,6 @@
   "main": "src/index.js",
   "author": "xixixao <xixixao@seznam.cz>",
   "license": "MIT",
-  "type": "module",
   "devDependencies": {
     "@babel/core": "7.10.2",
     "@babel/plugin-proposal-export-namespace-from": "^7.10.1",
@@ -18,7 +17,7 @@
     "prettier": "2.0.5"
   },
   "scripts": {
-    "build": "babel src -d lib; npx prettier --write lib/*",
+    "build": "babel src -d lib; npx prettier --write lib/*; rm lib/types.flow.js",
     "test": "jest"
   },
   "prettier": {
