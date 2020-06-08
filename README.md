@@ -53,18 +53,22 @@ Because JFL provides utilities for existing types, it uses a naming convention t
 ## Example
 
 ```js
-// Get a set of elements from two arrays
+/// Get a set of elements from two arrays
 // vanilla JS
 new Set(a.concat(b))
+
 // Lodash
 _.uniq(_.concat(a, b)) // actually an Array
+
 // JFL
+import * as St from 'jfl/set'
+
 St.union(a, b)
 ```
 
 JFL is heavily inspired by the Hack Standard Library, and specifically for collections and more broadly follows this rule:
 
-> The return type of a function determines which module the function is in.
+**The return type of a function determines which module the function is in.**
 
 In the example above we know the result should be a `Set` and so we we can find the function in the `St` module.
 
@@ -73,3 +77,14 @@ More examples can be found in documentation.
 ## Principles
 
 JFL is optimized primarily for code readability. It is not optimized for terseness, performance or space efficiency, although it strives to be as good as possible in those aspects without sacrificing readability.
+
+As mentioned above, the library is organized in such a way that it should be easy to find the function you're looking for.
+
+For argument order, collections always come first. This works well with Hack-style pipeline operator (available using Babel today, `#` is the preceding result placeholder):
+
+```
+list
+  | Ar.map(#, x => x * x)
+  | Ar.filter(#, x => x % 3 === 0)
+  | Mth.sum(#)
+```
