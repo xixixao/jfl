@@ -18,6 +18,8 @@ function mp<K, V>(): Map<K, V> {
   return (new Map(): any);
 }
 
+// TODO: Split into sections
+
 /**
  * Create a map.
  *

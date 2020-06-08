@@ -9,3 +9,6 @@ export * as Mth from './math';
 export * as St from './set';
 export {$St} from './set';
 export * as Str from './string';
+
+// TODO: nullthrows
+// TODO: invariant

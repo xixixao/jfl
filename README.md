@@ -88,3 +88,22 @@ list
   | Ar.filter(#, x => x % 3 === 0)
   | Mth.sum(#)
 ```
+
+## Scope
+
+To decide which functions are included, we use 2 main criteria:
+
+- The use of the function doesn't lead to hard-to-read code. This is why `compose` for example is not included.
+- We have data to support that the function or the pattern it abstracts is used widely (for now judged by number of occurences in the Facebook codebase).
+
+There are many functions that are perfectly readable but are only used for a specific narrow set of scenarios. For these, we will try to link to libraries that follow the same style as JFL.
+
+## Libraries out-of-scope
+
+[simple-statistics](https://simplestatistics.org/)
+
+```
+import * as Stats from 'simple-statistics'
+
+const meand = Stats.geometricMean(Ar.from(numbers));
+```
