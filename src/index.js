@@ -1,8 +1,11 @@
 // @flow
 
-exports.Ar = require('./array');
-exports.Cl = require('./collection');
-exports.Mp = require('./map');
-exports.St = require('./set');
-exports.Mth = require('./math');
-exports.Str = require('./string');
+export * as Ar from './array';
+export {$Ar} from './array';
+export * as Cl from './collection';
+export * as Mp from './map';
+export {$Mp} from './map';
+export * as Mth from './math';
+export * as St from './set';
+export {$St} from './set';
+export * as Str from './string';

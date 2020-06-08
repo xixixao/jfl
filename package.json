@@ -5,19 +5,21 @@
   "main": "src/index.js",
   "author": "xixixao <xixixao@seznam.cz>",
   "license": "MIT",
+  "type": "module",
   "devDependencies": {
+    "@babel/core": "7.10.2",
+    "@babel/plugin-proposal-export-namespace-from": "^7.10.1",
+    "@babel/plugin-transform-flow-strip-types": "^7.10.1",
+    "@babel/preset-env": "7.10.2",
+    "@babel/cli": "^7.10.1",
     "flow-bin": "^0.69.0",
     "flow-remove-types": "2.126.1",
     "jest": "26.0.1",
     "prettier": "2.0.5"
   },
   "scripts": {
+    "build": "babel src -d lib",
     "test": "jest"
-  },
-  "jest": {
-    "transform": {
-      ".*": "<rootDir>/test/jest-preprocessor.js"
-    }
   },
   "prettier": {
     "arrowParens": "avoid",

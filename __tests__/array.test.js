@@ -1,6 +1,6 @@
 // @flow
 
-const {Ar, Cl, St, Mp, Mth} = require('..');
+import {Ar, $Ar, Cl, St, $St, Mp, $Mp, Mth} from '..';
 const {setup} = require('../test/test-util.js');
 
 const {test, tru, eq, eqq, eqqq, not, throws} = setup(
@@ -21,28 +21,28 @@ test('equalsNested', () => {
 });
 
 test('Ar', async () => {
-  eq(Ar(1, 2, 3), [1, 2, 3]);
-  eqqq(Ar(), Ar());
+  eq($Ar(1, 2, 3), [1, 2, 3]);
+  eqqq($Ar(), $Ar());
 
   tru(Ar.isArray([]));
-  tru(Ar.isArray(Ar()));
-  not.tru(Ar.isArray(St()));
-  not.tru(Ar.isArray(Mp()));
+  tru(Ar.isArray($Ar()));
+  not.tru(Ar.isArray($St()));
+  not.tru(Ar.isArray($Mp()));
 
   eq(Ar.from([1, 2, 3]), [1, 2, 3]);
-  eq(Ar.from(St(1, 2, 3)), [1, 2, 3]);
+  eq(Ar.from($St(1, 2, 3)), [1, 2, 3]);
 
-  eq(await Ar.fromAsync(St((async () => 1)(), (async () => 2)())), [1, 2]);
+  eq(await Ar.fromAsync($St((async () => 1)(), (async () => 2)())), [1, 2]);
 
-  eq(Ar.keys(St(1, 2, 3)), [1, 2, 3]);
-  eq(Ar.keys(Mp({a: 1, b: 2, c: 3})), ['a', 'b', 'c']);
+  eq(Ar.keys($St(1, 2, 3)), [1, 2, 3]);
+  eq(Ar.keys($Mp({a: 1, b: 2, c: 3})), ['a', 'b', 'c']);
 
-  eqq(Ar.entries(Mp({a: 1, b: 2, c: 3})), [['a', 1], ['b', 2], ['c', 3]]);
+  eqq(Ar.entries($Mp({a: 1, b: 2, c: 3})), [['a', 1], ['b', 2], ['c', 3]]);
 
   eq(Ar.map([1, 2, 3], x => x * 2), [2, 4, 6]);
-  eqqq(Ar.map(Ar(), x => x), Ar());
-  eq(Ar.map(St(1, 2, 3), x => x * 2), [2, 4, 6]);
-  eq(Ar.map(Mp({a: 1, b: 2, c: 3}), x => x * 2), [2, 4, 6]);
+  eqqq(Ar.map($Ar(), x => x), $Ar());
+  eq(Ar.map($St(1, 2, 3), x => x * 2), [2, 4, 6]);
+  eq(Ar.map($Mp({a: 1, b: 2, c: 3}), x => x * 2), [2, 4, 6]);
 
   eq(await Ar.mapAsync([1, 2, 3], async x => x * 2), [2, 4, 6]);
 
@@ -105,9 +105,9 @@ test('Ar', async () => {
   eq(Ar.slice([1, 2, 3, 4], 2), [3, 4]);
   eq(Ar.slice([1, 2, 3, 4], 2, 3), [3]);
   eq(Ar.slice([1, 2, 3, 4, 5], 2, -2), [3]);
-  eq(Ar.slice(St(1, 2, 3, 4), 2), [3, 4]);
-  eq(Ar.slice(St(1, 2, 3, 4), 2, 3), [3]);
-  eq(Ar.slice(St(1, 2, 3, 4, 5), 2, -2), [3]);
+  eq(Ar.slice($St(1, 2, 3, 4), 2), [3, 4]);
+  eq(Ar.slice($St(1, 2, 3, 4), 2, 3), [3]);
+  eq(Ar.slice($St(1, 2, 3, 4, 5), 2, -2), [3]);
 
   eq(Ar.splice([1, 2, 4, 5], 2, 0, 3), [1, 2, 3, 4, 5]);
 

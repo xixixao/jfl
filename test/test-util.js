@@ -44,7 +44,7 @@ exports.setup = <T1, T2>(
     expect(fn).toThrow();
   };
   return exp;
-}
+};
 
 function format({utils}, pass, message, ...args) {
   return {
