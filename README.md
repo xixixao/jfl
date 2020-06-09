@@ -82,7 +82,7 @@ As mentioned above, the library is organized in such a way that it should be eas
 
 For argument order, collections always come first. This works well with Hack-style pipeline operator (available using Babel today, `#` is the preceding result placeholder):
 
-```
+```js
 list
   | Ar.map(#, x => x * x)
   | Ar.filter(#, x => x % 3 === 0)
@@ -102,7 +102,7 @@ There are many functions that are perfectly readable but are only used for a spe
 
 [simple-statistics](https://simplestatistics.org/)
 
-```
+```js
 import * as Stats from 'simple-statistics'
 
 const meand = Stats.geometricMean(Ar.from(numbers));

@@ -635,20 +635,6 @@ export function flatMap<VFrom, VTo>(
 }
 
 /**
- * Create an array containing the items of `collection` in reverse order.
- *
- * @ex Ar.reverse([1, 2, 3])
- * @alias flip
- */
-export function reverse<V>(collection: Collection<V>): $Array<V> {
-  const result = [];
-  for (const item of collection.values()) {
-    result.push(item);
-  }
-  return m(result.reverse());
-}
-
-/**
  * Create an array of values based on a reduction of given `collection`.
  *
  * Similar to `Cl.reduce` but instead of returning the final value accumulates
@@ -895,6 +881,20 @@ export function dropWhile<V>(
 }
 
 /// Ordering
+
+/**
+ * Create an array containing the items of `collection` in reverse order.
+ *
+ * @ex Ar.reverse([1, 2, 3])
+ * @alias flip
+ */
+export function reverse<V>(collection: Collection<V>): $Array<V> {
+  const result = [];
+  for (const item of collection.values()) {
+    result.push(item);
+  }
+  return m(result.reverse());
+}
 
 /**
  * Create an array of values in `collection` sorted.

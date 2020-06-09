@@ -190,14 +190,10 @@ export function equalsNested<V>(
  * @alias join, flatten
  * @see St.intersect, St.flatten
  */
-export function union<V>(...collections: $Array<Collection<V>>): $Set<V> {
-  const result = new Set();
-  for (const collection of collections) {
-    for (const item of collection.values()) {
-      result.add(item);
-    }
-  }
-  return m(result);
+export function add<V>(collection: Collection<V>, value: V): $Set<V> {
+  const result = new Set(collection.values());
+  result.add(value);
+  return result;
 }
 
 /**
@@ -207,10 +203,14 @@ export function union<V>(...collections: $Array<Collection<V>>): $Set<V> {
  * @alias join, flatten
  * @see St.intersect, St.flatten
  */
-export function add<V>(collection: Collection<V>, value: V): $Set<V> {
-  const result = new Set(collection.values());
-  result.add(value);
-  return result;
+export function union<V>(...collections: $Array<Collection<V>>): $Set<V> {
+  const result = new Set();
+  for (const collection of collections) {
+    for (const item of collection.values()) {
+      result.add(item);
+    }
+  }
+  return m(result);
 }
 
 /**

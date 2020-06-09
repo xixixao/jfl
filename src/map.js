@@ -18,7 +18,7 @@ function mp<K, V>(): Map<K, V> {
   return (new Map(): any);
 }
 
-// TODO: Split into sections
+/// Construction
 
 /**
  * Create a map.
@@ -39,123 +39,6 @@ export function $Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
     }
   }
   return m((map: any));
-}
-
-/**
- * Returns whether given value is a Map.
- *
- * Use `instanceof Map` directly if you need the type system to pick up
- * the refinement.
- *
- * @ex Mp.isMap([1, 2, 3])
- * @see St.isSet, Ar.isArray
- */
-export function isMap(argument: mixed): %checks {
-  return argument instanceof Map;
-}
-
-/**
- * Returns whether given Maps are equal.
- *
- * All values and keys must be strictly equal.
- *
- * @time O(n)
- * @space O(1)
- * @ex Mp.equals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2}))
- * @see Mp.equalsOrderIgnored, St.equals, Ar.equals, Cl.equals
- */
-export function equals<K, V>(
-  map: $Map<K, V>,
-  ...maps: $Array<$Map<K, V>>
-): boolean {
-  const keysInOrder = Ar.keys(map);
-  for (let ai = 0; ai < maps.length; ai++) {
-    const compared = maps[ai];
-    if (compared === map) {
-      continue;
-    }
-    if (compared.size !== map.size) {
-      return false;
-    }
-    let i = 0;
-    for (const key of compared.keys()) {
-      if (keysInOrder[i] !== key || compared.get(key) !== map.get(key)) {
-        return false;
-      }
-      i++;
-    }
-  }
-  return true;
-}
-
-/**
- * Returns whether given Maps contain the same key/value pairs.
- *
- * All values and keys must be strictly equal.
- *
- * @time O(n)
- * @space O(1)
- * @ex Mp.equalsOrderIgnored(Mp({a: 1, b: 2}), Mp({b: 2, a: 1}))
- * @see Mp.equals
- */
-export function equalsOrderIgnored<K, V>(
-  map: $Map<K, V>,
-  ...maps: $Array<$Map<K, V>>
-): boolean {
-  for (let ai = 0; ai < maps.length; ai++) {
-    const compared = maps[ai];
-    if (compared === map) {
-      continue;
-    }
-    if (compared.size !== map.size) {
-      return false;
-    }
-    for (const key of map.keys()) {
-      if (compared.get(key) !== map.get(key)) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-/**
- * Returns whether given Maps are equal.
- *
- * Any collection values or keys must deeply equal, all other values
- * and keys must be strictly equal.
- *
- * @time O(n)
- * @space O(1)
- * @ex Mp.equalsNested(Mp.of([[0], [1]]]), Mp.of([[0], [1]]]))
- * @see Mp.equals, Cl.equalsNested
- */
-export function equalsNested<K, V>(
-  map: $Map<K, V>,
-  ...maps: $Array<$Map<K, V>>
-): boolean {
-  const keysInOrder = Ar.keys(map);
-  for (let ai = 0; ai < maps.length; ai++) {
-    const compared = maps[ai];
-    if (compared === map) {
-      continue;
-    }
-    if (compared.size !== map.size) {
-      return false;
-    }
-    let i = 0;
-    for (const key of compared.keys()) {
-      const keyInOrder = keysInOrder[i];
-      if (
-        !Cl.equalsNested(keyInOrder, key) ||
-        !Cl.equalsNested(compared.get(key), map.get(keyInOrder))
-      ) {
-        return false;
-      }
-      i++;
-    }
-  }
-  return true;
 }
 
 /**
@@ -305,19 +188,136 @@ export function unzip<K, V>(
  * @ex Mp.toObject(Mp({a: 1, b: 2}))
  * @see Mp
  */
-export function toObject<K: string, V>(
-  collection: KeyedCollection<K, V>,
-): {[key: K]: V} {
-  const result = {};
-  for (const [key, item] of collection.entries()) {
-    result[key] = item;
-  }
-  return result;
+export function fromObject<K: string, V>(
+  object: {[key: K]: V},
+): KeyedCollection<K, V> {
+  return m((new Map(Object.entries(object)): any));
+}
+
+/// Checks
+
+/**
+ * Returns whether given value is a Map.
+ *
+ * Use `instanceof Map` directly if you need the type system to pick up
+ * the refinement.
+ *
+ * @ex Mp.isMap([1, 2, 3])
+ * @see St.isSet, Ar.isArray
+ */
+export function isMap(argument: mixed): %checks {
+  return argument instanceof Map;
 }
 
 /**
- * Create a new Map by adding `value` under `key` to the set of key/value
- * pairs in `collection`.
+ * Returns whether given Maps are equal.
+ *
+ * All values and keys must be strictly equal.
+ *
+ * @time O(n)
+ * @space O(1)
+ * @ex Mp.equals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2}))
+ * @see Mp.equalsOrderIgnored, St.equals, Ar.equals, Cl.equals
+ */
+export function equals<K, V>(
+  map: $Map<K, V>,
+  ...maps: $Array<$Map<K, V>>
+): boolean {
+  const keysInOrder = Ar.keys(map);
+  for (let ai = 0; ai < maps.length; ai++) {
+    const compared = maps[ai];
+    if (compared === map) {
+      continue;
+    }
+    if (compared.size !== map.size) {
+      return false;
+    }
+    let i = 0;
+    for (const key of compared.keys()) {
+      if (keysInOrder[i] !== key || compared.get(key) !== map.get(key)) {
+        return false;
+      }
+      i++;
+    }
+  }
+  return true;
+}
+
+/**
+ * Returns whether given Maps contain the same key/value pairs.
+ *
+ * All values and keys must be strictly equal.
+ *
+ * @time O(n)
+ * @space O(1)
+ * @ex Mp.equalsOrderIgnored(Mp({a: 1, b: 2}), Mp({b: 2, a: 1}))
+ * @see Mp.equals
+ */
+export function equalsOrderIgnored<K, V>(
+  map: $Map<K, V>,
+  ...maps: $Array<$Map<K, V>>
+): boolean {
+  for (let ai = 0; ai < maps.length; ai++) {
+    const compared = maps[ai];
+    if (compared === map) {
+      continue;
+    }
+    if (compared.size !== map.size) {
+      return false;
+    }
+    for (const key of map.keys()) {
+      if (compared.get(key) !== map.get(key)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+/**
+ * Returns whether given Maps are equal.
+ *
+ * Any collection values or keys must deeply equal, all other values
+ * and keys must be strictly equal.
+ *
+ * @time O(n)
+ * @space O(1)
+ * @ex Mp.equalsNested(Mp.of([[0], [1]]]), Mp.of([[0], [1]]]))
+ * @see Mp.equals, Cl.equalsNested
+ */
+export function equalsNested<K, V>(
+  map: $Map<K, V>,
+  ...maps: $Array<$Map<K, V>>
+): boolean {
+  const keysInOrder = Ar.keys(map);
+  for (let ai = 0; ai < maps.length; ai++) {
+    const compared = maps[ai];
+    if (compared === map) {
+      continue;
+    }
+    if (compared.size !== map.size) {
+      return false;
+    }
+    let i = 0;
+    for (const key of compared.keys()) {
+      const keyInOrder = keysInOrder[i];
+      if (
+        !Cl.equalsNested(keyInOrder, key) ||
+        !Cl.equalsNested(compared.get(key), map.get(keyInOrder))
+      ) {
+        return false;
+      }
+      i++;
+    }
+  }
+  return true;
+}
+
+/// Combine
+
+/**
+ * Create a new Map by adding or replacing `value` under `key` in given
+ * keyed `collection`.
  *
  * @ex Mp.set(Mp({a: 1}), 'b', 2)
  * @see Mp.merge
@@ -354,6 +354,22 @@ export function merge<K, V>(
   return m(result);
 }
 
+/// Select
+
+// TODO: diffByKey
+// TODO: drop
+// TODO: take
+// TODO: filter
+// TODO: filterAsync
+// TODO: filterKeys
+// TODO: filterNulls
+// TODO: selectKeys
+// TODO: unique
+// TODO: uniqueBy
+
+/// Transform
+
+
 /**
  * Create a new map by calling given `fn` on each key and value of `collection`.
  *
@@ -376,6 +392,7 @@ export function map<KFrom, VFrom, VTo>(
 // TODO: mapAsync
 
 /**
+ * // TODO: Replace with single `pull` method
  * Create a new map by calling given `fn` on each key and value of
  * `collection`.
  *
@@ -406,7 +423,7 @@ export function mapToEntries<KFrom, VFrom, KTo, VTo>(
  * @ex Mp.group([1, 2, 3], n => Mth.isOdd(n))
  * @see Ar.partition
  */
-export function group<V, KTo>(
+export function groupBy<V, KTo>(
   collection: Collection<V>,
   fn: V => ?KTo,
 ): $Map<KTo, $Array<V>> {
@@ -424,26 +441,20 @@ export function group<V, KTo>(
   return m(result);
 }
 
+// TODO: countValues
+// TODO: flatten
+// TODO: fillKeys
+// TODO: flip
 
-// TODO: diffByKey
-// TODO: drop
-// TODO: take
-// TODO: filter
-// TODO: filterAsync
-// TODO: filterKeys
-// TODO: filterNulls
-// TODO: selectKeys
-// TODO: unique
-// TODO: uniqueBy
+/// Divide
+
 // TODO: partition
+// TODO: chunk
+
+/// Ordering
+
 // TODO: reverse
 // TODO: sort
 // TODO: sortBy
 // TODO: numericalSort
 // TODO: numericalSortBy
-// TODO: chunk
-// TODO: countBy
-// TODO: flatten
-// TODO: fill
-// TODO: flip
-// TODO: pull

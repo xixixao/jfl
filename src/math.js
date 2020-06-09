@@ -11,8 +11,7 @@ import type {Collection, KeyedCollection, $Array} from './types.flow';
 // @ex Mth.isOdd(-3)
 // @see Mth.isEven
 export function isOdd(n: number): boolean {
-  const mod = n % 2;
-  return mod === 1 || mod === -1;
+  return n % 2 !== 0;
 };
 
 // Returns true when `n` is an even integer.
@@ -31,13 +30,9 @@ export function isNaN() {
 
 /// Operations
 
-export function squared(n: number): number {
-  return n * n;
-};
-
-export function cubed(n: number): number {
-  return n * n * n;
-};
+export function pmod(numerator: number, divisor: number): number {
+  return (numerator % divisor + divisor) % divisor;
+}
 
 export function idiv(numerator: number, divisor: number): number {
   return Math.floor(numerator / divisor);
@@ -57,7 +52,45 @@ export function idivx(numerator: number, divisor: number): number {
   return Math.floor(numerator / divisor);
 }
 
+export function squared(n: number): number {
+  return n * n;
+};
+
+export function cubed(n: number): number {
+  return n * n * n;
+};
+
 /// Collections
+
+// TODO:
+export function min() {
+
+}
+
+// TODO:
+export function minBy() {
+
+}
+
+// TODO:
+export function max() {
+
+}
+
+// TODO:
+export function maxBy() {
+
+}
+
+// TODO:
+export function mean() {
+
+}
+
+// TODO:
+export function median() {
+
+}
 
 // Returns the sum of all values in `collection`.
 //
@@ -76,50 +109,19 @@ export function sumFloat() {
 
 }
 
-// TODO:
-export function max() {
-
-}
-
-// TODO:
-export function min() {
-
-}
-
-// TODO:
-export function max_by() {
-
-}
-
-// TODO:
-export function mean() {
-
-}
-
-// TODO:
-export function median() {
-
-}
-
-// TODO:
-export function min_by() {
-
-}
-
-
 /// Bases
 
 // TODO:
-export function base_convert() {
+export function fromBase() {
 
 }
 
 // TODO:
-export function from_base() {
+export function baseConvert() {
 
 }
 
 // TODO:
-export function to_base() {
+export function toBase() {
 
 }
