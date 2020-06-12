@@ -62,5 +62,5 @@ test('Mp', async () => {
 
   eq(Mp.mapToEntries(['a', 'b'], (x, i) => [x, i]), $Mp({a: 0, b: 1}));
 
-  eqq(Mp.group([1, 2, 3], Mth.isOdd), Mp.of([true, [1, 3]], [false, [2]]));
+  eqq(Mp.groupBy([1, 2, 3], Mth.isOdd), Mp.of([true, [1, 3]], [false, [2]]));
 });

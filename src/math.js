@@ -6,38 +6,55 @@ import type {Collection, KeyedCollection, $Array} from './types.flow';
 
 /// Checks
 
-// Returns true when `n` is an odd integer.
-//
-// @ex Mth.isOdd(-3)
-// @see Mth.isEven
+/**
+ * Returns true when `n` is an odd integer.
+ *
+ * @ex Mth.isOdd(-3)
+ * @see Mth.isEven
+ */
 export function isOdd(n: number): boolean {
   return n % 2 !== 0;
 };
 
-// Returns true when `n` is an even integer.
-//
-// @ex Mth.isEven(-10)
-// @see Mth.isOdd
+/**
+ * Returns true when `n` is an even integer.
+ *
+ * @ex Mth.isEven(-10)
+ * @see Mth.isOdd
+ */
 export function isEven(n: number): boolean {
   return n % 2 === 0;
 };
 
-// TODO: check what the type of Number.isNaN is, if it's already
-// typed to numbers, drop this
-export function isNaN() {
-
-}
-
 /// Operations
 
+/**
+ * Returns the remainder of dividing `numerator` by `divisor`, unlike
+ * the `%` operator the result will always be positive.
+ *
+ * @ex Mth.pmod(-13, 5) // 2
+ */
 export function pmod(numerator: number, divisor: number): number {
   return (numerator % divisor + divisor) % divisor;
 }
 
+/**
+ * Returns the integer division of `numerator` by `divisor`.
+ *
+ * @ex Mth.idiv(10, 3) // 3
+ * @see Mth.idivx
+ */
 export function idiv(numerator: number, divisor: number): number {
   return Math.floor(numerator / divisor);
 }
 
+/**
+ * Returns the result of dividing `numerator` by `divisor`. Throws an error
+ * if `divisor` is 0.
+ *
+ * @ex Mth.divx(5, 0) // throws an error
+ * @see Mth.idivx
+ */
 export function divx(numerator: number, divisor: number): number {
   if (divisor === 0) {
     throw new Error('Expected divisor to not be 0, but it was');
@@ -45,6 +62,13 @@ export function divx(numerator: number, divisor: number): number {
   return numerator / divisor;
 }
 
+/**
+ * Returns the integer division of `numerator` by `divisor`. Throws an error
+ * if `divisor` is 0.
+ *
+ * @ex Mth.idivx(10, 0) // throws an error
+ * @see Mth.idiv
+ */
 export function idivx(numerator: number, divisor: number): number {
   if (divisor === 0) {
     throw new Error('Expected divisor to not be 0, but it was');
@@ -52,50 +76,80 @@ export function idivx(numerator: number, divisor: number): number {
   return Math.floor(numerator / divisor);
 }
 
+/**
+ * Returns the `n` squared.
+ *
+ * @ex Mth.squared(3) // 9
+ * @see Mth.cubed
+ */
 export function squared(n: number): number {
   return n * n;
 };
 
+
+/**
+ * Returns the `n` cubed.
+ *
+ * @ex Mth.cubed(3) // 27
+ * @see Mth.squared
+ */
 export function cubed(n: number): number {
   return n * n * n;
 };
 
 /// Collections
 
-// TODO:
+/**
+ * Returns the smallest of all values in `collection`.
+ *
+ * @ex Mth.min($Mp({a: 5, b: 2, c: 8})) // 2
+ * @see Mth.minBy, Mth.max
+ */
 export function min() {
 
 }
 
-// TODO:
+/**
+ * TODO:
+ */
 export function minBy() {
 
 }
 
-// TODO:
+/**
+ * TODO:
+ */
 export function max() {
 
 }
 
-// TODO:
+/**
+ * TODO:
+ */
 export function maxBy() {
 
 }
 
-// TODO:
+/**
+ * TODO:
+ */
 export function mean() {
 
 }
 
-// TODO:
+/**
+ * TODO:
+ */
 export function median() {
 
 }
 
-// Returns the sum of all values in `collection`.
-//
-// @ex Mth.sum([1, 2, 3])
-// @see Mth.product
+/**
+ * Returns the sum of all values in `collection`.
+ *
+ * @ex Mth.sum([1, 2, 3])
+ * @see Mth.product
+ */
 export function sum<K>(collection: KeyedCollection<K, number>): number {
   let total = 0;
   for (const value of collection.values()) {
@@ -104,24 +158,32 @@ export function sum<K>(collection: KeyedCollection<K, number>): number {
   return total;
 };
 
-// TODO:
+/**
+ * TODO:
+ */
 export function sumFloat() {
 
 }
 
 /// Bases
 
-// TODO:
+/**
+ * TODO:
+ */
 export function fromBase() {
 
 }
 
-// TODO:
+/**
+ * TODO:
+ */
 export function baseConvert() {
 
 }
 
-// TODO:
+/**
+ * TODO:
+ */
 export function toBase() {
 
 }

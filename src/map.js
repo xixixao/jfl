@@ -194,6 +194,22 @@ export function fromObject<K: string, V>(
   return m((new Map(Object.entries(object)): any));
 }
 
+/**
+ * Create a JavaScript Object from a string-keyed Map.
+ *
+ * @ex Mp.toObject(Mp({a: 1, b: 2}))
+ * @see Mp
+ */
+export function toObject<K: string, V>(
+  collection: KeyedCollection<K, V>,
+): {[key: K]: V} {
+  const result = {};
+  for (const [key, item] of collection.entries()) {
+    result[key] = item;
+  }
+  return result;
+}
+
 /// Checks
 
 /**
@@ -412,6 +428,9 @@ export function mapToEntries<KFrom, VFrom, KTo, VTo>(
   }
   return m(result);
 }
+
+// TODO: group (ala group_keys_by_values), consider dropping group_by
+// given JS doesn't have the arraykey limitation
 
 /**
  * Create a new map by grouping values from `collection` for which `fn`
