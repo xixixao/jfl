@@ -110,6 +110,13 @@ const mean = Stats.geometricMean(Ar.from(numbers));
 
 ## Alternatives
 
-lodash
-underscore
-Sugar.js
+<!-- prettier-ignore -->
+| Name |  Has static interface? | Supports Maps & Sets? | Well-typed |
+| ------- | -------------- | --------- | --------- |
+| [Lodash](https://lodash.com/)           | ✅ | ❌ | ❌ | ❌ |
+| [Underscore](https://underscorejs.org/) | ✅ | ❌ | ❌ | ❌ |
+| [Sugar](https://sugarjs.com/)           | ✅ | ❌ | ❌ | ❌ |
+| [Ramda](https://ramdajs.com/)           | ✅ | ❌ | ❌ | ❌ |
+| [Lazy](http://danieltao.com/lazy.js)    | ❌ | ❌ | ❌ | ❌ |
+| [CollectJS](https://collect.js.org/)    | ✅ | ❌ | ❌ | ❌ |
+| [Mout](http://moutjs.com/)              | ✅ | ❌ | ❌ | ❌ |
