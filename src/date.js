@@ -1,5 +1,3 @@
-
-
 // TODO: DateTime and LocalDate
 // probably wrap joda-js but needs functional typed API
 

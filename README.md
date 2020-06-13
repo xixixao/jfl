@@ -55,15 +55,15 @@ Because JFL provides utilities for existing types, it uses a naming convention t
 ```js
 /// Get a set of elements from two arrays
 // vanilla JS
-new Set(a.concat(b))
+new Set(a.concat(b));
 
 // Lodash
-_.uniq(_.concat(a, b)) // actually an Array
+_.uniq(_.concat(a, b)); // actually an Array
 
 // JFL
-import * as St from 'jfl/set'
+import * as St from 'jfl/set';
 
-St.union(a, b)
+St.union(a, b);
 ```
 
 JFL is heavily inspired by the Hack Standard Library, and specifically for collections and more broadly follows this rule:
@@ -103,7 +103,13 @@ There are many functions that are perfectly readable but are only used for a spe
 [simple-statistics](https://simplestatistics.org/)
 
 ```js
-import * as Stats from 'simple-statistics'
+import * as Stats from 'simple-statistics';
 
-const meand = Stats.geometricMean(Ar.from(numbers));
+const mean = Stats.geometricMean(Ar.from(numbers));
 ```
+
+## Alternatives
+
+lodash
+underscore
+Sugar.js

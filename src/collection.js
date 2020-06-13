@@ -44,7 +44,7 @@ export function equals<V, C: Collection<V>>(
     : isMap
     ? Mp.equals(...args)
     : St.equals(...args);
-};
+}
 
 /**
  * Returns whether given collections and any nested collections are equal.
@@ -82,7 +82,7 @@ export function equalsNested<V, C: mixed>(
     : isSet
     ? St.equalsNested(...args)
     : true;
-};
+}
 
 /**
  * Returns true when `collection` is empty.
@@ -96,7 +96,7 @@ export function equalsNested<V, C: mixed>(
  */
 export function isEmpty<V>(collection: Collection<V>): boolean {
   return Cl.count(collection) === 0;
-};
+}
 
 /**
  * Get the size of given `collection`.
@@ -111,7 +111,7 @@ export function isEmpty<V>(collection: Collection<V>): boolean {
 export function count<V>(collection: Collection<V>): number {
   const size = (collection: any).size;
   return size != null ? size : (collection: any).length;
-};
+}
 
 /**
  * Returns whether given `collection` contains given `value`.
@@ -123,10 +123,7 @@ export function count<V>(collection: Collection<V>): number {
  * @ex Cl.contains(Mp({a: 1, b: 3}), 1) // true
  * @see Cl.findKey
  */
-export function contains<V>(
-  collection: Collection<V>,
-  value: V,
-): boolean {
+export function contains<V>(collection: Collection<V>, value: V): boolean {
   if (collection instanceof Set) {
     return collection.has(value);
   }
@@ -136,7 +133,7 @@ export function contains<V>(
     }
   }
   return false;
-};
+}
 
 /**
  * Returns whether given `key` exists in keyed `collection`.
@@ -157,7 +154,7 @@ export function containsKey<K, V>(
   } else {
     return (collection: any).has(key);
   }
-};
+}
 
 /**
  * Returns whether some values satisfy `predicateFn`.
@@ -177,7 +174,7 @@ export function any<K, V>(
     }
   }
   return false;
-};
+}
 
 /**
  * Returns whether all values satisfy `predicateFn`.
@@ -197,7 +194,7 @@ export function every<K, V>(
     }
   }
   return true;
-};
+}
 
 /// Select
 
@@ -221,7 +218,7 @@ export function find<V>(
     }
   }
   return null;
-};
+}
 
 /**
  * Returns first value for which `predicateFn` returns true in `collection`.
@@ -243,7 +240,7 @@ export function findX<V>(
   throw new Error(
     "Expected to find a value in collection matching given predicateFn, but didn't find one.",
   );
-};
+}
 
 /**
  * Returns the key of the first value for which `predicateFn` returns true
@@ -264,7 +261,7 @@ export function findKey<K, V>(
     }
   }
   return null;
-};
+}
 
 /**
  * Returns the key of the first value for which `predicateFn` returns true
@@ -287,7 +284,7 @@ export function findKeyX<K, V>(
   throw new Error(
     "Expected to find a key in collection matching given predicateFn, but didn't find one.",
   );
-};
+}
 
 /**
  * Returns the first value in `collection` if it's not empty, null otherwise.
@@ -303,7 +300,7 @@ export function first<V>(collection: Collection<V>): ?V {
     return item;
   }
   return null;
-};
+}
 
 /**
  * Returns the first value in `collection` if it's not empty, throws otherwise.
@@ -318,7 +315,7 @@ export function firstX<V>(collection: Collection<V>): V {
     return item;
   }
   throw new Error('Expected a non-empty collection, was empty instead.');
-};
+}
 
 /**
  * Returns the one and only value in `collection`, throws otherwise.
@@ -346,7 +343,7 @@ export function onlyX<V>(collection: Collection<V>): V {
     );
   }
   return (result: any);
-};
+}
 
 /**
  * Returns the last value in `collection` if it's not empty, null otherwise.
@@ -366,7 +363,7 @@ export function last<V>(collection: Collection<V>): ?V {
     result = item;
   }
   return result;
-};
+}
 
 /**
  * Returns the last value in `collection` if it's not empty, throws otherwise.
@@ -388,7 +385,7 @@ export function lastX<V>(collection: Collection<V>): V {
     result = item;
   }
   return (result: any);
-};
+}
 
 /**
  * Returns the value at given iteration index or null.
@@ -415,7 +412,7 @@ export function at<V>(collection: Collection<V>, index: number): ?V {
     i++;
   }
   return null;
-};
+}
 
 /**
  * Returns the value at given iteration index or throws.
@@ -440,7 +437,7 @@ export function atX<V>(collection: Collection<V>, index: number): V {
     i++;
   }
   return (null: any); // unreachable
-};
+}
 
 /**
  * Returns the first key in `collection` if it's not empty, null otherwise.
@@ -456,7 +453,7 @@ export function firstKey<K, V>(collection: KeyedCollection<K, V>): ?K {
     return key;
   }
   return null;
-};
+}
 
 /**
  * Returns the first key in `collection` if it's not empty, throws otherwise.
@@ -471,7 +468,7 @@ export function firstKeyX<K, V>(collection: KeyedCollection<K, V>): K {
     return key;
   }
   throw new Error('Expected a non-empty collection, was empty instead.');
-};
+}
 
 /**
  * Returns the last key in `collection` if it's not empty, null otherwise.
@@ -488,7 +485,7 @@ export function lastKey<K, V>(collection: KeyedCollection<K, V>): ?K {
     result = item;
   }
   return result;
-};
+}
 
 /**
  * Returns the last key in `collection` if it's not empty, throws otherwise.
@@ -507,7 +504,7 @@ export function lastKeyX<K, V>(collection: KeyedCollection<K, V>): K {
     result = item;
   }
   return (result: any);
-};
+}
 
 /// Transform
 
@@ -524,15 +521,15 @@ export function forEach<K, V>(
   fn: (V, K, KeyedCollection<K, V>) => void,
 ): void {
   return collection.forEach(fn);
-};
+}
 
-declare function reduce <K, V, A>(
+declare function reduce<K, V, A>(
   collection: KeyedCollection<K, V>,
   fn: (V, V, K, KeyedCollection<K, V>) => V,
   initialValue: void,
 ): V;
 
-declare function reduce <K, V, A>(
+declare function reduce<K, V, A>(
   collection: KeyedCollection<K, V>,
   fn: (A, V, K, KeyedCollection<K, V>) => A,
   initialValue: A,
@@ -573,4 +570,4 @@ function reduce(collection, fn, initialValue) {
   return acc;
 }
 
-export {reduce}
+export {reduce};

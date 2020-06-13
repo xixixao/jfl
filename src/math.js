@@ -14,7 +14,7 @@ import type {Collection, KeyedCollection, $Array} from './types.flow';
  */
 export function isOdd(n: number): boolean {
   return n % 2 !== 0;
-};
+}
 
 /**
  * Returns true when `n` is an even integer.
@@ -24,7 +24,7 @@ export function isOdd(n: number): boolean {
  */
 export function isEven(n: number): boolean {
   return n % 2 === 0;
-};
+}
 
 /// Operations
 
@@ -35,7 +35,7 @@ export function isEven(n: number): boolean {
  * @ex Mth.pmod(-13, 5) // 2
  */
 export function pmod(numerator: number, divisor: number): number {
-  return (numerator % divisor + divisor) % divisor;
+  return ((numerator % divisor) + divisor) % divisor;
 }
 
 /**
@@ -84,8 +84,7 @@ export function idivx(numerator: number, divisor: number): number {
  */
 export function squared(n: number): number {
   return n * n;
-};
-
+}
 
 /**
  * Returns the `n` cubed.
@@ -95,7 +94,7 @@ export function squared(n: number): number {
  */
 export function cubed(n: number): number {
   return n * n * n;
-};
+}
 
 /// Collections
 
@@ -105,44 +104,32 @@ export function cubed(n: number): number {
  * @ex Mth.min($Mp({a: 5, b: 2, c: 8})) // 2
  * @see Mth.minBy, Mth.max
  */
-export function min() {
-
-}
+export function min() {}
 
 /**
  * TODO:
  */
-export function minBy() {
-
-}
+export function minBy() {}
 
 /**
  * TODO:
  */
-export function max() {
-
-}
+export function max() {}
 
 /**
  * TODO:
  */
-export function maxBy() {
-
-}
+export function maxBy() {}
 
 /**
  * TODO:
  */
-export function mean() {
-
-}
+export function mean() {}
 
 /**
  * TODO:
  */
-export function median() {
-
-}
+export function median() {}
 
 /**
  * Returns the sum of all values in `collection`.
@@ -156,34 +143,26 @@ export function sum<K>(collection: KeyedCollection<K, number>): number {
     total += value;
   }
   return total;
-};
+}
 
 /**
  * TODO:
  */
-export function sumFloat() {
-
-}
+export function sumFloat() {}
 
 /// Bases
 
 /**
  * TODO:
  */
-export function fromBase() {
-
-}
+export function fromBase() {}
 
 /**
  * TODO:
  */
-export function baseConvert() {
-
-}
+export function baseConvert() {}
 
 /**
  * TODO:
  */
-export function toBase() {
-
-}
+export function toBase() {}
