@@ -1,6 +1,6 @@
 # JavaScript Standard Funtional Library [JFL]
 
-The JavaScript library that aims to compliment the language to provide a single dependency for writing most business logic code.
+This JavaScript library aims to compliment the language to provide a single dependency for writing most business logic code.
 
 It is fully statically typed to work well with both Flow and TypeScript.
 
@@ -12,7 +12,7 @@ The major difference between JFL and built-in JavaScript is that JFL favors a fu
 - the functions are pure - they don't mutate global state
 - data is treated as immutable - functions don't mutate their arguments
 
-Some libraries and languages that are functional include other mechanisms which JFL **does not** include for style reasons (explained below):
+Some libraries and languages that are functional include other mechanisms which JFL **does not** include for style reasons (explained [below](#principles)):
 
 - [currying](https://en.wikipedia.org/wiki/Currying)
 - [point-free style](https://en.wikipedia.org/wiki/Tacit_programming)
@@ -61,7 +61,7 @@ new Set(a.concat(b));
 _.uniq(_.concat(a, b)); // actually an Array
 
 // JFL
-import * as St from 'jfl/set';
+import {St} from 'jfl';
 
 St.union(a, b);
 ```
@@ -89,6 +89,8 @@ list
   | Mth.sum(#)
 ```
 
+For highly performance sensitive code you can usually use the mutable collections directly. Otherwise you can check out the alternatives to this library [below]([#alternatives]).
+
 ## Scope
 
 To decide which functions are included, we use 2 main criteria:
@@ -110,13 +112,15 @@ const mean = Stats.geometricMean(Ar.from(numbers));
 
 ## Alternatives
 
+If this library isn't your cup of tea you might want to check the alternatives below, sorted roughly by popularity starting with the most popular.
+
 <!-- prettier-ignore -->
 | Name |  Has static interface? | Supports Maps & Sets? | Well-typed |
 | ------- | -------------- | --------- | --------- |
 | [Lodash](https://lodash.com/)           | ✅ | ❌ | ❌ | ❌ |
 | [Underscore](https://underscorejs.org/) | ✅ | ❌ | ❌ | ❌ |
-| [Sugar](https://sugarjs.com/)           | ✅ | ❌ | ❌ | ❌ |
 | [Ramda](https://ramdajs.com/)           | ✅ | ❌ | ❌ | ❌ |
+| [Sugar](https://sugarjs.com/)           | ✅ | ❌ | ❌ | ❌ |
 | [Lazy](http://danieltao.com/lazy.js)    | ❌ | ❌ | ❌ | ❌ |
 | [CollectJS](https://collect.js.org/)    | ✅ | ❌ | ❌ | ❌ |
 | [Mout](http://moutjs.com/)              | ✅ | ❌ | ❌ | ❌ |
