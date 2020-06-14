@@ -66,7 +66,7 @@ function checkDescriptions(fileNamesToFileSources) {
 }
 
 function getExportsWithDocs(source) {
-  let $$ = REx.everyMatch(
+  let $$ = Str.everyMatch(
     source,
     /(?:\/(?<doc>\*\*(?:(?:\s|\S)(?!\*\*|TODO|\n\n))*?))?export function (?<name>\w+)/g,
   );
@@ -85,10 +85,10 @@ function getExportsWithDocs(source) {
 }
 
 function getDescriptionFromDoc(doc) {
-  let [text] = nullthrows(REx.firstMatch(doc, /^((\s|\S)(?!@|\/))*/));
+  let [text] = nullthrows(Str.firstMatch(doc, /^((\s|\S)(?!@|\/))*/));
   let $$ = text;
-  $$ = Str.replace($$, / *\* */, ''); // strip comments
-  $$ = Str.replace($$, /^\n+/, ''); // truncate newlines from start
-  $$ = Str.replace($$, /\n+$/, ''); // truncate newlines from end
+  $$ = Str.replaceEvery($$, / *\* */, ''); // strip comments
+  $$ = Str.replaceEvery($$, /^\n+/, ''); // truncate newlines from start
+  $$ = Str.replaceEvery($$, /\n+$/, ''); // truncate newlines from end
   return $$;
 }

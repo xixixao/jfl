@@ -124,3 +124,5 @@ If this library isn't your cup of tea you might want to check the alternatives b
 | [Lazy](http://danieltao.com/lazy.js)    | ❌ | ❌ | ❌ | ❌ |
 | [CollectJS](https://collect.js.org/)    | ✅ | ❌ | ❌ | ❌ |
 | [Mout](http://moutjs.com/)              | ✅ | ❌ | ❌ | ❌ |
+| [Sanctuary](https://sanctuary.js.org/)  | ✅ | ❌ | ❌ | ❌ |
+| [Folktale](https://folktale.origamitower.com/)  | ✅ | ❌ | ❌ | ❌ |

@@ -113,9 +113,9 @@ test('flatten', () => {
   );
 });
 
-test('flatMap', () => {
+test('mapFlat', () => {
   eq(
-    Ar.flatMap([0, 3, 6], x => [x + 1, x + 2]),
+    Ar.mapFlat([0, 3, 6], x => [x + 1, x + 2]),
     [1, 2, 4, 5, 7, 8],
   );
 });

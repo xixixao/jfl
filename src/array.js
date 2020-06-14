@@ -23,7 +23,7 @@ function m<V>(array: $Array<V>): $Array<V> {
  *
  * @time O(n)
  * @space O(n)
- * @ex $Ar(1, 2, 3)
+ * @ex $Ar(1, 2, 3) // [1, 2, 3]
  * @alias create, constructor, new
  * @see Ar.from
  */
@@ -39,8 +39,8 @@ export function $Ar<V>(...args: $Array<V>): $Array<V> {
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.from(Set(1, 2, 3))
- * @ex Ar.from(Mp({a: 1, b: 2, c: 3}))
+ * @ex Ar.from(Set(1, 2, 3)) // [1, 2, 3]
+ * @ex Ar.from(Mp({a: 1, b: 2, c: 3})) // [1, 2, 3]
  * @alias values, fromValues
  * @see Ar
  */
@@ -57,7 +57,7 @@ export function from<V>(collection: Collection<V>): $Array<V> {
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.fromAsync([(async () => 1)(), (async () => 2)()])
+ * @ex Ar.fromAsync([(async () => 1)(), (async () => 2)()]) // [1, 2]
  * @alias all
  * @see Ar.from
  */
@@ -75,6 +75,9 @@ export function fromAsync<V>(
  *
  * @time O(n)
  * @space O(n)
+ * @ex Ar.keys([5, 6]) // [0, 1]
+ * @ex Ar.keys($Mp({a: 2, b: 3})) // ['a', 'b']
+ * @ex Ar.keys($St(3, 4) // [3, 4]
  * @see Ar.from
  */
 export function keys<K>(collection: KeyedCollection<K, any>): $Array<K> {
@@ -89,6 +92,9 @@ export function keys<K>(collection: KeyedCollection<K, any>): $Array<K> {
  *
  * @time O(n)
  * @space O(n)
+ * @ex Ar.entries([5, 6]) // [[0, 5], [1, 6]]
+ * @ex Ar.entries($Mp({a: 2, b: 3})) // [['a', 2], ['b', 3]]
+ * @ex Ar.entries($St(3, 4) // [[3, 3], [4, 4]]
  * @see Ar.from
  */
 export function entries<K, V>(
@@ -105,8 +111,8 @@ export function entries<K, V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.range(1, 6)
- * @ex Ar.range(-0.5, 0.51, 0.5)
+ * @ex Ar.range(1, 6) // [1, 2, 3, 4, 5]
+ * @ex Ar.range(-0.5, 0.51, 0.5) // [-0.5, 0, 0.5]
  * @see Ar.rangeInclusive, Ar.rangeDescending, Ar.rangeDynamic
  */
 export function range(
@@ -135,7 +141,7 @@ export function range(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.range(-0.5, 0.5, 0.5)
+ * @ex Ar.range(-0.5, 0.5, 0.5) // [-0.5, 0, 0.5]
  * @see Ar.range
  */
 export function rangeInclusive(
@@ -165,8 +171,8 @@ export function rangeInclusive(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.range(5, 1)
- * @ex Ar.range(2, 1, 0.2)
+ * @ex Ar.range(5, 1) // [5, 4, 3, 2]
+ * @ex Ar.range(2, 1, 0.2) // [2, 1.8, 1.6, 1.4, 1.2]
  * @see Ar.range
  */
 export function rangeDescending(
@@ -196,8 +202,8 @@ export function rangeDescending(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.range(2, 6, 2)
- * @ex Ar.range(6, 2, 2)
+ * @ex Ar.range(2, 6, 2) // [2, 4, 6]
+ * @ex Ar.range(6, 2, 2) // [6, 4, 2]
  * @see Ar.range
  */
 export function rangeDynamic(
@@ -229,7 +235,7 @@ export function rangeDynamic(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.repeat("value", 4)
+ * @ex Ar.repeat(4, "a") // ["a", "a", "a", "a"]
  * @see Ar.range
  */
 export function repeat<V>(times: number, value: V): $Array<V> {
@@ -248,7 +254,7 @@ export function repeat<V>(times: number, value: V): $Array<V> {
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.fill(4, i => i)
+ * @ex Ar.fill(4, i => i) // [0, 1, 2, 3]
  * @see Ar.repeat, Ar.range
  */
 export function fill<V>(times: number, fn: number => V): $Array<V> {
@@ -267,7 +273,7 @@ export function fill<V>(times: number, fn: number => V): $Array<V> {
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.generate(2, n => (n < 64 ? [n, n * n] : null))
+ * @ex Ar.generate(2, n => (n < 64 ? [n, n * n] : null)) // [2, 4, 16]
  * @alias unfold, unreduce
  * @see Ar.scan
  */
@@ -311,7 +317,7 @@ export function mutable<V>(collection: Collection<V>): Array<V> {
  *
  * @time O(1)
  * @space O(1)
- * @ex Ar.isArray([1, 2, 3])
+ * @ex Ar.isArray([1, 2, 3]) // true
  * @see St.isSet, Mp.isMap
  */
 export function isArray(argument: mixed): %checks {
@@ -325,7 +331,7 @@ export function isArray(argument: mixed): %checks {
  *
  * @time O(n)
  * @space O(1)
- * @ex Ar.equals([1, 2], [1, 2])
+ * @ex Ar.equals([1, 2], [1, 2]) // true
  * @see St.equals, Mp.equals, Cl.equals
  */
 export function equals<V>(
@@ -357,7 +363,7 @@ export function equals<V>(
  *
  * @time O(n)
  * @space O(1)
- * @ex Ar.equalsNested([[1], [2], 3], [[1], [2], 3])
+ * @ex Ar.equalsNested([[1], [2], 3], [[1], [2], 3]) // true
  * @see St.equalsNested, Mp.equalsNested, Cl.equalsNested
  */
 export function equalsNested<V>(
@@ -388,7 +394,7 @@ export function equalsNested<V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.concat([1, 2], [3, 4])
+ * @ex Ar.concat([1, 2], [3, 4]) // [1, 2, 3, 4]
  * @alias join, union
  * @see Ar.flatten
  */
@@ -401,7 +407,7 @@ export function concat<V>(...collections: $Array<Collection<V>>): $Array<V> {
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.concat([1, 2], [3, 4])
+ * @ex Ar.flatten([[1, 2], [3, 4]]) // [1, 2, 3, 4]
  * @alias join, union
  * @see Ar.flatten
  */
@@ -427,7 +433,7 @@ type $GetValue = <V>(Collection<V>) => V;
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.zip([1, 2, 3], ['a', 'b', 'c'], [5, 6, 7])
+ * @ex Ar.zip([1, 2], ['a', 'b'], [5, 6]) // [[1, 'a', 5], [2, 'b', 6]]
  * @alias zipAll
  * @see Ar.zipWith
  */
@@ -495,7 +501,7 @@ export function get<V>(array: $Array<V>, index: number): ?V {
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.filter([1, 2, 3], Mth.isOdd)
+ * @ex Ar.filter([1, 2, 3], n => Mth.isOdd(n)) // [1, 3]
  * @see Ar.map, Ar.filterNulls, Ar.findIndices
  */
 export function filter<V>(
@@ -519,7 +525,7 @@ export function filter<V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.filterAsync([1, 2, 3], async x => Mth.isOdd(x))
+ * @ex Ar.filterAsync([1, 2, 3], async x => Mth.isOdd(x)) // [1, 3]
  * @see Ar.filter, Ar.mapAsync
  */
 export async function filterAsync<V>(
@@ -545,7 +551,7 @@ export async function filterAsync<V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.filterNulls([1, null, 3])
+ * @ex Ar.filterNulls([1, null, 3]) // [1, 3]
  * @see Ar.filter
  */
 export function filterNulls<V>(collection: Collection<?V>): $Array<V> {
@@ -614,7 +620,7 @@ export function uniqueBy<V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.take([1, 2, 3], 2)
+ * @ex Ar.take([1, 2, 3], 2) // [1, 2]
  * @see Ar.drop, Ar.splitAt, Ar.takeWhile
  */
 export function take<V>(collection: Collection<V>, n: number): $Array<V> {
@@ -635,7 +641,7 @@ export function take<V>(collection: Collection<V>, n: number): $Array<V> {
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.drop([1, 2, 3], 2)
+ * @ex Ar.drop([1, 2, 3], 2) // [3]
  * @see Ar.take, Ar.splitAt, Ar.dropWhile
  */
 export function drop<V>(collection: Collection<V>, n: number): $Array<V> {
@@ -653,11 +659,12 @@ export function drop<V>(collection: Collection<V>, n: number): $Array<V> {
 /// Transform
 
 /**
+ * TODO: consider using KeyedCollection and always passing key to `fn`
  * Create a new array by calling given `fn` on each value of `collection`.
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.map([1, 2], x => x * 2)
+ * @ex Ar.map([1, 2], x => x * 2) // [2, 4]
  * @see Ar.mapAsync
  */
 export function map<VFrom, VTo>(
@@ -679,7 +686,7 @@ export function map<VFrom, VTo>(
  *
  * @time O(n)
  * @space O(n)
- * @ex await Ar.mapAsync([1, 2], async x => x * 2)
+ * @ex await Ar.mapAsync([1, 2], async x => x * 2) // [2, 4]
  * @alias Promise.all, genMap
  */
 export function mapAsync<VFrom, VTo>(
@@ -698,10 +705,10 @@ export function mapAsync<VFrom, VTo>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.flatMap([1, 2], x => [x - 1, x + 1])
+ * @ex Ar.mapFlat([1, 2], x => [x - 1, x + 1]) // [0, 2, 1, 3]
  * @see Ar.mapAsync
  */
-export function flatMap<VFrom, VTo>(
+export function mapFlat<VFrom, VTo>(
   collection: Collection<VFrom>,
   fn: VFrom => Collection<VTo>,
 ): $Array<VTo> {
@@ -1100,3 +1107,9 @@ export function sortUnstable<V>(
 function defaultCompareFn(a: any, b: any): number {
   return a > b ? 1 : a < b ? -1 : 0;
 }
+
+// TODO: includes
+// TODO: maybeMap
+// TODO: maybeMapAsync
+// TODO: fillAsync
+// TODO: append

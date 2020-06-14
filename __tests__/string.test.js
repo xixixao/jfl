@@ -8,10 +8,10 @@ const {test, tru, eq, eqq, eqqq, not, nil, throws} = setup(
   Cl.equalsNested,
 );
 
-test('replace', () => {
-  eqqq(Str.replace('', '', 'apple'), 'apple');
-  eqqq(Str.replace('', 'a', 'apple'), '');
-  eqqq(Str.replace('a', 'a', 'apple'), 'apple');
-  eqqq(Str.replace('aa', 'a', 'apple'), 'appleapple');
-  eqqq(Str.replace('a-a', 'a', 'apple'), 'apple-apple');
+test('replaceEvery', () => {
+  eqqq(Str.replaceEvery('', '', 'apple'), 'apple');
+  eqqq(Str.replaceEvery('', 'a', 'apple'), '');
+  eqqq(Str.replaceEvery('a', 'a', 'apple'), 'apple');
+  eqqq(Str.replaceEvery('aa', 'a', 'apple'), 'appleapple');
+  eqqq(Str.replaceEvery('a-a', 'a', 'apple'), 'apple-apple');
 });
