@@ -13,11 +13,6 @@ function m<K, V>(map: $Map<K, V>): $Map<K, V> {
   return map.size === 0 ? (EMPTY: any) : map;
 }
 
-// non-memoized, mutable for internal implementation
-function mp<K, V>(): Map<K, V> {
-  return (new Map(): any);
-}
-
 /// Construction
 
 /**
@@ -30,7 +25,7 @@ function mp<K, V>(): Map<K, V> {
  * @see Mp.of
  */
 export function $Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
-  const map = mp();
+  const map = new Map();
   if (object != null) {
     for (const key in object) {
       if (object.hasOwnProperty(key)) {
@@ -48,11 +43,7 @@ export function $Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
  * @see Mp, Mp.from, Mp.fromEntries
  */
 export function of<K, V>(...pairs: $Array<[K, V]>): $Map<K, V> {
-  const result = mp();
-  for (const [key, item] of pairs) {
-    result.set(key, item);
-  }
-  return m(result);
+  return m(new Map(pairs));
 }
 
 /**
@@ -69,11 +60,7 @@ export function from<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
   if (isMap(collection)) {
     return (collection: any);
   }
-  const result = mp();
-  for (const [key, item] of collection.entries()) {
-    result.set(key, item);
-  }
-  return m(result);
+  return m(new Map(collection.entries()));
 }
 
 /**
@@ -86,7 +73,7 @@ export async function fromAsync<K, V>(
   collection: KeyedCollection<K, Promise<V>>,
 ): Promise<$Map<K, V>> {
   const values = await Ar.fromAsync(collection);
-  const result = mp();
+  const result = new Map();
   let i = 0;
   for (const [key, _] of collection.entries()) {
     result.set(key, values[i]);
@@ -104,7 +91,7 @@ export function fromValues<K, V>(
   collection: Collection<V>,
   getKey: V => K,
 ): $Map<K, V> {
-  const result = mp();
+  const result = new Map();
   for (const item of collection.values()) {
     result.set(getKey(item), item);
   }
@@ -119,7 +106,7 @@ export function fromKeys<K, V>(
   collection: Collection<K>,
   getValue: K => V,
 ): $Map<K, V> {
-  const result = mp();
+  const result = new Map();
   for (const key of collection.values()) {
     result.set(key, getValue(key));
   }
@@ -135,7 +122,7 @@ export async function fromKeysAsync<K, V>(
   getValue: K => Promise<V>,
 ): Promise<$Map<K, V>> {
   const values = await Ar.mapAsync(collection, getValue);
-  const result = mp();
+  const result = new Map();
   let i = 0;
   for (const key of collection.values()) {
     result.set(key, values[i]);
@@ -148,11 +135,7 @@ export async function fromKeysAsync<K, V>(
   *@see Mp.fromKeys, Mp.mapToEntries
   */
 export function fromEntries<K, V>(collection: Collection<[K, V]>): $Map<K, V> {
-  const result = mp();
-  for (const [key, value] of collection.values()) {
-    result.set(key, value);
-  }
-  return m(result);
+  return m(new Map(collection.values()));
 }
 
 /**
@@ -168,7 +151,7 @@ export function unzip<K, V>(
   keys: Collection<K>,
   values: Collection<V>,
 ): $Map<K, V> {
-  const result = mp();
+  const result = new Map();
   const keysIterator = keys.values();
   const valuesIterator = values.values();
   while (true) {
@@ -189,7 +172,7 @@ export function unzip<K, V>(
  * @see Mp
  */
 export function fromObject<K: string, V>(
-  object: {[key: K]: V},
+  object: $ReadOnly<{[key: K]: V}>,
 ): KeyedCollection<K, V> {
   return m((new Map(Object.entries(object)): any));
 }
@@ -208,6 +191,20 @@ export function toObject<K: string, V>(
     result[key] = item;
   }
   return result;
+}
+
+
+/**
+ * Convert any keyed `collection` to a mutable Map.
+ *
+ * If a map is given, it will be cloned.
+ *
+ * @ex Mp.from([1, 2, 3])
+ * @ex Mp.from(Set(1, 2, 3))
+ * @see Mp.of, Mp.fromEntries
+ */
+export function mutable<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
+  return new Map(collection.entries());
 }
 
 /// Checks
@@ -343,10 +340,7 @@ export function set<K, V>(
   key: K,
   value: V,
 ): $Map<K, V> {
-  const result = mp();
-  for (const [oldKey, oldValue] of collection.entries()) {
-    result.set(oldKey, oldValue);
-  }
+  const result = new Map(collection.entries());
   result.set(key, value);
   return result;
 }
@@ -361,7 +355,7 @@ export function set<K, V>(
 export function merge<K, V>(
   ...collections: $Array<KeyedCollection<K, V>>
 ): $Map<K, V> {
-  const result = mp();
+  const result = new Map();
   for (const collection of collections) {
     for (const [key, value] of collection.entries()) {
       result.set(key, value);
@@ -396,7 +390,7 @@ export function map<KFrom, VFrom, VTo>(
   collection: KeyedCollection<KFrom, VFrom>,
   fn: (VFrom, KFrom) => VTo,
 ): $Map<KFrom, VTo> {
-  const result = mp();
+  const result = new Map();
   for (const [key, item] of collection.entries()) {
     result.set(key, fn(item, key));
   }
@@ -421,7 +415,7 @@ export function mapToEntries<KFrom, VFrom, KTo, VTo>(
   collection: KeyedCollection<KFrom, VFrom>,
   fn: (VFrom, KFrom) => [KTo, VTo],
 ): $Map<KTo, VTo> {
-  const result = mp();
+  const result = new Map();
   for (const [key, item] of collection.entries()) {
     const [newKey, newItem] = fn(item, key);
     result.set(newKey, newItem);
@@ -446,7 +440,7 @@ export function groupBy<V, KTo>(
   collection: Collection<V>,
   fn: V => ?KTo,
 ): $Map<KTo, $Array<V>> {
-  const result = mp();
+  const result = new Map();
   for (const item of collection.values()) {
     const key = fn(item);
     if (key != null) {

@@ -13,11 +13,6 @@ function m<V>(set: $Set<V>): $Set<V> {
   return set.size === 0 ? (EMPTY: any) : set;
 }
 
-// internal for performance
-function fromArray<V>(array: $Array<V>): $Set<V> {
-  return new Set(array);
-}
-
 /// Construction
 
 /**
@@ -30,7 +25,7 @@ function fromArray<V>(array: $Array<V>): $Set<V> {
  * @see St.from
  */
 export function $St<V>(...args: $Array<V>): $Set<V> {
-  return m((new Set(args): any));
+  return m(new Set(args));
 }
 
 /**
@@ -62,7 +57,19 @@ export function from<V>(collection: Collection<V>): $Set<V> {
 export async function fromAsync<V>(
   collection: Collection<Promise<V>>,
 ): Promise<$Set<V>> {
-  return m(fromArray(await Ar.fromAsync(collection)));
+  return m(new Set(await Ar.fromAsync(collection)));
+}
+
+/**
+ * Convert any `collection` of values to a mutable Set of values.
+ *
+ * If a set is given it will be cloned.
+ *
+ * @ex St.mutable($St(1, 2, 3)) // Set {1, 2, 3}
+ * @see St.from
+ */
+export function mutable<V>(collection: Collection<V>): Set<V> {
+  return new Set(collection.values());
 }
 
 /**
@@ -383,7 +390,7 @@ export async function mapAsync<VFrom, VTo>(
   collection: Collection<VFrom>,
   fn: VFrom => Promise<VTo>,
 ): Promise<$Set<VTo>> {
-  return m(fromArray(await Promise.all(Array.from(map(collection, fn)))));
+  return m(new Set(await Promise.all(Array.from(map(collection, fn)))));
 }
 
 // TODO:

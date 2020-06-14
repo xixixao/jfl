@@ -21,6 +21,8 @@ function m<V>(array: $Array<V>): $Array<V> {
  * Prefer array literal `[1, 2, 3]` unless you need a function, or you want
  * an empty array, in which case use the memoized `$Ar()`.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex $Ar(1, 2, 3)
  * @alias create, constructor, new
  * @see Ar.from
@@ -35,6 +37,8 @@ export function $Ar<V>(...args: $Array<V>): $Array<V> {
  * Note that this is not a way to clone an array, if passed an array, the same
  * array will be returned.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.from(Set(1, 2, 3))
  * @ex Ar.from(Mp({a: 1, b: 2, c: 3}))
  * @alias values, fromValues
@@ -44,17 +48,15 @@ export function from<V>(collection: Collection<V>): $Array<V> {
   if (isArray(collection)) {
     return (collection: any);
   }
-  const result = [];
-  for (const item of collection.values()) {
-    result.push(item);
-  }
-  return m(result);
+  return m(Array.from(collection.values()));
 }
 
 /**
  * Convert any `collection` of awaitable promises of values to a single
  * promise of an Array of values.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.fromAsync([(async () => 1)(), (async () => 2)()])
  * @alias all
  * @see Ar.from
@@ -71,14 +73,12 @@ export function fromAsync<V>(
  * Notably the keys of a Set are just its values. The keys of an Array are
  * its indices.
  *
+ * @time O(n)
+ * @space O(n)
  * @see Ar.from
  */
 export function keys<K>(collection: KeyedCollection<K, any>): $Array<K> {
-  const result = [];
-  for (const item of collection.keys()) {
-    result.push(item);
-  }
-  return m(result);
+  return m(Array.from(collection.keys()));
 }
 
 /**
@@ -92,11 +92,7 @@ export function keys<K>(collection: KeyedCollection<K, any>): $Array<K> {
 export function entries<K, V>(
   collection: KeyedCollection<K, V>,
 ): $Array<[K, V]> {
-  const result = [];
-  for (const item of collection.entries()) {
-    result.push(item);
-  }
-  return m(result);
+  return m(Array.from(collection.entries()));
 }
 
 /**
@@ -222,9 +218,9 @@ export function rangeDynamic(
  * The `value` will be referenced, not cloned.
  *
  * @ex Ar.repeat("value", 4)
- * @see Ar.range, Seq.repeat
+ * @see Ar.range
  */
-export function repeat<V>(value: V, times: number): $Array<V> {
+export function repeat<V>(times: number, value: V): $Array<V> {
   const result = [];
   for (let i = 0; i < times; i++) {
     result.push(value);
@@ -239,7 +235,7 @@ export function repeat<V>(value: V, times: number): $Array<V> {
  * result will be placed.
  *
  * @ex Ar.fill(4, i => i)
- * @see Ar.repeat, Ar.range, Seq.fill
+ * @see Ar.repeat, Ar.range
  */
 export function fill<V>(times: number, fn: number => V): $Array<V> {
   const result = [];
@@ -255,9 +251,9 @@ export function fill<V>(times: number, fn: number => V): $Array<V> {
  *
  * To mark the end of the array, `fn` must return `null` or `undefined`.
  *
- * @ex Ar.generate(2, n => n < 64 ? [n, n * n] : null)
+ * @ex Ar.generate(2, n => (n < 64 ? [n, n * n] : null))
  * @alias unfold, unreduce
- * @see Seq.generate, KdSeq.generate
+ * @see Ar.scan
  */
 export function generate<V, S>(seed: S, fn: S => ?[V, S]): $Array<V> {
   const result = [];
@@ -272,6 +268,24 @@ export function generate<V, S>(seed: S, fn: S => ?[V, S]): $Array<V> {
     acc = newAcc;
   }
   return m(result);
+}
+
+/**
+ * Convert any `collection` of values to a mutable Array of values.
+ *
+ * If an array is given it will be cloned.
+ *
+ * This function is useful for complicated or performance sensitive computation
+ * inside a function. Avoid passing arrays as mutable around your codebase
+ * to prevent bugs.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.mutable($Ar(1, 2, 3)) // [1, 2, 3]
+ * @see Ar.from
+ */
+export function mutable<V>(collection: Collection<V>): Array<V> {
+  return Array.from(collection.values());
 }
 
 /// Checks
@@ -657,7 +671,7 @@ export function flatMap<VFrom, VTo>(
  * Similar to `Cl.reduce` but instead of returning the final value accumulates
  * all the intermediate accumulators.
  *
- * @ex Ar.scan([1, 2, 3, 4], 0, (acc, x) => acc + x)
+ * @ex Ar.scan([1, 2, 3, 4], 0, (acc, x) => acc + x) // [1, 3, 6, 10]
  * @see Cl.reduce
  */
 export function scan<I, O>(
