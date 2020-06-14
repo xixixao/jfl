@@ -312,6 +312,7 @@ test('forEach', () => {
 });
 
 test('reduce', () => {
+  // Without initialValue
   eqqq(
     Cl.reduce(['a', 'b', 'c'], (word, letter) => word + letter),
     'abc',
@@ -327,6 +328,7 @@ test('reduce', () => {
     ),
     'adam boris cecil',
   );
+  // With initialValue
   eq(
     Cl.reduce(['a', 'b', 'b'], (set, letter) => St.add(set, letter), $St()),
     $St('a', 'b'),

@@ -545,7 +545,7 @@ declare function reduce<K, V, A>(
  * @ex Cl.reduce([2, 4, 3], (acc, x) => acc + x) // 9
  * @see Ar.scan
  */
-function reduce(collection, fn, initialValue) {
+export function reduce(collection, fn, initialValue) {
   const noInitialValue = arguments.length < 3;
   if (Ar.isArray(collection)) {
     if (noInitialValue) {
@@ -569,5 +569,3 @@ function reduce(collection, fn, initialValue) {
   }
   return acc;
 }
-
-export {reduce};

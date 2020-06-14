@@ -46,13 +46,9 @@ export function $St<V>(...args: $Array<V>): $Set<V> {
  */
 export function from<V>(collection: Collection<V>): $Set<V> {
   if (isSet(collection)) {
-    return (collection: any);
+    return collection;
   }
-  const result = new Set();
-  for (const item of collection.values()) {
-    result.add(item);
-  }
-  return m(result);
+  return m(new Set(collection.values()));
 }
 
 /**
@@ -324,6 +320,25 @@ export function filterNulls<V>(collection: Collection<?V>): $Set<V> {
   for (const item of collection.values()) {
     if (item != null) {
       result.add(item);
+    }
+  }
+  return m(result);
+}
+
+/**
+ * Create a set of keys corresponding to values passing given `predicateFn`.
+ *
+ * @ex St.findKeys([1, 2, 3], n => Mth.isOdd(n)) // $St(1, 3)
+ * @see St.filter, Ar.findKeys
+ */
+export function findKeys<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: V => boolean,
+): $Set<K> {
+  const result = new Set();
+  for (const [key, item] of collection.entries()) {
+    if (predicateFn(item)) {
+      result.add(key);
     }
   }
   return m(result);

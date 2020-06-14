@@ -78,19 +78,25 @@ test('mapAsync', async () => {
 });
 
 test('filter', () => {
-  eq(Ar.filter([1, 2, 3], Mth.isOdd), [1, 3]);
+  eq(
+    Ar.filter([1, 2, 3], n => Mth.isOdd(n)),
+    [1, 3],
+  );
 });
 
 test('filterAsync', async () => {
-  eq(await Ar.filterAsync([1, 2, 3], async x => Mth.isOdd(x)), [1, 3]);
+  eq(await Ar.filterAsync([1, 2, 3], async n => Mth.isOdd(n)), [1, 3]);
 });
 
 test('filterNulls', () => {
   eq(Ar.filterNulls([1, 2, null]), [1, 2]);
 });
 
-test('findIndices', () => {
-  eq(Ar.findIndices([1, 2, 3], Mth.isOdd), [0, 2]);
+test('findKeys', () => {
+  eq(
+    Ar.findKeys([1, 2, 3], n => Mth.isOdd(n)),
+    [0, 2],
+  );
 });
 
 test('concat', () => {
@@ -171,23 +177,31 @@ test('generate', () => {
 });
 
 test('partition', () => {
-  eqq(Ar.partition([1, 2, 3], Mth.isOdd), [[1, 3], [2]]);
+  eqq(
+    Ar.partition([1, 2, 3], n => Mth.isOdd(n)),
+    [[1, 3], [2]],
+  );
 });
 
 test('sort', () => {
   eq(Ar.sort(['c', 'a', 'b']), ['a', 'b', 'c']);
+  eq(Ar.sort([3, 1, 2]), [1, 2, 3]);
+  // The sort is stable
   eq(
     Ar.sort(['c', 'a', 'b'], (a, b) => a.length - b.length),
     ['c', 'a', 'b'],
   );
 });
 
-test('numericalSort', () => {
-  eq(Ar.numericalSort([3, 1, 2]), [1, 2, 3]);
+test('sortBy', () => {
+  eq(
+    Ar.sortBy([1, 5, 3, 2], n => n % 3),
+    [3, 1, 5, 2],
+  );
 });
 
-test('fastSort', () => {
-  eq(Ar.fastSort(['c', 'a', 'b']), ['a', 'b', 'c']);
+test('sortUnstable', () => {
+  eq(Ar.sortUnstable(['c', 'a', 'b']), ['a', 'b', 'c']);
 });
 
 test('scan', () => {
@@ -211,15 +225,24 @@ test('splice', () => {
 });
 
 test('takeWhile', () => {
-  eq(Ar.takeWhile([1, 2, 3], Mth.isOdd), [1]);
+  eq(
+    Ar.takeWhile([1, 2, 3], n => Mth.isOdd(n)),
+    [1],
+  );
 });
 
 test('dropWhile', () => {
-  eq(Ar.dropWhile([1, 2, 3], Mth.isOdd), [2, 3]);
+  eq(
+    Ar.dropWhile([1, 2, 3], n => Mth.isOdd(n)),
+    [2, 3],
+  );
 });
 
 test('span', () => {
-  eqq(Ar.span([1, 2, 3], Mth.isOdd), [[1], [2, 3]]);
+  eqq(
+    Ar.span([1, 2, 3], n => Mth.isOdd(n)),
+    [[1], [2, 3]],
+  );
 });
 
 test('zip', () => {

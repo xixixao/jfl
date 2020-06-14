@@ -5,6 +5,7 @@
 import type {Collection, KeyedCollection, $Array} from './types.flow';
 
 import * as Cl from './collection';
+import * as Mp from './map';
 
 const EMPTY = []; // Returned whenever we can return an empty array
 
@@ -510,33 +511,49 @@ export function filterNulls<V>(collection: Collection<?V>): $Array<V> {
 }
 
 /**
- * TODO: This should probably be `findKeys`, and it's not in HSL,
- * TODO: it would be something like keys(Dict\filter($x, $p))
- * Create an array of indices of values passing given `predicateFn`.
+ * Create an array of keys corresponding to values passing given `predicateFn`.
  *
- * @ex Ar.findIndices([1, 2, 3], Mth.isOdd)
+ * @ex Ar.findKeys([1, 2, 3], n => Mth.isOdd(n)) // [1, 3]
  * @see Ar.filter
  */
-export function findIndices<V>(
-  collection: Collection<V>,
+export function findKeys<K, V>(
+  collection: KeyedCollection<K, V>,
   predicateFn: V => boolean,
-): $Array<number> {
+): $Array<K> {
   const result = [];
-  let i = 0;
-  for (const item of collection.values()) {
+  for (const [key, item] of collection.entries()) {
     if (predicateFn(item)) {
-      result.push(i);
+      result.push(key);
     }
-    i++;
   }
   return m(result);
 }
 
 /**
- * TODO: unique
+ * Create an array of values from `collection` with each value included only
+ * once.
+ *
+ * @ex Ar.unique([1, 2, 1]) // [1]
+ * @see Ar.uniqueBy, St.from
+ */
+export function unique<V>(collection: Collection<V>): $Array<V> {
+  return from(new Set(collection.values()));
+}
 
 /**
- * TODO: uniqueBy
+ * Create an array of values from `collection` with each value included only
+ * once, where value equivalence is determined by calling `identityFn` on
+ * each value. Later values overwrite previous ones.
+ *
+ * @ex Ar.uniqueBy([2, 4, 7], n => n % 3) // [2, 7]
+ * @see Ar.unique
+ */
+export function uniqueBy<V>(
+  collection: Collection<V>,
+  identityFn: V => mixed,
+): $Array<V> {
+  return from(Mp.fromValues(collection, identityFn));
+}
 
 /**
  * Create an array containing the first `n` items of `collection`.
@@ -899,16 +916,24 @@ export function reverse<V>(collection: Collection<V>): $Array<V> {
 /**
  * Create an array of values in `collection` sorted.
  *
- * Uses string conversion and comparison by default. You can supply custom
- * `compareFn`. This sort is stable at the cost of using more memory allocation.
+ * The result of calling `compareFn` on values `a` and `b` determines their
+ * order:
+ *   negative number: `a`, `b`
+ *   positive number: `b`, `a`
+ *   zero: the order stays the same as it was in `collection`
+ * The default `compareFn` is `(a, b) => a > b ? 1 : a < b ? -1 : 0`,
+ * which sorts numbers and strings in ascending order (from small to large,
+ * from early in the alphabet to later in the alphabet).
  *
- * @ex Ar.sort([3, 2, 4, 1], (a, b) => b - a)
- * @alias sortBy
- * @see Ar.fastSort, Ar.numericalSort
+ * This sort preserves the order of elements when `compareFn` returns 0 at
+ * the cost of using more memory.
+ *
+ * @ex Ar.sort([3, 2, 4, 1]) // [1, 2, 3, 4]
+ * @see Ar.sortBy, Ar.sortUnstable
  */
 export function sort<V>(
   collection: Collection<V>,
-  compareFn?: (V, V) => number = defaultCompareFn,
+  compareFn?: (a: V, b: V) => number = defaultCompareFn,
 ): $Array<V> {
   const result: Array<[V, number]> = [];
   let i = 0;
@@ -918,53 +943,77 @@ export function sort<V>(
   }
   result
     .sort(([a, ai], [b, bi]) => compareFn(a, b) || ai - bi)
-    .forEach(([x], i) => {
-      (result: any)[i] = x;
+    .forEach(([item], i) => {
+      (result: any)[i] = item;
     });
 
   return m((result: any));
 }
 
-function defaultCompareFn(a: any, b: any): number {
-  return a > b ? 1 : a < b ? -1 : 0;
-}
-
 /**
- * TODO: sortBy
-
-/**
- * Create an array of numbers from `collection` sorted in ascending order.
+ * Create an array of values in `collection` sorted by the scalar computed
+ * by calling `scalarFn` on each value.
  *
- * @ex Ar.numericalSort([3, 2, 4, 1])
- * @see Ar.fastSort, Ar.sort
+ * The result of calling `compareFn` on scalars `a` and `b` determines the
+ * order of the corresponding values:
+ *   negative number: `a`, `b`
+ *   positive number: `b`, `a`
+ *   zero: the order stays the same as it was in `collection`
+ * The default `compareFn` is `(a, b) => a > b ? 1 : a < b ? -1 : 0`,
+ * which sorts numbers and strings in ascending order (from small to large,
+ * from early in the alphabet to later in the alphabet).
+ *
+ * This sort preserves the order of elements when `compareFn` returns 0 at
+ * the cost of using more memory.
+ *
+ * @ex Ar.sortBy([3, 2, 4, 1], n => n % 3) // [3, 4, 1, 2]
+ * @see Ar.sort
  */
-export function numericalSort(collection: Collection<number>): $Array<number> {
-  const result = [];
+export function sortBy<V, S>(
+  collection: Collection<V>,
+  scalarFn: V => S,
+  compareFn?: (a: S, b: S) => number = defaultCompareFn,
+): $Array<V> {
+  const result: Array<[V, S, number]> = [];
+  let i = 0;
   for (const item of collection.values()) {
-    result.push(item);
+    result.push([item, scalarFn(item), i]);
+    i++;
   }
-  return m(result.sort((a, b) => a - b));
-}
+  result
+    .sort(([aItem, a, ai], [bItem, b, bi]) => compareFn(a, b) || ai - bi)
+    .forEach(([item], i) => {
+      (result: any)[i] = item;
+    });
 
-// TODO: numericalSortBy (not fast)
+  return m((result: any));
+}
 
 /**
  * Create an array of values in `collection` sorted.
  *
- * A version of `Ar.sort` which is not stable, but uses less memory allocations.
+ * The result of calling `compareFn` on values `a` and `b` determines their
+ * order:
+ *   negative number: `a`, `b`
+ *   positive number: `b`, `a`
+ *   zero: the order is undetermined
+ * The default `compareFn` is `(a, b) => a > b ? 1 : a < b ? -1 : 0`,
+ * which sorts numbers and strings in ascending order (from small to large,
+ * from early in the alphabet to later in the alphabet).
  *
- * @ex Ar.fastSort([3, 2, 4, 1], (a, b) => b - a)
+ * This sort doesn't preserve the order of elements when `compareFn` returns 0
+ * which makes it more memory efficient.
+ *
+ * @ex Ar.sortUnstable([3, 2, 4, 1]) // 1, 2, 3, 4
  * @see Ar.sort
  */
-export function fastSort<V>(
+export function sortUnstable<V>(
   collection: Collection<V>,
-  compareFn?: (V, V) => number,
+  compareFn?: (V, V) => number = defaultCompareFn,
 ): $Array<V> {
-  const result = [];
-  for (const item of collection.values()) {
-    result.push(item);
-  }
-  return m(result.sort(compareFn));
+  return m(Array.from(collection.values()).sort(compareFn));
 }
 
-// TODO: fastSortBy
+function defaultCompareFn(a: any, b: any): number {
+  return a > b ? 1 : a < b ? -1 : 0;
+}
