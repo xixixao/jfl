@@ -1,7 +1,7 @@
 // @flow
 
 const {Ar, Cl, St, $St, Mp, $Mp, Mth} = require('..');
-const {setup} = require('../test/test-util.js');
+const {setup} = require('../dev/test-util.js');
 
 const {test, tru, eq, eqq, eqqq, not, throws} = setup(
   St.equals,
@@ -56,6 +56,10 @@ test('intersect', () => {
 
 test('diff', () => {
   eq(St.diff($St(1, 2, 3), $St(2, 4), $St(1, 4)), $St(3));
+});
+
+test('flaten', () => {
+  eq(St.flatten([$St(1, 2, 3), $St(2, 4), $St(1, 4)]), $St(1, 2, 3, 4));
 });
 
 test('map', () => {

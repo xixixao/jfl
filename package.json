@@ -17,7 +17,7 @@
     "prettier": "2.0.5"
   },
   "scripts": {
-    "build": "babel src -d lib; npx prettier --write lib/*; rm lib/types.flow.js",
+    "build": "babel src -d dist; npx prettier --write dist/*; rm dist/types.flow.js",
     "test": "jest"
   },
   "prettier": {
@@ -26,5 +26,6 @@
     "jsxBracketSameLine": true,
     "trailingComma": "all",
     "singleQuote": true
-  }
+  },
+  "dependencies": {}
 }

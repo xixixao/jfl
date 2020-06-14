@@ -207,13 +207,7 @@ export function add<V>(collection: Collection<V>, value: V): $Set<V> {
  * @see St.intersect, St.flatten
  */
 export function union<V>(...collections: $Array<Collection<V>>): $Set<V> {
-  const result = new Set();
-  for (const collection of collections) {
-    for (const item of collection.values()) {
-      result.add(item);
-    }
-  }
-  return m(result);
+  return flatten(collections);
 }
 
 /**
@@ -262,6 +256,23 @@ export function diff<V>(
   const result = new Set();
   for (const item of collection.values()) {
     if (!filter.has(item)) {
+      result.add(item);
+    }
+  }
+  return m(result);
+}
+
+/**
+ * Create a Set which is a union of all values in given `collections`.
+ *
+ * @ex St.flatten([St(1, 2, 3), St(1, 4, 5)])
+ * @alias join, union
+ * @see St.union, St.intersect
+ */
+export function flatten<V>(collections: $Array<Collection<V>>): $Set<V> {
+  const result = new Set();
+  for (const collection of collections) {
+    for (const item of collection.values()) {
       result.add(item);
     }
   }

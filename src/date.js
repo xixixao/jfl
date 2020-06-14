@@ -15,3 +15,5 @@
 
 // Consider simplifying to avoid Year, YearMonth, Month, MonthDay, DayOfWeek
 // but maybe they're required
+
+// consider date-fns too, but it doesn't look like it support everything needed

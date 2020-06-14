@@ -1,7 +1,7 @@
 // @flow
 
 const {Ar, Cl, St, $St, Mp, $Mp, Mth} = require('..');
-const {setup} = require('../test/test-util.js');
+const {setup} = require('../dev/test-util.js');
 
 const {test, tru, eq, eqq, eqqq, not, nil, throws} = setup(
   Cl.equals,

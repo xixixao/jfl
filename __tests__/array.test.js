@@ -1,7 +1,7 @@
 // @flow
 
 import {Ar, $Ar, Cl, St, $St, Mp, $Mp, Mth} from '..';
-const {setup} = require('../test/test-util.js');
+const {setup} = require('../dev/test-util.js');
 
 const {test, tru, eq, eqq, eqqq, not, throws} = setup(
   Ar.equals,
@@ -152,7 +152,7 @@ test('repeat', () => {
 test('fill', () => {
   eq(
     Ar.fill(4, i => i * 2),
-    [0, 2, 4, 8],
+    [0, 2, 4, 6],
   );
 });
 
@@ -168,8 +168,8 @@ test('splitAt', () => {
   eqq(Ar.splitAt([1, 2, 3], 2), [[1, 2], [3]]);
 });
 
-test('chunks', () => {
-  eqq(Ar.chunks([1, 2, 3, 4, 5], 2), [[1, 2], [3, 4], [5]]);
+test('chunk', () => {
+  eqq(Ar.chunk([1, 2, 3, 4, 5], 2), [[1, 2], [3, 4], [5]]);
 });
 
 test('reverse', () => {

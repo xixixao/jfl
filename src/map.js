@@ -25,15 +25,10 @@ function m<K, V>(map: $Map<K, V>): $Map<K, V> {
  * @see Mp.of
  */
 export function $Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
-  const map = new Map();
-  if (object != null) {
-    for (const key in object) {
-      if (object.hasOwnProperty(key)) {
-        map.set(key, object[(key: any)]);
-      }
-    }
+  if (object == null) {
+    return (EMPTY: any);
   }
-  return m((map: any));
+  return m((new Map(Object.entries(object)): any));
 }
 
 /**
@@ -58,7 +53,7 @@ export function of<K, V>(...pairs: $Array<[K, V]>): $Map<K, V> {
  */
 export function from<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
   if (isMap(collection)) {
-    return (collection: any);
+    return collection;
   }
   return m(new Map(collection.entries()));
 }
@@ -377,11 +372,27 @@ export function merge<K, V>(
 // TODO: unique
 // TODO: uniqueBy
 
+/**
+ * TODO
+ */
+export function filter<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicate: V => boolean,
+): $Map<K, V> {
+  const result = new Map();
+  for (const [key, item] of collection.entries()) {
+    if (predicate(item)) {
+      result.set(key, item);
+    }
+  }
+  return m(result);
+}
+
 /// Transform
 
 
 /**
- * Create a new map by calling given `fn` on each key and value of `collection`.
+ * Create a new map by calling given `fn` on each value and key of `collection`.
  *
  * @ex Mp.map([1, 2], (x, i) => x * 2)
  * @see Mp.fromValues
@@ -397,12 +408,39 @@ export function map<KFrom, VFrom, VTo>(
   return m(result);
 }
 
+/**
+ * Create a promise of a map by calling given async `fn` on each value and key
+ * of `collection`.
+ *
+ * Executes `fn` on all items in `collection` concurrently.
+ * 
+ * @time O(n)
+ * @space O(n)
+ * @ex await Ar.mapAsync([1, 2], async x => x * 2)
+ * @alias Promise.all, genMap
+ */
+export async function mapAsync<KFrom, VFrom, VTo>(
+  collection: KeyedCollection<KFrom, VFrom>,
+  fn: (VFrom, KFrom) => Promise<VTo>,
+): Promise<$Map<KFrom, VTo>> {
+  const awaitables = [];
+  for (const [key, item] of collection.entries()) {
+    awaitables.push(fn(item, key));
+  }
+  const values = await Promise.all(awaitables);
+  const result = new Map();
+  let i = 0;
+  for (const key of collection.keys()) {
+    result.set(key, values[i]);
+    i++;
+  }
+  return m(result);
+}
 
 // TODO: mapKeys
 // TODO: mapAsync
 
 /**
- * // TODO: Replace with single `pull` method
  * Create a new map by calling given `fn` on each key and value of
  * `collection`.
  *
@@ -422,6 +460,8 @@ export function mapToEntries<KFrom, VFrom, KTo, VTo>(
   }
   return m(result);
 }
+
+// TODO: pull
 
 // TODO: group (ala group_keys_by_values), consider dropping group_by
 // given JS doesn't have the arraykey limitation

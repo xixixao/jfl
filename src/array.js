@@ -87,6 +87,8 @@ export function keys<K>(collection: KeyedCollection<K, any>): $Array<K> {
  * Notably the keys of a Set are just its values. The keys of an Array are
  * its indices.
  *
+ * @time O(n)
+ * @space O(n)
  * @see Ar.from
  */
 export function entries<K, V>(
@@ -101,6 +103,8 @@ export function entries<K, V>(
  * The start of the range is inclusive, the end is exclusive. By default
  * increments by 1.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.range(1, 6)
  * @ex Ar.range(-0.5, 0.51, 0.5)
  * @see Ar.rangeInclusive, Ar.rangeDescending, Ar.rangeDynamic
@@ -129,6 +133,8 @@ export function range(
  *
  * A version of `Ar.range` where the end is inclusive.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.range(-0.5, 0.5, 0.5)
  * @see Ar.range
  */
@@ -157,6 +163,8 @@ export function rangeInclusive(
  * A version of `Ar.range` where the array of numbers has decreasing order. By
  * default increments by -1.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.range(5, 1)
  * @ex Ar.range(2, 1, 0.2)
  * @see Ar.range
@@ -186,6 +194,8 @@ export function rangeDescending(
  * A version of `Ar.range` where the array of numbers has increasing or
  * decreasing order, depending on given range limits. Both limits are inclusive.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.range(2, 6, 2)
  * @ex Ar.range(6, 2, 2)
  * @see Ar.range
@@ -217,6 +227,8 @@ export function rangeDynamic(
  *
  * The `value` will be referenced, not cloned.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.repeat("value", 4)
  * @see Ar.range
  */
@@ -234,6 +246,8 @@ export function repeat<V>(times: number, value: V): $Array<V> {
  * `fn` take as the first argument the index where the current invocation's
  * result will be placed.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.fill(4, i => i)
  * @see Ar.repeat, Ar.range
  */
@@ -251,6 +265,8 @@ export function fill<V>(times: number, fn: number => V): $Array<V> {
  *
  * To mark the end of the array, `fn` must return `null` or `undefined`.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.generate(2, n => (n < 64 ? [n, n * n] : null))
  * @alias unfold, unreduce
  * @see Ar.scan
@@ -293,6 +309,8 @@ export function mutable<V>(collection: Collection<V>): Array<V> {
 /**
  * Returns whether given value is an Array.
  *
+ * @time O(1)
+ * @space O(1)
  * @ex Ar.isArray([1, 2, 3])
  * @see St.isSet, Mp.isMap
  */
@@ -368,6 +386,8 @@ export function equalsNested<V>(
 /**
  * Concatenate multiple arrays together.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.concat([1, 2], [3, 4])
  * @alias join, union
  * @see Ar.flatten
@@ -379,6 +399,8 @@ export function concat<V>(...collections: $Array<Collection<V>>): $Array<V> {
 /**
  * Concatenate a collection of arrays together.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.concat([1, 2], [3, 4])
  * @alias join, union
  * @see Ar.flatten
@@ -403,6 +425,8 @@ type $GetValue = <V>(Collection<V>) => V;
  * The resulting array has the same length as the smallest given collection.
  * Excess values are ignored.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.zip([1, 2, 3], ['a', 'b', 'c'], [5, 6, 7])
  * @alias zipAll
  * @see Ar.zipWith
@@ -437,6 +461,8 @@ export function zip<V, Cs: $Array<Collection<mixed>>>(
  * enforces that the rest parameter is the last one. The resulting array has
  * the same length as the smallest given collection. Excess values are ignored.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.zipWith((a, b, c) => a + b * c, [1, 2, 3], [5, 6, 7], [2, 4, 6])
  * @see Ar.zip
  */
@@ -455,6 +481,8 @@ export function zipWith<I, Cs: $Array<Collection<I>>, O>(
  * Use this if you care about accurate typing (until JS type systems
  * fix the typing of the built-in). Otherwise use `array[index]`.
  *
+ * @time O(1)
+ * @space O(1)
  * @ex Ar.get([], 1) // undefined
  * @see Cl.at
  */
@@ -465,6 +493,8 @@ export function get<V>(array: $Array<V>, index: number): ?V {
 /**
  * Create a new array by filtering out values for which `fn` returns false.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.filter([1, 2, 3], Mth.isOdd)
  * @see Ar.map, Ar.filterNulls, Ar.findIndices
  */
@@ -487,6 +517,8 @@ export function filter<V>(
  *
  * Executes `predicate` on all items in `collection` concurrently.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.filterAsync([1, 2, 3], async x => Mth.isOdd(x))
  * @see Ar.filter, Ar.mapAsync
  */
@@ -511,6 +543,8 @@ export async function filterAsync<V>(
  *
  * Here because its type is more specific then the generic `filter` function.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.filterNulls([1, null, 3])
  * @see Ar.filter
  */
@@ -527,6 +561,8 @@ export function filterNulls<V>(collection: Collection<?V>): $Array<V> {
 /**
  * Create an array of keys corresponding to values passing given `predicateFn`.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.findKeys([1, 2, 3], n => Mth.isOdd(n)) // [1, 3]
  * @see Ar.filter
  */
@@ -547,6 +583,8 @@ export function findKeys<K, V>(
  * Create an array of values from `collection` with each value included only
  * once.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.unique([1, 2, 1]) // [1]
  * @see Ar.uniqueBy, St.from
  */
@@ -559,6 +597,8 @@ export function unique<V>(collection: Collection<V>): $Array<V> {
  * once, where value equivalence is determined by calling `identityFn` on
  * each value. Later values overwrite previous ones.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.uniqueBy([2, 4, 7], n => n % 3) // [2, 7]
  * @see Ar.unique
  */
@@ -572,6 +612,8 @@ export function uniqueBy<V>(
 /**
  * Create an array containing the first `n` items of `collection`.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.take([1, 2, 3], 2)
  * @see Ar.drop, Ar.splitAt, Ar.takeWhile
  */
@@ -591,6 +633,8 @@ export function take<V>(collection: Collection<V>, n: number): $Array<V> {
 /**
  * Create an array containing all but the first `n` items of `collection`.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.drop([1, 2, 3], 2)
  * @see Ar.take, Ar.splitAt, Ar.dropWhile
  */
@@ -611,6 +655,8 @@ export function drop<V>(collection: Collection<V>, n: number): $Array<V> {
 /**
  * Create a new array by calling given `fn` on each value of `collection`.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.map([1, 2], x => x * 2)
  * @see Ar.mapAsync
  */
@@ -631,6 +677,8 @@ export function map<VFrom, VTo>(
  *
  * Executes `fn` on all items in `collection` concurrently.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex await Ar.mapAsync([1, 2], async x => x * 2)
  * @alias Promise.all, genMap
  */
@@ -648,6 +696,8 @@ export function mapAsync<VFrom, VTo>(
  * Equivalent to using `map` followed by `flatten`, for simplicity and improved
  * performance.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.flatMap([1, 2], x => [x - 1, x + 1])
  * @see Ar.mapAsync
  */
@@ -671,6 +721,8 @@ export function flatMap<VFrom, VTo>(
  * Similar to `Cl.reduce` but instead of returning the final value accumulates
  * all the intermediate accumulators.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.scan([1, 2, 3, 4], 0, (acc, x) => acc + x) // [1, 3, 6, 10]
  * @see Cl.reduce
  */
@@ -693,13 +745,15 @@ export function scan<I, O>(
 /**
  * Create an array of arrays which are chunks of given `collection` of `size`.
  *
- * If the `collection` doesn't divide evenly, the final chunk we smaller than
- * the rest.
+ * If the `collection` doesn't divide evenly, the final chunk will be smaller
+ * than the rest.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.chunk([1, 2, 3, 4, 5], 2)
  * @see Ar.splitAt, Ar.partition
  */
-export function chunks<V>(
+export function chunk<V>(
   collection: Collection<V>,
   size: number,
 ): $Array<$Array<V>> {
@@ -731,6 +785,8 @@ export function chunks<V>(
  * More effecient combination of `Ar.filter` and `Ar.filter` combined
  * with `Fn.not`.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.partition([1, 2, 3, 4], Mth.isEven)
  * @alias split
  * @see Mp.group
@@ -757,6 +813,8 @@ export function partition<V>(
  * Note that this is not a way to clone an array, if given an array and indices
  * corresponding to its full size it returns the original array.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.slice([1, 2, 3, 4], 1, 3)
  * @see Ar.splice
  */
@@ -800,6 +858,8 @@ export function slice<V>(
  * Note that unlikely Array.prototype.splice this function returns the new
  * array, not the deleted items.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.slice([1, 2, 3, 4], 1, 3)
  * @see Ar.splice
  */
@@ -809,10 +869,7 @@ export function splice<V>(
   deleteCount?: number,
   ...items: $Array<V>
 ): $Array<V> {
-  const result = [];
-  for (const item of collection.values()) {
-    result.push(item);
-  }
+  const result = Array.from(collection.values());
   result.splice(startIndex, deleteCount, ...items);
   return m(result);
 }
@@ -821,6 +878,8 @@ export function splice<V>(
  * Create a tuple of arrays containing the first `n` items
  * and all but the first `n` items of given `collection`.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.split([1, 2, 3], 2)
  * @see Ar.drop, Ar.take, Ar.span
  */
@@ -846,6 +905,8 @@ export function splitAt<V>(
  * Create a tuple of arrays containing all the items of `collection` following
  * and preceding the first item for which `fn` returns false.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.span([1, 3, 4, 7], Mth.isOdd)
  * @alias break
  * @see Ar.splitAt
@@ -872,6 +933,8 @@ export function span<V>(
  * Create an array containing all the items of `collection` preceding the item
  * for which `fn` returns false.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.takeWhile([1, 3, 4, 7], Mth.isOdd)
  * @see Ar.take
  */
@@ -893,6 +956,8 @@ export function takeWhile<V>(
  * Create an array containing all the items of `collection` following and
  * including the first item for which `fn` returns false.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.dropWhile([1, 3, 4, 7], Mth.isOdd)
  * @see Ar.drop
  */
@@ -916,15 +981,13 @@ export function dropWhile<V>(
 /**
  * Create an array containing the items of `collection` in reverse order.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Ar.reverse([1, 2, 3])
  * @alias flip
  */
 export function reverse<V>(collection: Collection<V>): $Array<V> {
-  const result = [];
-  for (const item of collection.values()) {
-    result.push(item);
-  }
-  return m(result.reverse());
+  return m(Array.from(collection.values()).reverse());
 }
 
 /**
@@ -942,6 +1005,8 @@ export function reverse<V>(collection: Collection<V>): $Array<V> {
  * This sort preserves the order of elements when `compareFn` returns 0 at
  * the cost of using more memory.
  *
+ * @time Worst case O(n^2)
+ * @space O(n)
  * @ex Ar.sort([3, 2, 4, 1]) // [1, 2, 3, 4]
  * @see Ar.sortBy, Ar.sortUnstable
  */
@@ -980,6 +1045,8 @@ export function sort<V>(
  * This sort preserves the order of elements when `compareFn` returns 0 at
  * the cost of using more memory.
  *
+ * @time Worst case O(n^2)
+ * @space O(n)
  * @ex Ar.sortBy([3, 2, 4, 1], n => n % 3) // [3, 4, 1, 2]
  * @see Ar.sort
  */
@@ -1018,6 +1085,8 @@ export function sortBy<V, S>(
  * This sort doesn't preserve the order of elements when `compareFn` returns 0
  * which makes it more memory efficient.
  *
+ * @time Worst case O(n^2)
+ * @space O(n)
  * @ex Ar.sortUnstable([3, 2, 4, 1]) // 1, 2, 3, 4
  * @see Ar.sort
  */
