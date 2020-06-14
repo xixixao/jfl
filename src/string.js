@@ -5,6 +5,7 @@ import type {Collection, KeyedCollection, $Array} from './types.flow';
 import {isRegExp} from './regexp';
 import * as REx from './regexp';
 import * as St from './set';
+import * as Cl from './collection';
 
 /**
  * TODO: Should this be combined with `index of firstMatch` somehow?
@@ -33,6 +34,18 @@ export function includes(
 ): boolean {
   const result = string.indexOf(search, fromIndex);
   return result !== -1;
+}
+
+/**
+ * TODO:
+ */
+export function countMatches(string: string, search: string | RegExp): number {
+  const result = string.matchAll(search);
+  let count = 0;
+  for (let value of result) {
+    count++;
+  }
+  return count;
 }
 
 /**

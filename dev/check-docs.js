@@ -13,6 +13,31 @@ const srcDirectoryPath = path.join(__dirname, '../src');
   $$ = St.diff($$, ['types.flow.js']);
   $$ = Mp.fromKeys($$, fileName => path.join(srcDirectoryPath, fileName));
   $$ = await Mp.mapAsync($$, filePath => readFile(filePath, 'utf8'));
+  checkDescriptions($$);
+  console.log('');
+  checkTODOs($$);
+})();
+
+function checkTODOs(fileNamesToFileSources) {
+  let $$ = fileNamesToFileSources;
+  $$ = Mp.map($$, fileSource => getTODOs(fileSource));
+  $$ = Mp.filter($$, todoCount => todoCount > 0);
+  const fileNamesToTODOCounts = $$;
+  if (Cl.isEmpty(fileNamesToTODOCounts)) {
+    console.log('✅ No files with TODOs!');
+  }
+  console.log('❌ Files with TODOs:');
+  Cl.forEach(fileNamesToTODOCounts, (todoCount, fileName) => {
+    console.log('    ' + fileName + ': ' + todoCount);
+  });
+}
+
+function getTODOs(source) {
+  return Str.countMatches(source, 'TODO');
+}
+
+function checkDescriptions(fileNamesToFileSources) {
+  let $$ = fileNamesToFileSources;
   $$ = Mp.map($$, fileSource => getExportsWithDocs(fileSource));
   $$ = Mp.map($$, functionsToParsedDocs =>
     Mp.filter(
@@ -24,14 +49,21 @@ const srcDirectoryPath = path.join(__dirname, '../src');
     $$,
     functionsToParsedDocs => !Cl.isEmpty(functionsToParsedDocs),
   );
-  console.log('Functions are missing description in');
-  Cl.forEach($$, (functionsToParsedDocs, fileName) => {
-    console.log('  ' + fileName + ':');
-    Cl.forEach(functionsToParsedDocs, (_parsedDoc, functionName) => {
-      console.log('    ' + functionName);
-    });
-  });
-})();
+  const fileNamesToFunctionsToParsedDocs = $$;
+  if (Cl.isEmpty(fileNamesToFunctionsToParsedDocs)) {
+    console.log('✅ No files with functions missing descriptions!');
+  }
+  console.log('❌ Functions are missing description in:');
+  Cl.forEach(
+    fileNamesToFunctionsToParsedDocs,
+    (functionsToParsedDocs, fileName) => {
+      console.log('    ' + fileName + ':');
+      Cl.forEach(functionsToParsedDocs, (_parsedDoc, functionName) => {
+        console.log('      ' + functionName);
+      });
+    },
+  );
+}
 
 function getExportsWithDocs(source) {
   let $$ = REx.everyMatch(

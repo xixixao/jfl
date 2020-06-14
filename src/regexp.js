@@ -28,7 +28,7 @@ export function removeFlags(pattern: RegExp, flags: string) {
 }
 
 /**
- * TODO
+ * TODO:
  */
 export function everyMatch(
   text: string,
