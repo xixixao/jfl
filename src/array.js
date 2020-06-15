@@ -482,7 +482,7 @@ export function zipWith<I, Cs: $Array<Collection<I>>, O>(
 /// Select
 
 /**
- * Return element at given index.
+ * Return element at given `index`.
  *
  * Use this if you care about accurate typing (until JS type systems
  * fix the typing of the built-in). Otherwise use `array[index]`.
@@ -494,6 +494,50 @@ export function zipWith<I, Cs: $Array<Collection<I>>, O>(
  */
 export function get<V>(array: $Array<V>, index: number): ?V {
   return array[index];
+}
+
+/**
+ * Return the last element in `array` or null.
+ *
+ * @time O(1)
+ * @space O(1)
+ * @ex Ar.get([], 1) // undefined
+ * @see Cl.at
+ */
+export function last<V>(array: $Array<V>): ?V {
+  return array[array.length - 1];
+}
+
+/**
+ * Return element at `index` counting from the end of `array`.
+ *
+ * This is the same result as `get(Ar.reverse(array), index)`.
+ *
+ * @time O(1)
+ * @space O(1)
+ * @ex Ar.getFromEnd([1, 2, 3, 4], 0) // 4
+ * @see Cl.at
+ */
+export function getFromEnd<V>(array: $Array<V>, index: number): ?V {
+  return array[array.length - 1 - index];
+}
+
+/**
+ * Return element at `index` counting from start if it's positive and counting
+ * from end if it's negative, with last element being at index `-1`.
+ *
+ * @time O(1)
+ * @space O(1)
+ * @ex Ar.getDynamic([1, 2, 3, 4], 0) // 1
+ * @ex Ar.getDynamic([1, 2, 3, 4], -2) // 3
+ * @see Cl.at
+ */
+export function getDynamic<V>(array: $Array<V>, index: number): ?V {
+  if (index < 0) {
+    return array[array.length - index];
+  } else {
+    return array[array.length - 1];
+  }
 }
 
 /**
@@ -624,16 +668,7 @@ export function uniqueBy<V>(
  * @see Ar.drop, Ar.splitAt, Ar.takeWhile
  */
 export function take<V>(collection: Collection<V>, n: number): $Array<V> {
-  let i = 0;
-  const result = [];
-  for (const item of collection.values()) {
-    if (i >= n) {
-      break;
-    }
-    result.push(item);
-    i++;
-  }
-  return m(result);
+  return slice(collection, 0, n);
 }
 
 /**
@@ -645,15 +680,7 @@ export function take<V>(collection: Collection<V>, n: number): $Array<V> {
  * @see Ar.take, Ar.splitAt, Ar.dropWhile
  */
 export function drop<V>(collection: Collection<V>, n: number): $Array<V> {
-  let i = 0;
-  const result = [];
-  for (const item of collection.values()) {
-    if (i >= n) {
-      result.push(item);
-    }
-    i++;
-  }
-  return m(result);
+  return slice(collection, n);
 }
 
 /// Transform
@@ -820,10 +847,14 @@ export function partition<V>(
  * Note that this is not a way to clone an array, if given an array and indices
  * corresponding to its full size it returns the original array.
  *
+ * Either index can be negative, in which case they are counted from the end
+ * of the `collection`, with last element being at index `-1`.
+ *
  * @time O(n)
  * @space O(n)
- * @ex Ar.slice([1, 2, 3, 4], 1, 3)
- * @see Ar.splice
+ * @ex Ar.slice([1, 2, 3, 4, 5], 1, 2) // [2, 3]
+ * @ex Ar.slice([1, 2, 3, 4, 5], -2, -1) // [3, 4]
+ * @see Ar.take, Ar.drop, Ar.sliceFromEnd, Ar.splice
  */
 export function slice<V>(
   collection: Collection<V>,
@@ -843,16 +874,19 @@ export function slice<V>(
     endIndexExclusive != null && endIndexExclusive < 0
       ? Cl.count(collection) + endIndexExclusive
       : endIndexExclusive;
+  const start =
+    startIndexInclusive < 0
+      ? Cl.count(collection) + startIndexInclusive
+      : startIndexInclusive;
   const result = [];
   let i = 0;
   for (const item of collection.values()) {
     if (end != null && i >= end) {
       break;
     }
-    if (i >= startIndexInclusive) {
+    if (i >= start) {
       result.push(item);
     }
-
     i++;
   }
   return m(result);
@@ -887,7 +921,7 @@ export function splice<V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.split([1, 2, 3], 2)
+ * @ex Ar.split([1, 2, 3], 2) // [[1, 2], [3]]
  * @see Ar.drop, Ar.take, Ar.span
  */
 export function splitAt<V>(

@@ -6,9 +6,104 @@ import {isRegExp} from './regexp';
 import * as REx from './regexp';
 import * as St from './set';
 import * as Cl from './collection';
-import {Str} from '.';
+import {Ar, Mth} from '.';
+
+/// Construct
+
+/**
+ * Returns the string representation of `number`, with given number of
+ * `decimals`, which defaults to 0, and optionally using a different
+ * `decimalPoint` and adding a `thousandsSeparator`.
+ *
+ * For a string represention that shows all present decimals
+ * use `String(number)`.
+ *
+ * @ex Str.fromNumber(1234.56) // '1234'
+ * @ex Str.fromNumber(1234.56, 1) // '1234.6'
+ * @ex Str.fromNumber(1234.56, 4) // '1234.5600'
+ * @ex Str.fromNumber(1234.56, 2, ',', '.') // '1.234,56'
+ * @see Str.fromNumberInLocale
+ */
+export function fromNumber(
+  number: number,
+  decimals?: number = 0,
+  decimalPoint?: string = '.',
+  thousandsSeparator?: string = '',
+): string {
+  const fixedString = number.toFixed(decimals);
+  const needsThousandsSeparator = thousandsSeparator !== '' || number >= 1000;
+  if (decimalPoint === '.' && !needsThousandsSeparator) {
+    return fixedString;
+  }
+  const [integer, decimal] = split(fixedString, '.');
+  if (!needsThousandsSeparator) {
+    if (decimal != null) {
+      return integer + decimalPoint + decimal;
+    }
+    return integer;
+  }
+  const separatedInteger = join(chunkFromEnd(integer, 3), thousandsSeparator);
+  if (decimal != null) {
+    return separatedInteger + decimalPoint + decimal;
+  }
+  return separatedInteger;
+}
+
+/**
+ * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat
+ */
+export function fromNumberInLocale(
+  number: number,
+  locales?: string | Array<string>,
+  options?: Intl$NumberFormatOptions,
+) {
+  return number.toLocaleString(locales, options);
+}
+
+// TODO: 1510
+export function repeat() {}
+
+// TODO: 2642 should this be in Mth or somewhere else?
+export function toNumber() {}
 
 /// Checks
+
+// TODO: 38998
+export function isEmpty() {}
+
+// TODO: 17362
+export function length(string: string) {
+  return string.length;
+}
+
+// TODO: 334 this is indexOfCI
+export function searchCi() {}
+// TODO: 1551 not sure this is needed
+
+// TODO: 570 this is lastIndexOf
+export function searchLast() {}
+
+export function compare() {}
+// TODO: 1658 not sure this is needed
+export function compareCi() {}
+// TODO: 2588
+export function containsCi() {}
+
+// TODO: 9858
+export function startsWith() {}
+// TODO: 975
+export function startsWithCi() {}
+
+// TODO: 3545
+export function endsWith(string: string, suffix: string | RegExp) {
+  if (isRegExp(suffix)) {
+    return REx.append(suffix, '$').test(string);
+  }
+  return string.endsWith(string);
+}
+
+// TODO: 324
+export function endsWithCi() {}
 
 /**
  * Returns the index of the first occurence of `search` in `string` or null.
@@ -133,26 +228,159 @@ export function firstMatch(
   return string.match(search);
 }
 
+// TODO: 8925 figure out how it plays with take and drop - but should have
+// done it already for Ar
+export function slice(
+  string: string,
+  startIndex: number,
+  endIndex?: number,
+): string {
+  return string.slice(startIndex, endIndex);
+}
+
+// TODO: takes number
+export function take() {}
+// TODO: takes `fn`
+export function takeWhile() {}
+// TODO: this is just `slice` right?
+export function drop() {}
+// TODO:
+export function dropWhile() {}
+
+/**
+ * Returns `string` with whitespace stripped from the beginning and end.
+ *
+ * If `search` is given it will stripped instead from both ends.
+ */
+export function trim(string: string, search?: string | RegExp): string {
+  if (search == null) {
+    return string.trim();
+  }
+  // TODO
+}
+
+// TODO: 630, don't take mask
+export function trimStart() {}
+// TODO: 1189, don't take mask
+export function trimEnd() {}
+
+// TODO: 3422 takes string | Regexp
+export function stripPrefix() {}
+// TODO: 1991 takes string | Regexp
+export function stripSuffix() {}
+
 /// Combine
 
 /**
  * TODO:
  */
 export function join(collection: Collection<string>, glue: string): string {
-  return Array.from(collection.values()).join(glue);
+  return Ar.from(collection).join(glue);
+}
+
+// TODO:
+export function joinChars(chars: Collection<string>) {
+  return join(chars, '');
+}
+
+// TODO:
+export function joinWords(words: Collection<string>) {
+  return join(words, ' ');
+}
+
+// TODO:
+export function joinLines(lines: Collection<string>) {
+  return join(lines, '\n');
 }
 
 /// Divide
 
+// TODO: 28289
+export function split(
+  string: string,
+  delimiter: string | RegExp,
+  limit?: number,
+): $Array<string> {
+  const result = string.split(delimiter, limit);
+  if (limit != null) {
+    const resultLength = Mth.sum(
+      Ar.map(result, substring => length(substring)),
+    );
+    if (resultLength < length(string)) {
+      result.push(slice(string, resultLength));
+    }
+  }
+  return result;
+}
+
+/**
+ * Create a tuple of strings containing the first `n` characters
+ * and all but the first `n` characters of given `string`.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Str.split("hello", 2) // ["he", "llo"]
+ * @see Ar.drop, Ar.take, Ar.span
+ */
+export function splitAt(string: string, n: number): [string, string] {
+  return [string.slice(0, n), string.slice(n)];
+}
+
 // TODO: 276
 export function chunk() {}
+
+// TODO: 276
+export function chunkFromEnd(string: string, size: number) {
+  if (size < 1) {
+    throw new Error(`Expected \`size\` to be greater than 0, got \`${size}\``);
+  }
+  size = Math.floor(size);
+  const stringLength = length(string);
+  const chunks = [];
+  let chunksLength = 0;
+  const firstChunkLength = stringLength % size;
+  if (firstChunkLength > 0) {
+    chunks.push(string.slice(0, firstChunkLength));
+    chunksLength += firstChunkLength;
+  }
+  while (chunksLength < stringLength) {
+    const chunkEnd = chunksLength + size;
+    chunks.push(slice(string, chunksLength, chunkEnd));
+    chunksLength = chunkEnd;
+  }
+  return chunks;
+}
 
 /**
  * TODO:
  */
 export function chars(string: string): $Array<string> {
-  return string.split('');
+  return split(string, '');
 }
+
+// TODO:
+export function words(string: string): $Array<string> {
+  return split(trim(string), /\s+/);
+}
+
+const LINE_DELIMITER_PATTERN = /\r?\n/;
+
+// TODO:
+export function lines(
+  string: string,
+  ignoreTrailingNewLine?: boolean = false,
+): $Array<string> {
+  const lines = split(string, LINE_DELIMITER_PATTERN);
+  if (ignoreTrailingNewLine && endsWith(string, LINE_DELIMITER_PATTERN)) {
+    return Ar.slice(lines, 0, -1);
+  }
+  return lines;
+}
+
+// TODO:
+export function span() {}
+// TODO: 210
+export function splice() {}
 
 /// Transform
 
@@ -219,57 +447,6 @@ export function replaceFirst(
   return string.replace(search, replacement);
 }
 
-/**
- * TODO:
- */
-export function uniqueChars(text: string): string {
-  return join(St.from(chars(text)), '');
-}
-
-/// Construct
-
-// TODO: 99017 probably not needed, should favor interpolation
-export function format() {}
-// TODO: 2594
-export function formatNumber() {}
-
-// TODO: 1510
-export function repeat() {}
-
-// TODO: 2642 should this be in Mth or somewhere else?
-export function toNumber() {}
-
-/// Checks
-
-// TODO: 38998
-export function isEmpty() {}
-// TODO: 17362
-export function length() {}
-
-// TODO: 334 this is indexOfCI
-export function searchCi() {}
-// TODO: 1551 not sure this is needed
-
-// TODO: 570 this is lastIndexOf
-export function searchLast() {}
-
-export function compare() {}
-// TODO: 1658 not sure this is needed
-export function compareCi() {}
-// TODO: 2588
-export function containsCi() {}
-
-// TODO: 9858
-export function startsWith() {}
-// TODO: 975
-export function startsWithCi() {}
-
-// TODO: 3545
-export function endsWith() {}
-// TODO: 324
-export function endsWithCi() {}
-
-/// Transform
 // TODO: 229
 export function replaceCi() {}
 // TODO: 1337
@@ -289,56 +466,6 @@ export function lowercase() {}
 // TODO: 6377
 export function uppercase() {}
 // TODO: 420
-export function padLeft() {}
+export function padStart() {}
 // TODO: 317
-export function padRight() {}
-
-/// Select
-
-// TODO: 8925 figure out how it plays with take and drop - but should have
-// done it already for Ar
-export function slice() {}
-// TODO: 3422 takes sting | Regexp
-export function stripPrefix() {}
-// TODO: 1991 takes sting | Regexp
-export function stripSuffix() {}
-// TODO: takes number
-export function take() {}
-// TODO: takes `fn`
-export function takeWhile() {}
-// TODO: this is just `slice` right?
-export function drop() {}
-// TODO:
-export function dropWhile() {}
-
-// TODO: 14672 doesn't take anything or general util from stripping both suffix
-// and prefix?
-export function trim() {}
-// TODO: 630
-export function trimLeft() {}
-// TODO: 1189
-export function trimRight() {}
-
-/// Combine
-
-// TODO:
-export function unchars() {}
-// TODO:
-export function unlines() {}
-// TODO:
-export function unwords() {}
-
-/// Divide
-
-// TODO:
-export function lines() {}
-// TODO:
-export function span() {}
-// TODO: 210
-export function splice() {}
-// TODO: 28289
-export function split() {}
-// TODO:
-export function splitAt() {}
-// TODO:
-export function words() {}
+export function padEnd() {}
