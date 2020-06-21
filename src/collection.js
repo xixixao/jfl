@@ -92,7 +92,7 @@ export function equalsNested<V, C: mixed>(
  * @ex Cl.isEmpty(Ar()) // true
  * @ex Cl.isEmpty(Mp()) // true
  * @ex Cl.isEmpty(St()) // true
- * @see Cl.count
+ * @see Cl.count, Str.isEmpty
  */
 export function isEmpty<V>(collection: Collection<V>): boolean {
   return Cl.count(collection) === 0;
@@ -106,7 +106,7 @@ export function isEmpty<V>(collection: Collection<V>): boolean {
  * @ex Cl.count([1, 2, 3]) // 3
  * @ex Cl.count(Mp({a: 1, b: 3})) // 2
  * @alias length, size
- * @see Cl.isEmpty
+ * @see Cl.isEmpty, Str.length
  */
 export function count<V>(collection: Collection<V>): number {
   const size = (collection: any).size;

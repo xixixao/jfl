@@ -725,6 +725,32 @@ export function mapAsync<VFrom, VTo>(
 
 /**
  * Create a new array by calling given `fn` on each value of `collection` and
+ * and including the result if it is not null or undefined.
+ *
+ * Equivalent to using `map` followed by `filterNulls`, for simplicity and
+ * improved performance.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.mapMaybe([1, 2, 3], x => Math.isOdd(x) ? x * x : null) // [1, 9]
+ * @see Ar.mapFlat
+ */
+export function mapMaybe<VFrom, VTo>(
+  collection: Collection<VFrom>,
+  fn: VFrom => ?VTo,
+): $Array<VTo> {
+  const result = [];
+  for (const item of collection.values()) {
+    const mapped = fn(item);
+    if (mapped != null) {
+      result.push(mapped);
+    }
+  }
+  return m(result);
+}
+
+/**
+ * Create a new array by calling given `fn` on each value of `collection` and
  * flattening the results.
  *
  * Equivalent to using `map` followed by `flatten`, for simplicity and improved

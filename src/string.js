@@ -183,26 +183,31 @@ export function toNumber(
 
 /// Checks
 
-// TODO: 38998
-export function isEmpty() {}
+/**
+ * Returns true when `string` has zero length.
+ *
+ * @time O(1)
+ * @space O(1)
+ * @ex Str.isEmpty('') // true
+ * @ex Str.isEmpty('a') // false
+ * @see Str.length, Cl.isEmpty
+ */
+export function isEmpty(string: string): boolean {
+  return string.length === 0;
+}
 
-// TODO: 17362
+/**
+ * Returns the length of the `string`.
+ *
+ * @time O(1)
+ * @space O(1)
+ * @ex Str.length('') // 0
+ * @ex Str.length('aa') // 2
+ * @see Str.isEmpty, Cl.count
+ */
 export function length(string: string) {
   return string.length;
 }
-
-// TODO: 334 this is indexOfCI
-export function searchCaseIgnored() {}
-// TODO: 1551 not sure this is needed
-
-// TODO: 570 this is lastIndexOf
-export function searchLast() {}
-
-export function compare() {}
-// TODO: 1658 not sure this is needed
-export function compareCaseIgnored() {}
-// TODO: 2588
-export function containsCaseIgnored() {}
 
 // TODO: 9858
 export function startsWith(string: string, prefix: string | RegExp) {
@@ -225,6 +230,27 @@ export function endsWith(string: string, suffix: string | RegExp) {
 
 // TODO: 324
 export function endsWithCaseIgnored() {}
+
+/**
+ * Returns whether `string` includes `search`.
+ *
+ * If `fromIndex` is given then the occurence must be at or after it.
+ *
+ * @time O(n)
+ * @space Worst case O(2^m) (O(n) when `search` is a regex and
+ *        `fromIndex` is used)
+ * @ex Str.includes("abcd", "c") // true
+ * @ex Str.includes("ab cd", /\s/) // true
+ * @alias contains, search, find
+ * @see Str.indexOf, Str.firstMatch
+ */
+export function includes(
+  string: string,
+  search: string | RegExp,
+  fromIndex?: number,
+): boolean {
+  return indexOf(string, search, fromIndex) != null;
+}
 
 /**
  * Returns the index of the first occurence of `search` in `string` or null.
@@ -259,26 +285,14 @@ export function indexOf(
   }
 }
 
-/**
- * Returns whether `string` includes `search`.
- *
- * If `fromIndex` is given then the occurence must be at or after it.
- *
- * @time O(n)
- * @space Worst case O(2^m) (O(n) when `search` is a regex and
- *        `fromIndex` is used)
- * @ex Str.includes("abcd", "c") // true
- * @ex Str.includes("ab cd", /\s/) // true
- * @alias contains, search, find
- * @see Str.indexOf, Str.firstMatch
- */
-export function includes(
-  string: string,
-  search: string | RegExp,
-  fromIndex?: number,
-): boolean {
-  return indexOf(string, search, fromIndex) != null;
-}
+// TODO: 334 this is indexOfCI
+export function indexOfCaseIgnored() {}
+
+// TODO: 570 this is lastIndexOf
+export function lastIndexOf() {}
+
+// TODO:
+export function lastIndexOfCaseIgnored() {}
 
 /**
  * Returns the number of times `search` occurs in `string`.
@@ -297,6 +311,12 @@ export function countMatches(string: string, search: string | RegExp): number {
   }
   return count;
 }
+
+export function compare() {}
+// TODO: 1658 not sure this is needed
+export function compareCaseIgnored() {}
+// TODO: 2588
+export function containsCaseIgnored() {}
 
 /// Select
 
