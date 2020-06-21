@@ -146,7 +146,7 @@ test('rangeDynamic', () => {
 });
 
 test('repeat', () => {
-  eq(Ar.repeat(4, 1), [1, 1, 1, 1]);
+  eq(Ar.repeat('a', 4), ['a', 'a', 'a', 'a']);
 });
 
 test('fill', () => {

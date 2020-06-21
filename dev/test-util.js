@@ -31,7 +31,13 @@ exports.setup = <T1, T2>(
       return format(this, pass, 'expected $0r to $not match $1e', a, b);
     },
     eqqq(_, a, b) {
-      return format(this, a === b, `expected $0r to $not === $1e`, a, b);
+      return format(
+        this,
+        a === b || (a !== a && b !== b),
+        `expected $0r to $not === $1e`,
+        a,
+        b,
+      );
     },
     nil(_, a) {
       return format(this, a == null, `expected $0r to be null`, a);

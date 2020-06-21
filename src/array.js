@@ -182,7 +182,7 @@ export function rangeDescending(
 ): $Array<number> {
   if (step < 0) {
     throw new Error(
-      `\`step\` must be a positive number, got \`${step}\` instead`,
+      `\`step\` must be a positive number, got \`${step}\` instead.`,
     );
   }
   const result = [];
@@ -213,7 +213,7 @@ export function rangeDynamic(
 ): $Array<number> {
   if (step < 0) {
     throw new Error(
-      `\`step\` must be a positive number, got \`${step}\` instead`,
+      `\`step\` must be a positive number, got \`${step}\` instead.`,
     );
   }
   const result = [];
@@ -229,7 +229,7 @@ export function rangeDynamic(
 }
 
 /**
- * Create an array filled with a number of given `value`s.
+ * Create an array filled with a `count` of given `value`s.
  *
  * The `value` will be referenced, not cloned.
  *
@@ -238,16 +238,16 @@ export function rangeDynamic(
  * @ex Ar.repeat(4, "a") // ["a", "a", "a", "a"]
  * @see Ar.range
  */
-export function repeat<V>(times: number, value: V): $Array<V> {
+export function repeat<V>(value: V, count: number): $Array<V> {
   const result = [];
-  for (let i = 0; i < times; i++) {
+  for (let i = 0; i < count; i++) {
     result.push(value);
   }
   return m(result);
 }
 
 /**
- * Create an array filled with results of `fn`.
+ * Create an array filled with `count` results of calling `fn`.
  *
  * `fn` take as the first argument the index where the current invocation's
  * result will be placed.
@@ -257,9 +257,9 @@ export function repeat<V>(times: number, value: V): $Array<V> {
  * @ex Ar.fill(4, i => i) // [0, 1, 2, 3]
  * @see Ar.repeat, Ar.range
  */
-export function fill<V>(times: number, fn: number => V): $Array<V> {
+export function fill<V>(count: number, fn: number => V): $Array<V> {
   const result = [];
-  for (let i = 0; i < times; i++) {
+  for (let i = 0; i < count; i++) {
     result.push(fn(i));
   }
   return m(result);
@@ -792,7 +792,7 @@ export function chunk<V>(
   size: number,
 ): $Array<$Array<V>> {
   if (size < 1) {
-    throw new Error(`Expected \`size\` to be greater than 0, got \`${size}\``);
+    throw new Error(`Expected \`size\` to be greater than 0, got \`${size}\`.`);
   }
   const result = [];
   let chunk = [];

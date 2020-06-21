@@ -11,18 +11,21 @@ import {Ar, Mth} from '.';
 /// Construct
 
 /**
- * Returns the string representation of `number`, with given number of
+ * Create the string representation of `number`, with given number of
  * `decimals`, which defaults to 0, and optionally using a different
  * `decimalPoint` and adding a `thousandsSeparator`.
  *
  * For a string represention that shows all present decimals
  * use `String(number)`.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Str.fromNumber(1234.56) // '1234'
  * @ex Str.fromNumber(1234.56, 1) // '1234.6'
  * @ex Str.fromNumber(1234.56, 4) // '1234.5600'
  * @ex Str.fromNumber(1234.56, 2, ',', '.') // '1.234,56'
- * @see Str.fromNumberInLocale
+ * @alias toString
+ * @see Str.fromNumberInLocale, Str.toNumber, Mth.toBase, Mth.baseConvert
  */
 export function fromNumber(
   number: number,
@@ -31,7 +34,7 @@ export function fromNumber(
   thousandsSeparator?: string = '',
 ): string {
   const fixedString = number.toFixed(decimals);
-  const needsThousandsSeparator = thousandsSeparator !== '' || number >= 1000;
+  const needsThousandsSeparator = thousandsSeparator !== '' && number >= 1000;
   if (decimalPoint === '.' && !needsThousandsSeparator) {
     return fixedString;
   }
@@ -42,15 +45,31 @@ export function fromNumber(
     }
     return integer;
   }
-  const separatedInteger = join(chunkFromEnd(integer, 3), thousandsSeparator);
-  if (decimal != null) {
-    return separatedInteger + decimalPoint + decimal;
+  if (decimalPoint === thousandsSeparator) {
+    throw new Error(
+      `Expected different parameters \`decimalPoint\` and ` +
+        `\`thousandsSeparator\`, but got \`${decimalPoint}\` for both.`,
+    );
   }
-  return separatedInteger;
+  const separatedInteger = join(chunkFromEnd(integer, 3), thousandsSeparator);
+  if (decimal == null) {
+    return separatedInteger;
+  }
+  return separatedInteger + decimalPoint + decimal;
 }
 
 /**
+ * Create the string representation of `number` based on the execution
+ * environment.
+ *
  * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat
+ * for full details.
+ *
+ * There is currently no counter part, ie no `Str.toNumberFromLocale`, because
+ * there is no such API in JavaScript.
+ *
+ * @alias toLocaleString
+ * @see Str.fromNumber, Str.toNumber
  */
 export function fromNumberInLocale(
   number: number,
@@ -60,11 +79,107 @@ export function fromNumberInLocale(
   return number.toLocaleString(locales, options);
 }
 
-// TODO: 1510
-export function repeat() {}
+/**
+ * Create a new string by repeating `string` `count` times.
+ *
+ * @time O(n*m)
+ * @space O(n*m)
+ * @ex Str.repeat('abr', 3) // 'abrabrabr'
+ * @see Str.fill, Ar.repeat
+ */
+export function repeat(string: string, count: number): string {
+  if (this == null) throw new TypeError("can't convert " + this + ' to object');
 
-// TODO: 2642 should this be in Mth or somewhere else?
-export function toNumber() {}
+  if (count < 0) {
+    throw new RangeError(
+      `Expected non-negative parameter \`count\`, but got a \`${count}\` instead.`,
+    );
+  }
+
+  if (count == Infinity) {
+    throw new RangeError(
+      `Expected finite parameter \`count\`, but got a \`${count}\` instead.`,
+    );
+  }
+
+  let countInt = Math.floor(count);
+  if (string.length == 0 || count == 0 || count != count) {
+    return '';
+  }
+
+  if (string.length * countInt >= 1 << 28) {
+    throw new RangeError(
+      `Expected parametrs \`string\` and \`count\` such that the result ` +
+        `will be reasonably long, but got string length \`${string.length}\` ` +
+        `count \`${count}\`.`,
+    );
+  }
+
+  let result = string;
+  const totalLength = string.length * countInt;
+  // Speed string construction via string doubling trick
+  countInt = Math.floor(Math.log(countInt) / Math.log(2));
+  while (countInt) {
+    result += result;
+    countInt--;
+  }
+  result += result.substring(0, totalLength - result.length);
+  return result;
+}
+
+/**
+ * Create a new string by concatenating `count` results of calling `fn`.
+ *
+ * `fn` take as the first argument the position in the final string where the
+ * current invocation's result will be placed.
+ *
+ * @time O(m)
+ * @space O(m)
+ * @ex Str.fill(4, i => `${i}`) // '1234'
+ * @see Str.repeat, Ar.fill
+ */
+export function fill(times: number, fn: number => string): string {
+  let result = '';
+  for (let i = 0; i < times; i++) {
+    result += fn(i);
+  }
+  return result;
+}
+
+/**
+ * Return the number represented by given `string`.
+ *
+ * @time O(n)
+ * @space O(1) (O(n) if thousandsSeparator is used)
+ * @ex Str.toNumber('1234.56') // 1234.56
+ * @ex Str.fromNumber('1.234,56', ',', '.') // 1234.56
+ * @alias Number
+ * @see Str.fromNumber, Mth.fromBase
+ */
+export function toNumber(
+  string: string,
+  decimalPoint?: string = '.',
+  thousandsSeparator?: string = '',
+) {
+  if (decimalPoint === '.' && thousandsSeparator === '') {
+    return Number(string);
+  }
+  if (thousandsSeparator === '') {
+    return Number(string.replace(decimalPoint, '.'));
+  }
+  if (decimalPoint === thousandsSeparator) {
+    throw new Error(
+      `Expected different parameters \`decimalPoint\` and ` +
+        `\`thousandsSeparator\`, but got \`${decimalPoint}\` for both.`,
+    );
+  }
+  const [integer, decimal] = split(string, decimalPoint);
+  const nonSeparatedInteger = integer.replace(thousandsSeparator, '');
+  if (decimal == null) {
+    return Number(nonSeparatedInteger);
+  }
+  return Number(nonSeparatedInteger + '.' + decimal);
+}
 
 /// Checks
 
@@ -77,7 +192,7 @@ export function length(string: string) {
 }
 
 // TODO: 334 this is indexOfCI
-export function searchCi() {}
+export function searchCaseIgnored() {}
 // TODO: 1551 not sure this is needed
 
 // TODO: 570 this is lastIndexOf
@@ -85,14 +200,20 @@ export function searchLast() {}
 
 export function compare() {}
 // TODO: 1658 not sure this is needed
-export function compareCi() {}
+export function compareCaseIgnored() {}
 // TODO: 2588
-export function containsCi() {}
+export function containsCaseIgnored() {}
 
 // TODO: 9858
-export function startsWith() {}
+export function startsWith(string: string, prefix: string | RegExp) {
+  if (isRegExp(prefix)) {
+    return REx.prepend(prefix, '^').test(string);
+  }
+  return string.startsWith(string);
+}
+
 // TODO: 975
-export function startsWithCi() {}
+export function startsWithCaseIgnored() {}
 
 // TODO: 3545
 export function endsWith(string: string, suffix: string | RegExp) {
@@ -103,7 +224,7 @@ export function endsWith(string: string, suffix: string | RegExp) {
 }
 
 // TODO: 324
-export function endsWithCi() {}
+export function endsWithCaseIgnored() {}
 
 /**
  * Returns the index of the first occurence of `search` in `string` or null.
@@ -250,24 +371,54 @@ export function dropWhile() {}
 /**
  * Returns `string` with whitespace stripped from the beginning and end.
  *
- * If `search` is given it will stripped instead from both ends.
+ * If `search` is given it will stripped instead from both ends. The beginning
+ * will be trimmed first.
+ *
+ * @time O(n)
+ * @space Worst case O(2^m)
  */
 export function trim(string: string, search?: string | RegExp): string {
   if (search == null) {
     return string.trim();
   }
-  // TODO
+  return trimEnd(trimStart(string, search), search);
 }
 
-// TODO: 630, don't take mask
-export function trimStart() {}
-// TODO: 1189, don't take mask
-export function trimEnd() {}
+/**
+ * Returns `string` with whitespace stripped from its beginning.
+ *
+ * If `prefix` is given it will stripped instead.
+ *
+ * @time O(n)
+ * @space Worst case O(2^m)
+ */
+export function trimStart(string: string, prefix?: string | RegExp): string {
+  if (prefix == null) {
+    return string.trimStart();
+  }
+  if (isRegExp(prefix)) {
+    return string.replace(REx.prepend(prefix, '^'), '');
+  }
+  return string.startsWith(prefix) ? string.slice(prefix.length) : string;
+}
 
-// TODO: 3422 takes string | Regexp
-export function stripPrefix() {}
-// TODO: 1991 takes string | Regexp
-export function stripSuffix() {}
+/**
+ * Returns `string` with whitespace stripped from its end.
+ *
+ * If `suffix` is given it will stripped instead.
+ *
+ * @time O(n)
+ * @space Worst case O(2^m)
+ */
+export function trimEnd(string: string, suffix?: string | RegExp): string {
+  if (suffix == null) {
+    return string.trimEnd();
+  }
+  if (isRegExp(suffix)) {
+    return string.replace(REx.append(suffix, '$'), '');
+  }
+  return string.endsWith(suffix) ? string.slice(0, -suffix.length) : string;
+}
 
 /// Combine
 
@@ -448,9 +599,9 @@ export function replaceFirst(
 }
 
 // TODO: 229
-export function replaceCi() {}
+export function replaceFirstCaseIgnored() {}
 // TODO: 1337
-export function replaceEveryCi() {}
+export function replaceEveryCaseIgnored() {}
 // TODO:
 export function camelize() {}
 // TODO: 1351
