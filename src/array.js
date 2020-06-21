@@ -550,11 +550,11 @@ export function getDynamic<V>(array: $Array<V>, index: number): ?V {
  */
 export function filter<V>(
   collection: Collection<V>,
-  predicate: V => boolean,
+  predicateFn: V => boolean,
 ): $Array<V> {
   const result = [];
   for (const item of collection.values()) {
-    if (predicate(item)) {
+    if (predicateFn(item)) {
       result.push(item);
     }
   }
@@ -565,7 +565,7 @@ export function filter<V>(
  * Create a promise of an array by filtering out values in `collection`
  * for which async `fn` returns false.
  *
- * Executes `predicate` on all items in `collection` concurrently.
+ * Executes `predicateFn` on all items in `collection` concurrently.
  *
  * @time O(n)
  * @space O(n)
@@ -574,9 +574,9 @@ export function filter<V>(
  */
 export async function filterAsync<V>(
   collection: Collection<V>,
-  predicate: V => Promise<boolean>,
+  predicateFn: V => Promise<boolean>,
 ): Promise<$Array<V>> {
-  const filter = await mapAsync(collection, predicate);
+  const filter = await mapAsync(collection, predicateFn);
   const result = [];
   let i = 0;
   for (const item of collection.values()) {
@@ -681,6 +681,53 @@ export function take<V>(collection: Collection<V>, n: number): $Array<V> {
  */
 export function drop<V>(collection: Collection<V>, n: number): $Array<V> {
   return slice(collection, n);
+}
+
+/**
+ * Create an array containing all the items of `collection` preceding the item
+ * for which `predicateFn` returns false.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.takeWhile([1, 3, 4, 7], Mth.isOdd)
+ * @see Ar.take
+ */
+export function takeWhile<V>(
+  collection: Collection<V>,
+  predicateFn: V => boolean,
+): $Array<V> {
+  const result = [];
+  for (const item of collection.values()) {
+    if (!predicateFn(item)) {
+      break;
+    }
+    result.push(item);
+  }
+  return m(result);
+}
+
+/**
+ * Create an array containing all the items of `collection` following and
+ * including the first item for which `predicateFn` returns false.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.dropWhile([1, 3, 4, 7], Mth.isOdd)
+ * @see Ar.drop
+ */
+export function dropWhile<V>(
+  collection: Collection<V>,
+  predicateFn: V => boolean,
+): $Array<V> {
+  const result = [];
+  let taking = false;
+  for (const item of collection.values()) {
+    taking = taking || !predicateFn(item);
+    if (taking) {
+      result.push(item);
+    }
+  }
+  return m(result);
 }
 
 /// Transform
@@ -994,53 +1041,6 @@ export function span<V>(
     }
   }
   return [m(before), m(after)];
-}
-
-/**
- * Create an array containing all the items of `collection` preceding the item
- * for which `fn` returns false.
- *
- * @time O(n)
- * @space O(n)
- * @ex Ar.takeWhile([1, 3, 4, 7], Mth.isOdd)
- * @see Ar.take
- */
-export function takeWhile<V>(
-  collection: Collection<V>,
-  fn: V => boolean,
-): $Array<V> {
-  const result = [];
-  for (const item of collection.values()) {
-    if (!fn(item)) {
-      break;
-    }
-    result.push(item);
-  }
-  return m(result);
-}
-
-/**
- * Create an array containing all the items of `collection` following and
- * including the first item for which `fn` returns false.
- *
- * @time O(n)
- * @space O(n)
- * @ex Ar.dropWhile([1, 3, 4, 7], Mth.isOdd)
- * @see Ar.drop
- */
-export function dropWhile<V>(
-  collection: Collection<V>,
-  fn: V => boolean,
-): $Array<V> {
-  const result = [];
-  let taking = false;
-  for (const item of collection.values()) {
-    taking = taking || !fn(item);
-    if (taking) {
-      result.push(item);
-    }
-  }
-  return m(result);
 }
 
 /// Ordering

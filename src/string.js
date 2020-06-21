@@ -252,6 +252,28 @@ export function includes(
   return indexOf(string, search, fromIndex) != null;
 }
 
+// TODO: 2588
+export function includesCaseIgnored() {}
+
+/**
+ * Returns whether `string` matches the regular expression `search`.
+ *
+ * To compare two strings, use `a === b`.
+ *
+ * @time O(n)
+ * @space Worst case O(2^m)
+ * @ex Str.matches("abcd", /abcd/) // true
+ * @ex Str.includes("abcde", /abcd/) // false
+ * @alias test, equals
+ * @see Str.includes, Str.matchFirst
+ */
+export function matches(string: string, search: RegExp): boolean {
+  return REx.append(REx.prepend(search, '^'), '$').test(string);
+}
+
+// TODO
+export function matchesCaseIgnored() {}
+
 /**
  * Returns the index of the first occurence of `search` in `string` or null.
  *
@@ -315,8 +337,6 @@ export function countMatches(string: string, search: string | RegExp): number {
 export function compare() {}
 // TODO: 1658 not sure this is needed
 export function compareCaseIgnored() {}
-// TODO: 2588
-export function containsCaseIgnored() {}
 
 /// Select
 
@@ -380,13 +400,45 @@ export function slice(
 }
 
 // TODO: takes number
-export function take() {}
-// TODO: takes `fn`
-export function takeWhile() {}
-// TODO: this is just `slice` right?
-export function drop() {}
+export function take(string: string, n: number): string {
+  return string.slice(0, n);
+}
+
+// TODO: more readable slice alias
+export function drop(string: string, n: number): string {
+  return string.slice(n);
+}
+
 // TODO:
-export function dropWhile() {}
+export function takeWhile(
+  string: string,
+  predicateFn: string => boolean,
+): string {
+  let result = '';
+  forEachCodePoint(string, codePoint => {
+    if (predicateFn(codePoint)) {
+      result += codePoint;
+    }
+    return true;
+  });
+  return result;
+}
+
+// TODO:
+export function dropWhile(
+  string: string,
+  predicateFn: string => boolean,
+): string {
+  let result = '';
+  forEachCodePoint(string, (codePoint, index) => {
+    if (predicateFn(codePoint)) {
+      result = string.slice(index + codePoint.length);
+      return false;
+    }
+    return true;
+  });
+  return result;
+}
 
 /**
  * Returns `string` with whitespace stripped from the beginning and end.
@@ -554,6 +606,46 @@ export function span() {}
 export function splice() {}
 
 /// Transform
+
+// TODO:
+export function forEachCodePoint(
+  string: string,
+  fn: (string, number) => boolean,
+): void {
+  if ((string: any)[Symbol.iterator] != null) {
+    for (const codePoint of string) {
+      if (!fn(codePoint)) {
+        break;
+      }
+    }
+  } else {
+    let index = 0;
+    let codePoint;
+    while (index < string.length) {
+      codePoint = fixedCharAt(string, index);
+      if (!fn(codePoint, index)) {
+        break;
+      }
+      index += codePoint.length;
+    }
+  }
+}
+
+// Takes full Unicode code points into account
+function fixedCharAt(string: string, pos: number) {
+  const position = toInteger(pos);
+  const size = string.length;
+  let first, second;
+  if (position < 0 || position >= size) return '';
+  first = string.charCodeAt(position);
+  return first < 0xd800 ||
+    first > 0xdbff ||
+    position + 1 === size ||
+    (second = string.charCodeAt(position + 1)) < 0xdc00 ||
+    second > 0xdfff
+    ? string.charAt(position)
+    : string.slice(position, position + 2);
+}
 
 /**
  * TODO
