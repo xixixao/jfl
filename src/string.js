@@ -242,7 +242,7 @@ export function endsWithCaseIgnored() {}
  * @ex Str.includes("abcd", "c") // true
  * @ex Str.includes("ab cd", /\s/) // true
  * @alias contains, search, find
- * @see Str.indexOf, Str.firstMatch
+ * @see Str.indexOf, Str.matchFirst
  */
 export function includes(
   string: string,
@@ -263,7 +263,7 @@ export function includes(
  * @ex Str.indexOf("abcd", "c") // 2
  * @ex Str.indexOf("ab cd", "/\s/") // 2
  * @alias search, firstIndexOf, find
- * @see Str.includes, Str.firstMatch
+ * @see Str.includes, Str.matchFirst
  */
 export function indexOf(
   string: string,
@@ -301,7 +301,7 @@ export function lastIndexOfCaseIgnored() {}
  * @space Worst case O(2^m)
  * @ex Str.countMatches("abcd", "c") // 1
  * @ex Str.countMatches("ab cd", /\s/) // 1
- * @see Str.includes, Str.everyMatch
+ * @see Str.includes, Str.matchEvery
  */
 export function countMatches(string: string, search: string | RegExp): number {
   const result = string.matchAll(search);
@@ -323,14 +323,14 @@ export function containsCaseIgnored() {}
 /**
  * Returns every match corresponding to `search` that occurs in `string`.
  *
- * See `Str.firstMatch` for the description of the values in the returned array.
+ * See `Str.matchFirst` for the description of the values in the returned array.
  *
  * @time O(n)
  * @space Worst case O(2^m)
- * @ex Str.everyMatch("a b1cd", /\w+/) // [['a'], ['b'], ['cd']]
- * @see Str.firstMatch
+ * @ex Str.matchEvery("a b1cd", /\w+/) // [['a'], ['b'], ['cd']]
+ * @see Str.matchFirst
  */
-export function everyMatch(
+export function matchEvery(
   string: string,
   search: string | RegExp,
 ): $Array<RegExp$matchResult> {
@@ -356,10 +356,10 @@ export function everyMatch(
  *
  * @time O(n)
  * @space Worst case O(2^m)
- * @ex Str.firstMatch("apple", /\w+(pp)?/) // ['app', 'pp'] {index: 0}
- * @see Str.everyMatch
+ * @ex Str.matchFirst("apple", /\w+(pp)?/) // ['app', 'pp'] {index: 0}
+ * @see Str.matchEvery
  */
-export function firstMatch(
+export function matchFirst(
   string: string,
   search: string | RegExp,
 ): ?RegExp$matchResult {

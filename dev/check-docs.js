@@ -66,7 +66,7 @@ function checkDescriptions(fileNamesToFileSources) {
 }
 
 function getExportsWithDocs(source) {
-  let $$ = Str.everyMatch(
+  let $$ = Str.matchEvery(
     source,
     /(?:\/(?<doc>\*\*(?:(?:\s|\S)(?!\*\*|TODO|\n\n))*?))?export function (?<name>\w+)/g,
   );
@@ -85,7 +85,7 @@ function getExportsWithDocs(source) {
 }
 
 function getDescriptionFromDoc(doc) {
-  let [text] = nullthrows(Str.firstMatch(doc, /^((\s|\S)(?!@|\/))*/));
+  let [text] = nullthrows(Str.matchFirst(doc, /^((\s|\S)(?!@|\/))*/));
   let $$ = text;
   $$ = Str.replaceEvery($$, / *\* */, ''); // strip comments
   $$ = Str.replaceEvery($$, /^\n+/, ''); // truncate newlines from start
