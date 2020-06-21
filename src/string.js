@@ -613,10 +613,12 @@ export function forEachCodePoint(
   fn: (string, number) => boolean,
 ): void {
   if ((string: any)[Symbol.iterator] != null) {
+    let index = 0;
     for (const codePoint of string) {
-      if (!fn(codePoint)) {
+      if (!fn(codePoint, index)) {
         break;
       }
+      index += codePoint.length;
     }
   } else {
     let index = 0;
@@ -632,10 +634,10 @@ export function forEachCodePoint(
 }
 
 // Takes full Unicode code points into account
-function fixedCharAt(string: string, pos: number) {
-  const position = toInteger(pos);
+function fixedCharAt(string: string, position: number) {
   const size = string.length;
-  let first, second;
+  let first;
+  let second = 0;
   if (position < 0 || position >= size) return '';
   first = string.charCodeAt(position);
   return first < 0xd800 ||
