@@ -18,6 +18,7 @@
     "prettier": "2.0.5"
   },
   "scripts": {
+    "preinstall": "git config core.hooksPath .githooks; chmod +x .githooks/pre-commit",
     "build": "babel src -d dist; npx prettier --write dist/*; rm dist/types.flow.js",
     "check": "node_modules/.bin/jest-runtime dev/check-docs.js",
     "test": "node_modules/.bin/jest"

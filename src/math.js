@@ -99,12 +99,19 @@ export function cubed(n: number): number {
 /// Collections
 
 /**
- * Returns the smallest of all values in `collection`.
+ * Returns the smallest of all values in `collection`, null if it's empty.
  *
  * @ex Mth.min($Mp({a: 5, b: 2, c: 8})) // 2
+ * @ex Mth.min([]) // null
  * @see Mth.minBy, Mth.max
  */
-export function min() {}
+export function min(collection: Collection<number>): ?number {
+  let min = null;
+  for (const value of collection.values()) {
+    min = Math.min(value);
+  }
+  return min;
+}
 
 /**
  * TODO:
@@ -114,7 +121,13 @@ export function minBy() {}
 /**
  * TODO:
  */
-export function max() {}
+export function max(collection: Collection<number>): ?number {
+  let max = null;
+  for (const value of collection.values()) {
+    max = Math.max(value);
+  }
+  return max;
+}
 
 /**
  * TODO:
@@ -134,7 +147,7 @@ export function median() {}
 /**
  * Returns the sum of all values in `collection`.
  *
- * @ex Mth.sum([1, 2, 3])
+ * @ex Mth.sum([1, 2, 3]) // 6
  * @see Mth.product
  */
 export function sum<K>(collection: KeyedCollection<K, number>): number {
@@ -149,6 +162,20 @@ export function sum<K>(collection: KeyedCollection<K, number>): number {
  * TODO:
  */
 export function sumFloat() {}
+
+/**
+ * Returns the product of all values in `collection`.
+ *
+ * @ex Mth.product([2, 3, 4]) // 24
+ * @see Mth.sum
+ */
+export function product<K>(collection: KeyedCollection<K, number>): number {
+  let total = 0;
+  for (const value of collection.values()) {
+    total *= value;
+  }
+  return total;
+}
 
 /// Bases
 

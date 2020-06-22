@@ -1,0 +1,3 @@
+#!/bin/bash
+
+node_modules/.bin/flow && npm run test || exit 1

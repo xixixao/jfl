@@ -423,10 +423,10 @@ export function flatten<V>(
   return m(result);
 }
 
-type $GetValue = <V>(Collection<V>) => V;
+type TupleOfValues<Cs> = $TupleMap<Cs, <V>(Collection<V>) => V>;
 
 /**
- * Join collections into an array of tuples of values from each collection.
+ * Join `collections` into an array of tuples of values from each collection.
  *
  * The resulting array has the same length as the smallest given collection.
  * Excess values are ignored.
@@ -439,7 +439,7 @@ type $GetValue = <V>(Collection<V>) => V;
  */
 export function zip<V, Cs: $Array<Collection<mixed>>>(
   ...collections: Cs
-): $Array<$TupleMap<Cs, $GetValue>> {
+): $Array<TupleOfValues<Cs>> {
   if (collections.length < 1) {
     throw new Error('Expected at least one collection, got none instead.');
   }
@@ -460,7 +460,7 @@ export function zip<V, Cs: $Array<Collection<mixed>>>(
 }
 
 /**
- * Join multiple collections into an array of values resulting form calling
+ * Join multiple `collections` into an array of values resulting form calling
  * `fn` on items from each collection.
  *
  * Note that this function has unusual order of arguments because JavaScript
@@ -473,10 +473,42 @@ export function zip<V, Cs: $Array<Collection<mixed>>>(
  * @see Ar.zip
  */
 export function zipWith<I, Cs: $Array<Collection<I>>, O>(
-  fn: (...collections: $TupleMap<Cs, $GetValue>) => O,
+  fn: (...collections: TupleOfValues<Cs>) => O,
   ...collections: Cs
 ): $Array<O> {
   return map(zip(...collections), tuple => fn(...tuple));
+}
+
+/**
+ * Join `collections` into an array of tuples of values of all combinations
+ * from each collection.
+ *
+ * The resulting array has the length which is the product of the lengths
+ * of each collection.
+ *
+ * @time O(n*m)
+ * @space O(n*m)
+ * @ex Ar.product([1, 2], ['a', 'b']) // [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b']]
+ * @alias zipAll
+ * @see Ar.zipWith
+ */
+export function product<V, Cs: $Array<Collection<mixed>>>(
+  ...collections: Cs
+): $Array<TupleOfValues<Cs>> {
+  if (collections.length < 1) {
+    throw new Error('Expected at least one collection, got none instead.');
+  }
+  let result: Array<Array<mixed>> = [[]];
+  for (const collection of collections) {
+    let newResult = [];
+    for (const item of collection.values()) {
+      for (const tuple of result) {
+        newResult.push(tuple.concat([item]));
+      }
+    }
+    result = newResult;
+  }
+  return m(result);
 }
 
 /// Select
