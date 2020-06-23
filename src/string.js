@@ -718,8 +718,12 @@ export function replaceFirstCaseIgnored() {}
 export function replaceEveryCaseIgnored() {}
 // TODO:
 export function camelize() {}
+
 // TODO: 1351
-export function capitalize() {}
+export function capitalize(string: string): string {
+  return fixedCharAt(string, 0).toUpperCase() + string.slice(1);
+}
+
 // TODO: 968
 export function capitalizeWords() {}
 // TODO:
@@ -727,7 +731,10 @@ export function dasherize() {}
 // TODO:
 export function underscorize() {}
 // TODO: 15578
-export function lowercase() {}
+export function lowercase(string: string): string {
+  return string.toLowerCase();
+}
+
 // TODO: 6377
 export function uppercase() {}
 // TODO: 420

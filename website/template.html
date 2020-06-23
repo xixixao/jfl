@@ -1,0 +1,185 @@
+<html>
+  <head>
+    <title>JFL - JavaScript Standard Functional Library</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        /* Colors */
+        --background-color: rgb(210, 210, 210);
+        --hover-background-color: rgb(0, 112, 245);
+        --hover-text-color: rgb(255, 255, 255);
+        --input-background-color: rgb(255, 255, 255);
+        --input-border-color: rgb(241, 241, 241);
+        --input-placeholder-color: rgb(178, 178, 178);
+        --secondary-text-color: rgb(0, 0, 0);
+        --text-color: rgb(0, 0, 0);
+
+        /* Sizes */
+        --content-width: 44rem;
+        --sidebar-content-width: 16rem;
+        --min-content-width: var(--sidebar-content-width) + var(--content-width);
+        --sidebar-width: var(--sidebar-content-width);
+      }
+
+      @media screen and (prefers-color-scheme: dark) {
+        :root {
+          --background-color: rgb(30, 30, 30);
+          --hover-background-color: rgb(50, 114, 246);
+          --hover-text-color: rgb(255, 255, 255);
+          --input-background-color: rgb(54, 54, 54);
+          --input-border-color: rgb(31, 31, 31);
+          --input-placeholder-color: rgb(131, 131, 131);
+          --secondary-text-color: rgb(191, 191, 191);
+          --text-color: rgb(255, 255, 255);
+        }
+      }
+
+      /* (2 * sidebar-content-width + content-width) */
+      @media screen and (min-width: 76rem) {
+        :root {
+          --sidebar-width: calc((100vw - var(--content-width)) / 2);
+        }
+      }
+
+      body {
+        -webkit-text-size-adjust: none;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        display: flex;
+        font-family: 'SF Pro Display', 'Helvetica Neue', 'Helvetica', 'Arial',
+          sans-serif;
+        margin: 0;
+      }
+      a {
+        color: var(--text-color);
+        cursor: pointer;
+        text-decoration: none;
+      }
+      h1 {
+        font-weight: normal;
+      }
+      .sidebar {
+        display: flex;
+        height: 100vh;
+        justify-content: flex-end;
+        width: var(--sidebar-width);
+      }
+      .sidebarContent {
+        display: flex;
+        flex-direction: column;
+        width: 16rem;
+      }
+      .sidebarSearch {
+        padding: 16px;
+      }
+      .sidebarNavigation {
+        font-size: 0.85rem;
+        overflow: auto;
+        padding: 16px;
+      }
+      .sidebar a {
+        display: block;
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
+      .sidebar a:hover {
+        background-color: var(--hover-background-color);
+        color: var(--hover-text-color);
+      }
+      .sidebar div.section {
+        color: var(--secondary-text-color);
+        font-size: 0.75rem;
+        font-weight: bold;
+        margin-top: 4px;
+        margin-left: 8px;
+        padding: 4px 8px;
+      }
+      .sidebar a.function {
+        margin-left: 8px;
+        font-size: 0.85rem;
+      }
+      .main {
+        max-width: var(--content-width);
+      }
+      .mainContent {
+        padding: 28px;
+      }
+      input[type='text'] {
+        background-color: var(--input-background-color);
+        border-radius: 4px;
+        border: 1px solid var(--input-border-color);
+        box-sizing: border-box;
+        color: inherit;
+        display: block;
+        font-family: inherit;
+        font-size: 0.75rem;
+        height: 2rem;
+        padding: 0.5rem;
+        width: 100%;
+      }
+      input[type='text']:focus {
+        outline: none;
+        box-shadow: 0px 0px 0px 2px var(--hover-background-color);
+      }
+      ::placeholder {
+        color: var(--input-placeholder-color);
+        opacity: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <div class="sidebarContent">
+        <div class="sidebarSearch">
+          <input type="text" placeholder="Search" />
+        </div>
+        <div class="sidebarNavigation">
+          <a href="#intro">
+            Intro
+          </a>
+          <!--NAVIGATION-->
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="mainContent">
+        <a name="intro">
+          <h1>JFL - JavaScript Standard Functional Library</h1>
+        </a>
+        <p>
+          This JavaScript library aims to compliment the language to provide a
+          single dependency for writing most business logic code. It is fully
+          statically typed to work well with both Flow and TypeScript.
+        </p>
+        <!--CONTENT-->
+      </div>
+    </div>
+    <script>
+      var navItems = document.querySelectorAll('.doc-nav .side .has-sublist');
+      var hasChildItems, navItemAnchor;
+      // function closeAllItems(except) {
+      // 	for (var i = 0; i < navItems.length; i++) {
+      // 		if (navItems[i] !== except) {
+      // 			navItems[i].classList.remove('open');
+      // 		}
+      // 	}
+      // }
+      for (var i = 0; i < navItems.length; i++) {
+        hasChildItems = !!navItems[i].querySelector('li');
+        navItemAnchor = navItems[i].querySelector('a');
+        if (hasChildItems) {
+          navItemAnchor.addEventListener(
+            'click',
+            function (e) {
+              e.preventDefault();
+              e.target.parentNode.classList.toggle('open');
+              setNavPosition();
+            },
+            true,
+          );
+        }
+      }
+    </script>
+  </body>
+</html>

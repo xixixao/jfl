@@ -13,7 +13,7 @@ function m<V>(array: $Array<V>): $Array<V> {
   return array.length === 0 ? EMPTY : array;
 }
 
-/// Construction
+/// Construct
 
 /**
  * Create an array.
@@ -310,7 +310,7 @@ export function mutable<V>(collection: Collection<V>): Array<V> {
   return Array.from(collection.values());
 }
 
-/// Checks
+/// Check
 
 /**
  * Returns whether given value is an Array.
@@ -385,130 +385,6 @@ export function equalsNested<V>(
     }
   }
   return true;
-}
-
-/// Combine
-
-/**
- * Concatenate multiple arrays together.
- *
- * @time O(n)
- * @space O(n)
- * @ex Ar.concat([1, 2], [3, 4]) // [1, 2, 3, 4]
- * @alias join, union
- * @see Ar.flatten
- */
-export function concat<V>(...collections: $Array<Collection<V>>): $Array<V> {
-  return flatten(collections);
-}
-
-/**
- * Concatenate a collection of arrays together.
- *
- * @time O(n)
- * @space O(n)
- * @ex Ar.flatten([[1, 2], [3, 4]]) // [1, 2, 3, 4]
- * @alias join, union
- * @see Ar.flatten
- */
-export function flatten<V>(
-  collectionOfArrays: Collection<Collection<V>>,
-): $Array<V> {
-  const result = [];
-  for (const nested of collectionOfArrays.values()) {
-    for (const item of nested.values()) {
-      result.push(item);
-    }
-  }
-  return m(result);
-}
-
-type TupleOfValues<Cs> = $TupleMap<Cs, <V>(Collection<V>) => V>;
-
-/**
- * Join `collections` into an array of tuples of values from each collection.
- *
- * The resulting array has the same length as the smallest given collection.
- * Excess values are ignored.
- *
- * @time O(n)
- * @space O(n)
- * @ex Ar.zip([1, 2], ['a', 'b'], [5, 6]) // [[1, 'a', 5], [2, 'b', 6]]
- * @alias zipAll
- * @see Ar.zipWith
- */
-export function zip<V, Cs: $Array<Collection<mixed>>>(
-  ...collections: Cs
-): $Array<TupleOfValues<Cs>> {
-  if (collections.length < 1) {
-    throw new Error('Expected at least one collection, got none instead.');
-  }
-  const first = collections[0];
-  let zippedLength = Cl.count(first);
-  for (const collection of collections) {
-    zippedLength = Math.min(zippedLength, Cl.count(collection));
-  }
-  const result = fill(zippedLength, _ => []);
-  for (const collection of collections) {
-    let i = 0;
-    for (const item of collection.values()) {
-      (result[i]: any).push(item);
-      i++;
-    }
-  }
-  return m(result);
-}
-
-/**
- * Join multiple `collections` into an array of values resulting form calling
- * `fn` on items from each collection.
- *
- * Note that this function has unusual order of arguments because JavaScript
- * enforces that the rest parameter is the last one. The resulting array has
- * the same length as the smallest given collection. Excess values are ignored.
- *
- * @time O(n)
- * @space O(n)
- * @ex Ar.zipWith((a, b, c) => a + b * c, [1, 2, 3], [5, 6, 7], [2, 4, 6])
- * @see Ar.zip
- */
-export function zipWith<I, Cs: $Array<Collection<I>>, O>(
-  fn: (...collections: TupleOfValues<Cs>) => O,
-  ...collections: Cs
-): $Array<O> {
-  return map(zip(...collections), tuple => fn(...tuple));
-}
-
-/**
- * Join `collections` into an array of tuples of values of all combinations
- * from each collection.
- *
- * The resulting array has the length which is the product of the lengths
- * of each collection.
- *
- * @time O(n*m)
- * @space O(n*m)
- * @ex Ar.product([1, 2], ['a', 'b']) // [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b']]
- * @alias zipAll
- * @see Ar.zipWith
- */
-export function product<V, Cs: $Array<Collection<mixed>>>(
-  ...collections: Cs
-): $Array<TupleOfValues<Cs>> {
-  if (collections.length < 1) {
-    throw new Error('Expected at least one collection, got none instead.');
-  }
-  let result: Array<Array<mixed>> = [[]];
-  for (const collection of collections) {
-    let newResult = [];
-    for (const item of collection.values()) {
-      for (const tuple of result) {
-        newResult.push(tuple.concat([item]));
-      }
-    }
-    result = newResult;
-  }
-  return m(result);
 }
 
 /// Select
@@ -762,123 +638,6 @@ export function dropWhile<V>(
   return m(result);
 }
 
-/// Transform
-
-/**
- * TODO: consider using KeyedCollection and always passing key to `fn`
- * Create a new array by calling given `fn` on each value of `collection`.
- *
- * @time O(n)
- * @space O(n)
- * @ex Ar.map([1, 2], x => x * 2) // [2, 4]
- * @see Ar.mapAsync
- */
-export function map<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => VTo,
-): $Array<VTo> {
-  const result = [];
-  for (const item of collection.values()) {
-    result.push(fn(item));
-  }
-  return m(result);
-}
-
-/**
- * Create a promise of an array by calling given async `fn` on each value of
- * `collection`.
- *
- * Executes `fn` on all items in `collection` concurrently.
- *
- * @time O(n)
- * @space O(n)
- * @ex await Ar.mapAsync([1, 2], async x => x * 2) // [2, 4]
- * @alias Promise.all, genMap
- */
-export function mapAsync<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => Promise<VTo>,
-): Promise<$Array<VTo>> {
-  return Promise.all(map(collection, fn));
-}
-
-/**
- * Create a new array by calling given `fn` on each value of `collection` and
- * and including the result if it is not null or undefined.
- *
- * Equivalent to using `map` followed by `filterNulls`, for simplicity and
- * improved performance.
- *
- * @time O(n)
- * @space O(n)
- * @ex Ar.mapMaybe([1, 2, 3], x => Math.isOdd(x) ? x * x : null) // [1, 9]
- * @see Ar.mapFlat
- */
-export function mapMaybe<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => ?VTo,
-): $Array<VTo> {
-  const result = [];
-  for (const item of collection.values()) {
-    const mapped = fn(item);
-    if (mapped != null) {
-      result.push(mapped);
-    }
-  }
-  return m(result);
-}
-
-/**
- * Create a new array by calling given `fn` on each value of `collection` and
- * flattening the results.
- *
- * Equivalent to using `map` followed by `flatten`, for simplicity and improved
- * performance.
- *
- * @time O(n)
- * @space O(n)
- * @ex Ar.mapFlat([1, 2], x => [x - 1, x + 1]) // [0, 2, 1, 3]
- * @see Ar.mapAsync
- */
-export function mapFlat<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => Collection<VTo>,
-): $Array<VTo> {
-  const result = [];
-  for (const item of collection.values()) {
-    const mapped = fn(item);
-    for (const mappedItem of mapped.values()) {
-      result.push(mappedItem);
-    }
-  }
-  return m(result);
-}
-
-/**
- * Create an array of values based on a reduction of given `collection`.
- *
- * Similar to `Cl.reduce` but instead of returning the final value accumulates
- * all the intermediate accumulators.
- *
- * @time O(n)
- * @space O(n)
- * @ex Ar.scan([1, 2, 3, 4], 0, (acc, x) => acc + x) // [1, 3, 6, 10]
- * @see Cl.reduce
- */
-export function scan<I, O>(
-  collection: Collection<I>,
-  initialValue: O,
-  fn: (O, I) => O,
-): $Array<O> {
-  const result = [];
-  let acc = initialValue;
-  for (const item of collection.values()) {
-    acc = fn(acc, item);
-    result.push(acc);
-  }
-  return m(result);
-}
-
 /// Divide
 
 /**
@@ -1075,7 +834,248 @@ export function span<V>(
   return [m(before), m(after)];
 }
 
-/// Ordering
+/// Combine
+
+/**
+ * Concatenate multiple arrays together.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.concat([1, 2], [3, 4]) // [1, 2, 3, 4]
+ * @alias join, union
+ * @see Ar.flatten
+ */
+export function concat<V>(...collections: $Array<Collection<V>>): $Array<V> {
+  return flatten(collections);
+}
+
+/**
+ * Concatenate a collection of arrays together.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.flatten([[1, 2], [3, 4]]) // [1, 2, 3, 4]
+ * @alias join, union
+ * @see Ar.flatten
+ */
+export function flatten<V>(
+  collectionOfArrays: Collection<Collection<V>>,
+): $Array<V> {
+  const result = [];
+  for (const nested of collectionOfArrays.values()) {
+    for (const item of nested.values()) {
+      result.push(item);
+    }
+  }
+  return m(result);
+}
+
+type TupleOfValues<Cs> = $TupleMap<Cs, <V>(Collection<V>) => V>;
+
+/**
+ * Join `collections` into an array of tuples of values from each collection.
+ *
+ * The resulting array has the same length as the smallest given collection.
+ * Excess values are ignored.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.zip([1, 2], ['a', 'b'], [5, 6]) // [[1, 'a', 5], [2, 'b', 6]]
+ * @alias zipAll
+ * @see Ar.zipWith
+ */
+export function zip<V, Cs: $Array<Collection<mixed>>>(
+  ...collections: Cs
+): $Array<TupleOfValues<Cs>> {
+  if (collections.length < 1) {
+    throw new Error('Expected at least one collection, got none instead.');
+  }
+  const first = collections[0];
+  let zippedLength = Cl.count(first);
+  for (const collection of collections) {
+    zippedLength = Math.min(zippedLength, Cl.count(collection));
+  }
+  const result = fill(zippedLength, _ => []);
+  for (const collection of collections) {
+    let i = 0;
+    for (const item of collection.values()) {
+      (result[i]: any).push(item);
+      i++;
+    }
+  }
+  return m(result);
+}
+
+/**
+ * Join multiple `collections` into an array of values resulting form calling
+ * `fn` on items from each collection.
+ *
+ * Note that this function has unusual order of arguments because JavaScript
+ * enforces that the rest parameter is the last one. The resulting array has
+ * the same length as the smallest given collection. Excess values are ignored.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.zipWith((a, b, c) => a + b * c, [1, 2, 3], [5, 6, 7], [2, 4, 6])
+ * @see Ar.zip
+ */
+export function zipWith<I, Cs: $Array<Collection<I>>, O>(
+  fn: (...collections: TupleOfValues<Cs>) => O,
+  ...collections: Cs
+): $Array<O> {
+  return map(zip(...collections), tuple => fn(...tuple));
+}
+
+/**
+ * Join `collections` into an array of tuples of values of all combinations
+ * from each collection.
+ *
+ * The resulting array has the length which is the product of the lengths
+ * of each collection.
+ *
+ * @time O(n*m)
+ * @space O(n*m)
+ * @ex Ar.product([1, 2], ['a', 'b']) // [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b']]
+ * @alias zipAll
+ * @see Ar.zipWith
+ */
+export function product<V, Cs: $Array<Collection<mixed>>>(
+  ...collections: Cs
+): $Array<TupleOfValues<Cs>> {
+  if (collections.length < 1) {
+    throw new Error('Expected at least one collection, got none instead.');
+  }
+  let result: Array<Array<mixed>> = [[]];
+  for (const collection of collections) {
+    let newResult = [];
+    for (const item of collection.values()) {
+      for (const tuple of result) {
+        newResult.push(tuple.concat([item]));
+      }
+    }
+    result = newResult;
+  }
+  return m(result);
+}
+
+/// Transform
+
+/**
+ * TODO: consider using KeyedCollection and always passing key to `fn`
+ * Create a new array by calling given `fn` on each value of `collection`.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.map([1, 2], x => x * 2) // [2, 4]
+ * @see Ar.mapAsync
+ */
+export function map<VFrom, VTo>(
+  collection: Collection<VFrom>,
+  fn: VFrom => VTo,
+): $Array<VTo> {
+  const result = [];
+  for (const item of collection.values()) {
+    result.push(fn(item));
+  }
+  return m(result);
+}
+
+/**
+ * Create a promise of an array by calling given async `fn` on each value of
+ * `collection`.
+ *
+ * Executes `fn` on all items in `collection` concurrently.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex await Ar.mapAsync([1, 2], async x => x * 2) // [2, 4]
+ * @alias Promise.all, genMap
+ */
+export function mapAsync<VFrom, VTo>(
+  collection: Collection<VFrom>,
+  fn: VFrom => Promise<VTo>,
+): Promise<$Array<VTo>> {
+  return Promise.all(map(collection, fn));
+}
+
+/**
+ * Create a new array by calling given `fn` on each value of `collection` and
+ * and including the result if it is not null or undefined.
+ *
+ * Equivalent to using `map` followed by `filterNulls`, for simplicity and
+ * improved performance.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.mapMaybe([1, 2, 3], x => Math.isOdd(x) ? x * x : null) // [1, 9]
+ * @see Ar.mapFlat
+ */
+export function mapMaybe<VFrom, VTo>(
+  collection: Collection<VFrom>,
+  fn: VFrom => ?VTo,
+): $Array<VTo> {
+  const result = [];
+  for (const item of collection.values()) {
+    const mapped = fn(item);
+    if (mapped != null) {
+      result.push(mapped);
+    }
+  }
+  return m(result);
+}
+
+/**
+ * Create a new array by calling given `fn` on each value of `collection` and
+ * flattening the results.
+ *
+ * Equivalent to using `map` followed by `flatten`, for simplicity and improved
+ * performance.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.mapFlat([1, 2], x => [x - 1, x + 1]) // [0, 2, 1, 3]
+ * @see Ar.mapAsync
+ */
+export function mapFlat<VFrom, VTo>(
+  collection: Collection<VFrom>,
+  fn: VFrom => Collection<VTo>,
+): $Array<VTo> {
+  const result = [];
+  for (const item of collection.values()) {
+    const mapped = fn(item);
+    for (const mappedItem of mapped.values()) {
+      result.push(mappedItem);
+    }
+  }
+  return m(result);
+}
+
+/**
+ * Create an array of values based on a reduction of given `collection`.
+ *
+ * Similar to `Cl.reduce` but instead of returning the final value accumulates
+ * all the intermediate accumulators.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.scan([1, 2, 3, 4], 0, (acc, x) => acc + x) // [1, 3, 6, 10]
+ * @see Cl.reduce
+ */
+export function scan<I, O>(
+  collection: Collection<I>,
+  initialValue: O,
+  fn: (O, I) => O,
+): $Array<O> {
+  const result = [];
+  let acc = initialValue;
+  for (const item of collection.values()) {
+    acc = fn(acc, item);
+    result.push(acc);
+  }
+  return m(result);
+}
+
+/// Order
 
 /**
  * Create an array containing the items of `collection` in reverse order.
