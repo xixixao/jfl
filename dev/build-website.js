@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {promisify} from 'util';
 import {rollup} from 'rollup';
+import Highlighter from 'highlights';
 import rollupFlowPlugin from './rollup-flow-plugin';
 import {Str, St, Ar, Cl, REx} from '../src';
 import {joinLines} from '../src/string';
@@ -70,7 +71,7 @@ function parseSectionFunctions(moduleLines, sectionSource) {
     REx.concat(
       /(\/\*\*(?:(?:\s|\S)(?!export))*)?\s/,
       /export (async )?function (\w+)/,
-      /((?:(?:\s|\S)(?!\{\n  \S))*)/,
+      /((?:(?:\s|\S)(?!(\{\n  \S)|\{\}\n\n))*)/,
     ),
   );
   return Ar.map($$, ([_, doc, isAsync, functionName, params]) => ({
@@ -178,44 +179,62 @@ function formatModules(modules) {
       <a name="${formatModuleLinkID(moduleAlias)}"></a>
       <h2>${formatModuleName(moduleAlias, moduleName)}</h2>
       ${formatDoc(null, moduleDoc)}
-      ${formatModuleSections(moduleAlias, sections)}
+      ${formatModuleSections(moduleAlias, moduleName, sections)}
     `,
   );
 }
 
-function formatModuleSections(moduleAlias, sections) {
+function formatModuleSections(moduleAlias, moduleName, sections) {
   return mapAndJoin(
     sections,
     ({sectionName, functions}) => `
       <h3>${sectionName}</h3>
-      ${formatFunctions(moduleAlias, functions)}
+      ${formatFunctions(moduleAlias, moduleName, functions)}
     `,
   );
 }
 
-function formatFunctions(moduleAlias, functions) {
+function formatFunctions(moduleAlias, moduleName, functions) {
   return mapAndJoin(
     functions,
-    ({functionName, doc, signature}) => `
+    ({functionName, doc, signature, lineNumber}) => `
       <div>
         <a name="${formatFunctionName(moduleAlias, functionName)}"></a>
         <h4>${formatFunctionName(moduleAlias, functionName)}</h4>
         ${formatDoc(signature, doc)}
+        <p class="functionFooter"><a target="_blank" href="${getSourceHref(
+          moduleName,
+          lineNumber,
+        )}">Source</a></p>
       </div>
     `,
   );
 }
 
 function formatDoc(signature, doc) {
+  const highlightedCode =
+    doc.examples != null && !Cl.isEmpty(doc.examples)
+      ? highlight(Str.joinLines(doc.examples))
+      : null;
   return `
     <p>${doc.text}</p>
-    ${signature != null ? `<pre>${signature}</pre>` : ''}
-    ${
-      doc.examples != null && !Cl.isEmpty(doc.examples)
-        ? `<pre>${Str.joinLines(doc.examples)}</pre>`
-        : ''
-    }
+    ${signature != null ? highlight(signature) : ''}
+    ${highlightedCode ?? ''}
   `;
+}
+
+const highlighter = new Highlighter({scopePrefix: 'syntax--'});
+function highlight(code) {
+  return highlighter.highlightSync({
+    fileContents: code,
+    scopeName: 'source.js',
+  });
+}
+
+const repoSourceURL = 'https://github.com/xixixao/jfl/blob/master/src/';
+
+function getSourceHref(moduleName, lineNumber) {
+  return path.join(repoSourceURL, moduleName + '.js' + '#L' + lineNumber);
 }
 
 function mapAndJoin<V>(collection: Collection<V>, fn: V => string): string {
