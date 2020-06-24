@@ -234,7 +234,7 @@ function highlight(code) {
 const repoSourceURL = 'https://github.com/xixixao/jfl/blob/master/src/';
 
 function getSourceHref(moduleName, lineNumber) {
-  return path.join(repoSourceURL, moduleName + '.js' + '#L' + lineNumber);
+  return repoSourceURL + moduleName + '.js' + '#L' + lineNumber;
 }
 
 function mapAndJoin<V>(collection: Collection<V>, fn: V => string): string {

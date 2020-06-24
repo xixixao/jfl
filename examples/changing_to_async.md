@@ -35,7 +35,7 @@ async function getNavigation() {
 }
 ```
 
-This is very similary. But what if `getNavigationItem` needs to become async like before?
+This is very similar. But what if `getNavigationItem` needs to become async like before?
 
 ```js
 async function getNavigation() {

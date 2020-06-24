@@ -16,7 +16,6 @@ Some libraries and languages that are functional include other mechanisms which 
 
 - [currying](https://en.wikipedia.org/wiki/Currying)
 - [point-free style](https://en.wikipedia.org/wiki/Tacit_programming)
-- passing functions as arguments by reference
 
 ## What's in it?
 
@@ -72,7 +71,7 @@ JFL is heavily inspired by the Hack Standard Library, and specifically for colle
 
 In the example above we know the result should be a `Set` and so we we can find the function in the `St` module.
 
-More examples can be found in documentation.
+More examples can be found in documentation, and in [examples folder](/examples).
 
 ## Principles
 
