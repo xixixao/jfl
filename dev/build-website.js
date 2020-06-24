@@ -15,7 +15,7 @@ const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
 
 const websiteSrcDirPath = path.join(__dirname, '../website-src');
-const websiteDirectoryPath = path.join(__dirname, '../website');
+const websiteDirectoryPath = path.join(__dirname, '../docs');
 
 (async () => {
   const websiteTemplatePath = path.join(websiteSrcDirPath, 'template.html');
