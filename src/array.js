@@ -1,4 +1,11 @@
-// @flow
+/**
+ * @flow
+ *
+ * This module provides functions which operate on collections (Arrays, Maps,
+ * Sets) and return read-only (immutable) arrays.
+ *
+ * @ex import {Ar} from 'jfl'
+ */
 
 'use strict';
 
@@ -390,65 +397,6 @@ export function equalsNested<V>(
 /// Select
 
 /**
- * Return element at given `index`.
- *
- * Use this if you care about accurate typing (until JS type systems
- * fix the typing of the built-in). Otherwise use `array[index]`.
- *
- * @time O(1)
- * @space O(1)
- * @ex Ar.get([], 1) // undefined
- * @see Cl.at
- */
-export function get<V>(array: $Array<V>, index: number): ?V {
-  return array[index];
-}
-
-/**
- * Return the last element in `array` or null.
- *
- * @time O(1)
- * @space O(1)
- * @ex Ar.get([], 1) // undefined
- * @see Cl.at
- */
-export function last<V>(array: $Array<V>): ?V {
-  return array[array.length - 1];
-}
-
-/**
- * Return element at `index` counting from the end of `array`.
- *
- * This is the same result as `get(Ar.reverse(array), index)`.
- *
- * @time O(1)
- * @space O(1)
- * @ex Ar.getFromEnd([1, 2, 3, 4], 0) // 4
- * @see Cl.at
- */
-export function getFromEnd<V>(array: $Array<V>, index: number): ?V {
-  return array[array.length - 1 - index];
-}
-
-/**
- * Return element at `index` counting from start if it's positive and counting
- * from end if it's negative, with last element being at index `-1`.
- *
- * @time O(1)
- * @space O(1)
- * @ex Ar.getDynamic([1, 2, 3, 4], 0) // 1
- * @ex Ar.getDynamic([1, 2, 3, 4], -2) // 3
- * @see Cl.at
- */
-export function getDynamic<V>(array: $Array<V>, index: number): ?V {
-  if (index < 0) {
-    return array[array.length - index];
-  } else {
-    return array[array.length - 1];
-  }
-}
-
-/**
  * Create a new array by filtering out values for which `fn` returns false.
  *
  * @time O(n)
@@ -597,7 +545,7 @@ export function drop<V>(collection: Collection<V>, n: number): $Array<V> {
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.takeWhile([1, 3, 4, 7], Mth.isOdd)
+ * @ex Ar.takeWhile([1, 3, 4, 7], Mth.isOdd) // [1]
  * @see Ar.take
  */
 export function takeWhile<V>(
@@ -620,7 +568,7 @@ export function takeWhile<V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.dropWhile([1, 3, 4, 7], Mth.isOdd)
+ * @ex Ar.dropWhile([1, 3, 4, 7], Mth.isOdd) // [3, 4, 7]
  * @see Ar.drop
  */
 export function dropWhile<V>(
@@ -635,6 +583,33 @@ export function dropWhile<V>(
       result.push(item);
     }
   }
+  return m(result);
+}
+
+/**
+ * Create an array containing all the items of `collection` preceding and
+ * including the first item when iterating from the end for which `predicateFn`
+ * returns false.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.dropWhileFromEnd([1, 3, 4, 7], Mth.isOdd) // [1, 3, 4]
+ * @see Ar.dropWhile
+ */
+export function dropWhileFromEnd<V>(
+  collection: Collection<V>,
+  predicateFn: V => boolean,
+): $Array<V> {
+  let result = Array.from(collection.values());
+  result.reverse();
+  for (let i = 0; i < result.length; i++) {
+    if (predicateFn(result[i])) {
+      continue;
+    }
+    result.splice(0, i);
+    break;
+  }
+  result.reverse();
   return m(result);
 }
 
@@ -835,6 +810,11 @@ export function span<V>(
 }
 
 /// Combine
+
+// TODO:
+export function prepend<V>(collection: Collection<V>, item: V): Collection<V> {
+  return [item].concat(from(collection));
+}
 
 /**
  * Concatenate multiple arrays together.
@@ -1205,3 +1185,4 @@ function defaultCompareFn(a: any, b: any): number {
 // TODO: maybeMapAsync
 // TODO: fillAsync
 // TODO: append
+// TODO: takeLast dropLast and rename to takeFirst and dropFirst?

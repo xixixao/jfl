@@ -15,7 +15,9 @@
     "flow-remove-types": "2.126.1",
     "jest": "^26.0.1",
     "jest-repl": "^26.0.1",
-    "prettier": "2.0.5"
+    "prettier": "2.0.5",
+    "rollup": "^2.18.0",
+    "rollup-pluginutils": "^2.8.2"
   },
   "scripts": {
     "preinstall": "git config core.hooksPath .githooks; chmod +x .githooks/pre-commit",

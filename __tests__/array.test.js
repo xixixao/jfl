@@ -160,8 +160,22 @@ test('take', () => {
   eq(Ar.take([1, 2, 3], 2), [1, 2]);
 });
 
+test('takeWhile', () => {
+  eq(
+    Ar.takeWhile([1, 2, 3], n => Mth.isOdd(n)),
+    [1],
+  );
+});
+
 test('drop', () => {
   eq(Ar.drop([1, 2, 3], 2), [3]);
+});
+
+test('dropWhileFromEnd', () => {
+  eq(
+    Ar.dropWhileFromEnd([1, 2, 3, 4, 6, 5, 7], n => Mth.isOdd(n)),
+    [1, 2, 3, 4, 6],
+  );
 });
 
 test('splitAt', () => {

@@ -15,10 +15,14 @@
         --text-color: rgb(0, 0, 0);
 
         /* Sizes */
+        --chevron-width: 1.5rem;
         --content-width: 44rem;
         --sidebar-content-width: 16rem;
         --min-content-width: var(--sidebar-content-width) + var(--content-width);
         --sidebar-width: var(--sidebar-content-width);
+
+        /* Images */
+        --chevron-url: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hldnJvbi1yaWdodCI+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxNSAxMiA5IDYiPjwvcG9seWxpbmU+PC9zdmc+');
       }
 
       @media screen and (prefers-color-scheme: dark) {
@@ -46,17 +50,45 @@
         background-color: var(--background-color);
         color: var(--text-color);
         display: flex;
-        font-family: 'SF Pro Display', 'Helvetica Neue', 'Helvetica', 'Arial',
+        font-family: 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial',
           sans-serif;
+        font-size: 1.063rem;
+        letter-spacing: -0.022em;
         margin: 0;
+        line-height: 1.5;
       }
       a {
         color: var(--text-color);
         cursor: pointer;
         text-decoration: none;
       }
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: 'SF Pro Display', 'Helvetica Neue', 'Helvetica', 'Arial',
+          sans-serif;
+        font-weight: 600;
+        letter-spacing: 0em;
+        line-height: 1.1;
+        letter-spacing: 0em;
+        margin-bottom: 0;
+        margin-top: 0;
+      }
       h1 {
-        font-weight: normal;
+        font-size: 3rem;
+      }
+      h2 {
+        font-size: 2.5rem;
+        margin-top: 3rem;
+      }
+      h3 {
+        font-size: 2rem;
+        margin-top: 2rem;
+      }
+      h4 {
+        font-size: 1.5rem;
+        padding-top: 2rem;
       }
       .sidebar {
         display: flex;
@@ -73,6 +105,8 @@
         padding: 16px;
       }
       .sidebarNavigation {
+        font-family: 'SF Pro Display', 'Helvetica Neue', 'Helvetica', 'Arial',
+          sans-serif;
         font-size: 0.85rem;
         overflow: auto;
         padding: 16px;
@@ -81,28 +115,71 @@
         display: block;
         padding: 4px 8px;
         border-radius: 4px;
+        margin-left: var(--chevron-width);
       }
       .sidebar a:hover {
         background-color: var(--hover-background-color);
         color: var(--hover-text-color);
       }
-      .sidebar div.section {
+      .sidebar .module {
+        margin-left: 0;
+        margin-top: 8px;
+        position: relative;
+        padding-left: var(--chevron-width);
+      }
+      .sidebar .module::before {
+        -webkit-mask-image: var(--chevron-url);
+        -webkit-mask-size: 1.2rem;
+        background-color: var(--text-color);
+        content: '';
+        display: block;
+        height: 1.25rem;
+        left: 0.2rem;
+        mask-image: var(--chevron-url);
+        mask-size: 1.2rem;
+        opacity: 0.5;
+        opacity: 0.75;
+        position: absolute;
+        top: 0.3rem;
+        transform: rotate(0);
+        width: 1.25rem;
+      }
+      .sidebar .open .module::before {
+        transform: rotate(90deg);
+      }
+      .sidebar .module:hover::before {
+        background-color: var(--hover-text-color);
+      }
+      .sidebar .section {
         color: var(--secondary-text-color);
         font-size: 0.75rem;
         font-weight: bold;
         margin-top: 4px;
-        margin-left: 8px;
+        margin-left: calc(var(--chevron-width) + 0.5rem);
         padding: 4px 8px;
+        display: none;
       }
-      .sidebar a.function {
-        margin-left: 8px;
+      .sidebar .function {
+        margin-left: calc(var(--chevron-width) + 0.5rem);
         font-size: 0.85rem;
+        display: none;
+      }
+      .sidebar .open .section {
+        display: block;
+      }
+      .sidebar .open .function {
+        display: block;
       }
       .main {
-        max-width: var(--content-width);
+        flex-grow: 1;
+        height: 100vh;
+        overflow: auto;
       }
       .mainContent {
         padding: 28px;
+      }
+      .mainText {
+        max-width: var(--content-width);
       }
       input[type='text'] {
         background-color: var(--input-background-color);
@@ -125,6 +202,15 @@
         color: var(--input-placeholder-color);
         opacity: 1;
       }
+      pre {
+        background-color: var(--input-background-color);
+        border-radius: 4px;
+        border: 1px solid var(--input-border-color);
+        font-family: Menlo, monospace;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        padding: 1rem;
+      }
     </style>
   </head>
 
@@ -143,43 +229,21 @@
       </div>
     </div>
     <div class="main">
+      <a name="intro"></a>
       <div class="mainContent">
-        <a name="intro">
+        <div class="mainText">
           <h1>JFL - JavaScript Standard Functional Library</h1>
-        </a>
-        <p>
-          This JavaScript library aims to compliment the language to provide a
-          single dependency for writing most business logic code. It is fully
-          statically typed to work well with both Flow and TypeScript.
-        </p>
-        <!--CONTENT-->
+          <p>
+            This JavaScript library aims to compliment the language to provide a
+            single dependency for writing most business logic code. It is fully
+            statically typed to work well with both Flow and TypeScript.
+          </p>
+          <!--CONTENT-->
+        </div>
       </div>
     </div>
     <script>
-      var navItems = document.querySelectorAll('.doc-nav .side .has-sublist');
-      var hasChildItems, navItemAnchor;
-      // function closeAllItems(except) {
-      // 	for (var i = 0; i < navItems.length; i++) {
-      // 		if (navItems[i] !== except) {
-      // 			navItems[i].classList.remove('open');
-      // 		}
-      // 	}
-      // }
-      for (var i = 0; i < navItems.length; i++) {
-        hasChildItems = !!navItems[i].querySelector('li');
-        navItemAnchor = navItems[i].querySelector('a');
-        if (hasChildItems) {
-          navItemAnchor.addEventListener(
-            'click',
-            function (e) {
-              e.preventDefault();
-              e.target.parentNode.classList.toggle('open');
-              setNavPosition();
-            },
-            true,
-          );
-        }
-      }
+      /*SCRIPT*/
     </script>
   </body>
 </html>

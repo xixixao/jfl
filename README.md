@@ -115,14 +115,14 @@ const mean = Stats.geometricMean(Ar.from(numbers));
 If this library isn't your cup of tea you might want to check the alternatives below, sorted roughly by popularity starting with the most popular.
 
 <!-- prettier-ignore -->
-| Name |  Has static interface? | Supports Maps & Sets? | Well-typed |
+| Name |  Has static interface? | Supports Maps & Sets? | Immutable? | Well-typed |
 | ------- | -------------- | --------- | --------- |
-| [Lodash](https://lodash.com/)           | ✅ | ❌ | ❌ | ❌ |
-| [Underscore](https://underscorejs.org/) | ✅ | ❌ | ❌ | ❌ |
-| [Ramda](https://ramdajs.com/)           | ✅ | ❌ | ❌ | ❌ |
-| [Sugar](https://sugarjs.com/)           | ✅ | ❌ | ❌ | ❌ |
-| [Lazy](http://danieltao.com/lazy.js)    | ❌ | ❌ | ❌ | ❌ |
-| [CollectJS](https://collect.js.org/)    | ✅ | ❌ | ❌ | ❌ |
-| [Mout](http://moutjs.com/)              | ✅ | ❌ | ❌ | ❌ |
-| [Sanctuary](https://sanctuary.js.org/)  | ✅ | ❌ | ❌ | ❌ |
-| [Folktale](https://folktale.origamitower.com/)  | ✅ | ❌ | ❌ | ❌ |
+| [Lodash](https://lodash.com/)           | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Underscore](https://underscorejs.org/) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Ramda](https://ramdajs.com/)           | ✅ | ❌ | ❌ | ✅ | ❌ |
+| [Sugar](https://sugarjs.com/)           | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Lazy](http://danieltao.com/lazy.js)    | ❌ | ❌ | ❌ | ✅ | ❌ |
+| [CollectJS](https://collect.js.org/)    | ✅ | ❌ | ❌ | ✅ | ❌ |
+| [Sanctuary](https://sanctuary.js.org/)  | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Folktale](https://folktale.origamitower.com/)  | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Mout](http://moutjs.com/)              | ✅ | ❌ | ❌ | ❌ | ❌ |

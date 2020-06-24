@@ -4,8 +4,8 @@
 
 import type {Collection, KeyedCollection, $Array, $Map} from './types.flow';
 
-const Ar = require('./array');
-const Cl = require('./collection');
+import * as Ar from './array';
+import * as Cl from './collection';
 
 const EMPTY = new Map(); // Returned whenever we can return an empty set
 

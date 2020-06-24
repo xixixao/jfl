@@ -76,18 +76,18 @@ test('replaceEvery', () => {
   eqqq(Str.replaceEvery('a-a', 'a', 'apple'), 'apple-apple');
 });
 
-test('words', () => {
-  eq(Str.words('adam eve'), ['adam', 'eve']);
-  eq(Str.words(' adam eve'), ['adam', 'eve']);
-  eq(Str.words(' adam eve '), ['adam', 'eve']);
-  eq(Str.words(' adam\neve '), ['adam', 'eve']);
-  eq(Str.words(' adam\n\teve '), ['adam', 'eve']);
+test('splitWords', () => {
+  eq(Str.splitWords('adam eve'), ['adam', 'eve']);
+  eq(Str.splitWords(' adam eve'), ['adam', 'eve']);
+  eq(Str.splitWords(' adam eve '), ['adam', 'eve']);
+  eq(Str.splitWords(' adam\neve '), ['adam', 'eve']);
+  eq(Str.splitWords(' adam\n\teve '), ['adam', 'eve']);
 });
 
-test('lines', () => {
-  eq(Str.lines('adam\neve'), ['adam', 'eve']);
-  eq(Str.lines('adam\r\neve'), ['adam', 'eve']);
-  eq(Str.lines('adam\n\neve'), ['adam', '', 'eve']);
-  eq(Str.lines('adam\n\neve\n'), ['adam', '', 'eve', '']);
-  eq(Str.lines('adam\n\neve\n', true), ['adam', '', 'eve']);
+test('splitLines', () => {
+  eq(Str.splitLines('adam\neve'), ['adam', 'eve']);
+  eq(Str.splitLines('adam\r\neve'), ['adam', 'eve']);
+  eq(Str.splitLines('adam\n\neve'), ['adam', '', 'eve']);
+  eq(Str.splitLines('adam\n\neve\n'), ['adam', '', 'eve', '']);
+  eq(Str.splitLines('adam\n\neve\n', true), ['adam', '', 'eve']);
 });

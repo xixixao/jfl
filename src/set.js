@@ -4,8 +4,8 @@
 
 import type {Collection, KeyedCollection, $Array, $Set} from './types.flow';
 
-const Cl = require('./collection');
-const Ar = require('./array');
+import * as Cl from './collection';
+import * as Ar from './array';
 
 const EMPTY = new Set(); // Returned whenever we can return an empty set
 
@@ -402,6 +402,32 @@ export async function mapAsync<VFrom, VTo>(
   fn: VFrom => Promise<VTo>,
 ): Promise<$Set<VTo>> {
   return m(new Set(await Promise.all(Array.from(map(collection, fn)))));
+}
+
+/**
+ * Create a new set by calling given `fn` on each value of `collection` and
+ * flattening the results.
+ *
+ * Equivalent to using `map` followed by `flatten`, for simplicity and improved
+ * performance.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.mapFlat([1, 2], x => [x - 1, x + 1]) // [0, 2, 1, 3]
+ * @see Ar.mapAsync
+ */
+export function mapFlat<VFrom, VTo>(
+  collection: Collection<VFrom>,
+  fn: VFrom => Collection<VTo>,
+): $Set<VTo> {
+  const result = new Set();
+  for (const item of collection.values()) {
+    const mapped = fn(item);
+    for (const mappedItem of mapped.values()) {
+      result.add(mappedItem);
+    }
+  }
+  return m(result);
 }
 
 // TODO:

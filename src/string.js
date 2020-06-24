@@ -3,10 +3,11 @@
 import type {Collection, KeyedCollection, $Array} from './types.flow';
 
 import {isRegExp} from './regexp';
+import * as Ar from './array';
+import * as Cl from './collection';
+import * as Mth from './math';
 import * as REx from './regexp';
 import * as St from './set';
-import * as Cl from './collection';
-import {Ar, Mth} from '.';
 
 /// Construct
 
@@ -214,7 +215,7 @@ export function startsWith(string: string, prefix: string | RegExp) {
   if (isRegExp(prefix)) {
     return REx.prepend(prefix, '^').test(string);
   }
-  return string.startsWith(string);
+  return string.startsWith(prefix);
 }
 
 // TODO: 975
@@ -225,7 +226,7 @@ export function endsWith(string: string, suffix: string | RegExp) {
   if (isRegExp(suffix)) {
     return REx.append(suffix, '$').test(string);
   }
-  return string.endsWith(string);
+  return string.endsWith(suffix);
 }
 
 // TODO: 324
@@ -519,22 +520,17 @@ export function joinLines(lines: Collection<string>) {
 /// Divide
 
 // TODO: 28289
+// doesn't return the remainder
 export function split(
   string: string,
   delimiter: string | RegExp,
   limit?: number,
 ): $Array<string> {
-  const result = string.split(delimiter, limit);
-  if (limit != null) {
-    const resultLength = Mth.sum(
-      Ar.map(result, substring => length(substring)),
-    );
-    if (resultLength < length(string)) {
-      result.push(slice(string, resultLength));
-    }
-  }
-  return result;
+  return string.split(delimiter, limit);
 }
+
+// TODO: might want to do splitUpTo that returns the remainder, which is tricky
+// with a regex
 
 /**
  * Create a tuple of strings containing the first `n` characters
@@ -577,19 +573,19 @@ export function chunkFromEnd(string: string, size: number) {
 /**
  * TODO:
  */
-export function chars(string: string): $Array<string> {
+export function splitChars(string: string): $Array<string> {
   return split(string, '');
 }
 
 // TODO:
-export function words(string: string): $Array<string> {
+export function splitWords(string: string): $Array<string> {
   return split(trim(string), /\s+/);
 }
 
 const LINE_DELIMITER_PATTERN = /\r?\n/;
 
 // TODO:
-export function lines(
+export function splitLines(
   string: string,
   ignoreTrailingNewLine?: boolean = false,
 ): $Array<string> {

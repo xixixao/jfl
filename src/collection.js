@@ -8,9 +8,7 @@ import * as Ar from './array';
 import * as Mp from './map';
 import * as St from './set';
 
-const Cl = exports;
-
-/// Checks
+/// Check
 
 /**
  * Returns whether given collections are equal.
@@ -95,7 +93,7 @@ export function equalsNested<V, C: mixed>(
  * @see Cl.count, Str.isEmpty
  */
 export function isEmpty<V>(collection: Collection<V>): boolean {
-  return Cl.count(collection) === 0;
+  return count(collection) === 0;
 }
 
 /**
@@ -374,7 +372,7 @@ export function last<V>(collection: Collection<V>): ?V {
  * @see Cl.last
  */
 export function lastX<V>(collection: Collection<V>): V {
-  if (Cl.isEmpty(collection)) {
+  if (isEmpty(collection)) {
     throw new Error('Expected a non-empty collection, was empty instead.');
   }
   if (Array.isArray(collection)) {
@@ -388,11 +386,10 @@ export function lastX<V>(collection: Collection<V>): V {
 }
 
 /**
- * Returns the value at given iteration index or null.
+ * Returns the value at given iteration `index` or null.
  *
- * For accessing values using corresponding keys, use `Ar.get`,
- * `Map.prototype.get` or `Set.prototype.has`, which are all correctly
- * typed.
+ * For accessing values using corresponding keys use `Map.prototype.get` or
+ * `Set.prototype.has`, which are all correctly typed.
  *
  * @time O(n) (O(1) for Arrays)
  * @space O(1)
@@ -423,7 +420,7 @@ export function at<V>(collection: Collection<V>, index: number): ?V {
  * @see Cl.at
  */
 export function atX<V>(collection: Collection<V>, index: number): V {
-  if (Cl.isEmpty(collection)) {
+  if (isEmpty(collection)) {
     throw new Error('Expected a non-empty collection, was empty instead.');
   }
   if (Array.isArray(collection)) {
@@ -437,6 +434,53 @@ export function atX<V>(collection: Collection<V>, index: number): V {
     i++;
   }
   return (null: any); // unreachable
+}
+
+/**
+ * Returns the value at `index` as if iterating through the `collection` in
+ * reverse order or null.
+ *
+ * @time O(n) (O(1) for Arrays)
+ * @space O(1)
+ * @ex Cl.atFromEnd([], 2) // null
+ * @ex Cl.atFromEnd([1, 2, 3, 4], 0) // 4
+ * @ex Cl.atFromEnd([1, 2, 3, 4], 3) // 1
+ * @see Cl.at
+ */
+export function atFromEnd<V>(collection: Collection<V>, index: number): ?V {
+  return at(collection, count(collection) - 1 - index);
+}
+
+/**
+ * Returns the value at `index` as if iterating through the `collection` in
+ * reverse order or throws.
+ *
+ * @time O(n) (O(1) for Arrays)
+ * @space O(1)
+ * @ex Cl.atFromEndX([1, 2, 3, 4], 0) // 4
+ * @ex Cl.atFromEndX([1, 2, 3, 4], 3) // 1
+ * @see Cl.at
+ */
+export function atFromEndX<V>(collection: Collection<V>, index: number): V {
+  return atX(collection, count(collection) - 1 - index);
+}
+
+/**
+ * Return element at `index` counting from start if it's positive and counting
+ * from end if it's negative, with last element being at index `-1`.
+ *
+ * @time O(1)
+ * @space O(1)
+ * @ex Cl.atDynamic([1, 2, 3, 4], 0) // 1
+ * @ex Cl.atDynamic([1, 2, 3, 4], -2) // 3
+ * @see Cl.at
+ */
+export function atDynamic<V>(collection: Collection<V>, index: number): ?V {
+  if (index < 0) {
+    return at(collection, count(collection) - index);
+  } else {
+    return at(collection, index);
+  }
 }
 
 /**
@@ -496,7 +540,7 @@ export function lastKey<K, V>(collection: KeyedCollection<K, V>): ?K {
  * @see Cl.lastKey
  */
 export function lastKeyX<K, V>(collection: KeyedCollection<K, V>): K {
-  if (Cl.isEmpty(collection)) {
+  if (isEmpty(collection)) {
     throw new Error('Expected a non-empty collection, was empty instead.');
   }
   let result = null;
@@ -569,3 +613,7 @@ export function reduce(collection, fn, initialValue) {
   }
   return acc;
 }
+
+// TODO
+// isSorted
+// isSortedBy
