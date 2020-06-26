@@ -2,26 +2,29 @@
 
 import {Ar, Cl, Str, invariant, nullthrows} from '../src/index';
 
-const collapsible = document.querySelectorAll('.sidebar a.module');
-Cl.forEach(collapsible, link => {
+const sidebar = nullthrows(document.querySelector('.sidebar'));
+const searchBar = document.querySelector('.sidebarSearch input');
+const searchBarCancel = nullthrows(
+  document.querySelector('.sidebarSearchCancel'),
+);
+const moduleLinks = document.querySelectorAll('.sidebar a.module');
+const functionLinks = document.querySelectorAll('.sidebar a.function');
+
+Cl.forEach(moduleLinks, link => {
   link.addEventListener(
     'click',
     (event: MouseEvent) => {
-      invariant(event.target instanceof Node);
-      const parent = event.target.parentNode;
-      invariant(parent instanceof Element);
-      parent.classList.toggle('open');
+      if (!sidebar.classList.contains('searched')) {
+        invariant(event.target instanceof Node);
+        const parent = event.target.parentNode;
+        invariant(parent instanceof Element);
+        parent.classList.toggle('open');
+      }
     },
     true,
   );
 });
 
-const sidebar = nullthrows(document.querySelector('.sidebar'));
-const searchBar = document.querySelector('.sidebarSearch input');
-const functionLinks = document.querySelectorAll('.sidebar a.function');
-const searchBarCancel = nullthrows(
-  document.querySelector('.sidebarSearchCancel'),
-);
 invariant(searchBar instanceof HTMLInputElement);
 searchBar.addEventListener('input', onSearchUpdate);
 searchBarCancel.addEventListener('click', cancelSearch);

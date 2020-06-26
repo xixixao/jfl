@@ -242,7 +242,7 @@ function formatSignature(signature) {
   return highlight($$);
 }
 
-const highlighter = new Highlighter({scopePrefix: 'syntax--'});
+const highlighter = new Highlighter({scopePrefix: '-'});
 function highlight(code) {
   return highlighter.highlightSync({
     fileContents: code,

@@ -281,7 +281,7 @@
         font-family: Menlo, monospace;
         font-size: var(--code-font-size);
         overflow-x: auto;
-        padding: 1rem;
+        padding: var(--code-font-size);
       }
       .functionFooter {
         margin-bottom: 2rem;
@@ -290,860 +290,430 @@
         color: var(--input-background-color);
       }
       /* This is generated from one-light-syntax and one-dark-syntax, by
-       cloning respective repo and running lessc on it */
-      .syntax--comment {
-        color: hsl(230, 4%, 64%);
+       cloning respective repo and running lessc on it, then minized using
+       https://refresh-sf.com/, and manually stripping customizations for
+       other languages */
+      .-comment,
+      .-comment .-markup.-link {
+        color: #9fa0a6;
+      }
+      .-comment {
         font-style: italic;
       }
-      .syntax--comment .syntax--markup.syntax--link {
-        color: hsl(230, 4%, 64%);
+      .-entity.-name.-type {
+        color: #c08400;
       }
-      .syntax--entity.syntax--name.syntax--type {
-        color: hsl(41, 99%, 38%);
+      .-entity.-other.-inherited-class {
+        color: #50a04f;
       }
-      .syntax--entity.syntax--other.syntax--inherited-class {
-        color: hsl(119, 34%, 47%);
+      .-keyword,
+      .-keyword.-control {
+        color: #a625a4;
       }
-      .syntax--keyword {
-        color: hsl(301, 63%, 40%);
+      .-keyword.-operator {
+        color: #383942;
       }
-      .syntax--keyword.syntax--control {
-        color: hsl(301, 63%, 40%);
+      .-keyword.-other.-special-method {
+        color: #4078f1;
       }
-      .syntax--keyword.syntax--operator {
-        color: hsl(230, 8%, 24%);
+      .-keyword.-other.-unit {
+        color: #986800;
       }
-      .syntax--keyword.syntax--other.syntax--special-method {
-        color: hsl(221, 87%, 60%);
+      .-storage,
+      .-storage.-type.-annotation,
+      .-storage.-type.-primitive {
+        color: #a625a4;
       }
-      .syntax--keyword.syntax--other.syntax--unit {
-        color: hsl(41, 99%, 30%);
+      .-storage.-modifier.-import,
+      .-storage.-modifier.-package {
+        color: #383942;
       }
-      .syntax--storage {
-        color: hsl(301, 63%, 40%);
+      .-constant,
+      .-constant.-variable {
+        color: #986800;
       }
-      .syntax--storage.syntax--type.syntax--annotation,
-      .syntax--storage.syntax--type.syntax--primitive {
-        color: hsl(301, 63%, 40%);
+      .-constant.-character.-escape {
+        color: #0083bb;
       }
-      .syntax--storage.syntax--modifier.syntax--package,
-      .syntax--storage.syntax--modifier.syntax--import {
-        color: hsl(230, 8%, 24%);
+      .-constant.-numeric {
+        color: #986800;
       }
-      .syntax--constant {
-        color: hsl(41, 99%, 30%);
+      .-constant.-other.-color,
+      .-constant.-other.-symbol {
+        color: #0083bb;
       }
-      .syntax--constant.syntax--variable {
-        color: hsl(41, 99%, 30%);
+      .-variable {
+        color: #e35549;
       }
-      .syntax--constant.syntax--character.syntax--escape {
-        color: hsl(198, 99%, 37%);
+      .-variable.-interpolation {
+        color: #c91142;
       }
-      .syntax--constant.syntax--numeric {
-        color: hsl(41, 99%, 30%);
+      .-variable.-parameter {
+        color: #383942;
       }
-      .syntax--constant.syntax--other.syntax--color {
-        color: hsl(198, 99%, 37%);
+      .-string {
+        color: #50a04f;
       }
-      .syntax--constant.syntax--other.syntax--symbol {
-        color: hsl(198, 99%, 37%);
+      .-string .-embedded,
+      .-string > .-source {
+        color: #383942;
       }
-      .syntax--variable {
-        color: hsl(5, 74%, 59%);
+      .-string.-regexp {
+        color: #0083bb;
       }
-      .syntax--variable.syntax--interpolation {
-        color: hsl(344, 84%, 43%);
+      .-string.-regexp .-source.-ruby.-embedded {
+        color: #c08400;
       }
-      .syntax--variable.syntax--parameter {
-        color: hsl(230, 8%, 24%);
+      .-string.-other.-link {
+        color: #e35549;
       }
-      .syntax--string {
-        color: hsl(119, 34%, 47%);
+      .-punctuation.-definition.-comment {
+        color: #9fa0a6;
       }
-      .syntax--string > .syntax--source,
-      .syntax--string .syntax--embedded {
-        color: hsl(230, 8%, 24%);
+      .-punctuation.-definition.-array,
+      .-punctuation.-definition.-function-parameters,
+      .-punctuation.-definition.-method-parameters,
+      .-punctuation.-definition.-parameters,
+      .-punctuation.-definition.-separator,
+      .-punctuation.-definition.-seperator {
+        color: #383942;
       }
-      .syntax--string.syntax--regexp {
-        color: hsl(198, 99%, 37%);
+      .-punctuation.-definition.-heading,
+      .-punctuation.-definition.-identity {
+        color: #4078f1;
       }
-      .syntax--string.syntax--regexp
-        .syntax--source.syntax--ruby.syntax--embedded {
-        color: hsl(41, 99%, 38%);
+      .-punctuation.-definition.-bold {
+        color: #c08400;
+        font-weight: 700;
       }
-      .syntax--string.syntax--other.syntax--link {
-        color: hsl(5, 74%, 59%);
-      }
-      .syntax--punctuation.syntax--definition.syntax--comment {
-        color: hsl(230, 4%, 64%);
-      }
-      .syntax--punctuation.syntax--definition.syntax--method-parameters,
-      .syntax--punctuation.syntax--definition.syntax--function-parameters,
-      .syntax--punctuation.syntax--definition.syntax--parameters,
-      .syntax--punctuation.syntax--definition.syntax--separator,
-      .syntax--punctuation.syntax--definition.syntax--seperator,
-      .syntax--punctuation.syntax--definition.syntax--array {
-        color: hsl(230, 8%, 24%);
-      }
-      .syntax--punctuation.syntax--definition.syntax--heading,
-      .syntax--punctuation.syntax--definition.syntax--identity {
-        color: hsl(221, 87%, 60%);
-      }
-      .syntax--punctuation.syntax--definition.syntax--bold {
-        color: hsl(41, 99%, 38%);
-        font-weight: bold;
-      }
-      .syntax--punctuation.syntax--definition.syntax--italic {
-        color: hsl(301, 63%, 40%);
+      .-punctuation.-definition.-italic {
+        color: #a625a4;
         font-style: italic;
       }
-      .syntax--punctuation.syntax--section.syntax--embedded {
-        color: hsl(344, 84%, 43%);
+      .-punctuation.-section.-embedded {
+        color: #c91142;
       }
-      .syntax--punctuation.syntax--section.syntax--method,
-      .syntax--punctuation.syntax--section.syntax--class,
-      .syntax--punctuation.syntax--section.syntax--inner-class {
-        color: hsl(230, 8%, 24%);
+      .-punctuation.-section.-class,
+      .-punctuation.-section.-inner-class,
+      .-punctuation.-section.-method {
+        color: #383942;
       }
-      .syntax--support.syntax--class {
-        color: hsl(41, 99%, 38%);
+      .-support.-class {
+        color: #c08400;
       }
-      .syntax--support.syntax--type {
-        color: hsl(198, 99%, 37%);
+      .-support.-function,
+      .-support.-type {
+        color: #0083bb;
       }
-      .syntax--support.syntax--function {
-        color: hsl(198, 99%, 37%);
+      .-entity.-name.-function,
+      .-support.-function.-any-method {
+        color: #4078f1;
       }
-      .syntax--support.syntax--function.syntax--any-method {
-        color: hsl(221, 87%, 60%);
+      .-entity.-name.-class,
+      .-entity.-name.-type.-class {
+        color: #c08400;
       }
-      .syntax--entity.syntax--name.syntax--function {
-        color: hsl(221, 87%, 60%);
+      .-entity.-name.-section {
+        color: #4078f1;
       }
-      .syntax--entity.syntax--name.syntax--class,
-      .syntax--entity.syntax--name.syntax--type.syntax--class {
-        color: hsl(41, 99%, 38%);
+      .-entity.-name.-tag {
+        color: #e35549;
       }
-      .syntax--entity.syntax--name.syntax--section {
-        color: hsl(221, 87%, 60%);
+      .-entity.-other.-attribute-name {
+        color: #986800;
       }
-      .syntax--entity.syntax--name.syntax--tag {
-        color: hsl(5, 74%, 59%);
+      .-entity.-other.-attribute-name.-id {
+        color: #4078f1;
       }
-      .syntax--entity.syntax--other.syntax--attribute-name {
-        color: hsl(41, 99%, 30%);
+      .-meta.-class {
+        color: #c08400;
       }
-      .syntax--entity.syntax--other.syntax--attribute-name.syntax--id {
-        color: hsl(221, 87%, 60%);
+      .-meta.-class.-body,
+      .-meta.-method,
+      .-meta.-method-call {
+        color: #383942;
       }
-      .syntax--meta.syntax--class {
-        color: hsl(41, 99%, 38%);
+      .-meta.-definition.-variable {
+        color: #e35549;
       }
-      .syntax--meta.syntax--class.syntax--body {
-        color: hsl(230, 8%, 24%);
+      .-meta.-link {
+        color: #986800;
       }
-      .syntax--meta.syntax--method-call,
-      .syntax--meta.syntax--method {
-        color: hsl(230, 8%, 24%);
+      .-meta.-require {
+        color: #4078f1;
       }
-      .syntax--meta.syntax--definition.syntax--variable {
-        color: hsl(5, 74%, 59%);
+      .-meta.-selector {
+        color: #a625a4;
       }
-      .syntax--meta.syntax--link {
-        color: hsl(41, 99%, 30%);
+      .-meta.-separator,
+      .-meta.-tag,
+      .-none {
+        color: #383942;
       }
-      .syntax--meta.syntax--require {
-        color: hsl(221, 87%, 60%);
-      }
-      .syntax--meta.syntax--selector {
-        color: hsl(301, 63%, 40%);
-      }
-      .syntax--meta.syntax--separator {
-        color: hsl(230, 8%, 24%);
-      }
-      .syntax--meta.syntax--tag {
-        color: hsl(230, 8%, 24%);
-      }
-      .syntax--underline {
+      .-underline {
         text-decoration: underline;
       }
-      .syntax--none {
-        color: hsl(230, 8%, 24%);
+      .-invalid.-deprecated {
+        color: #000 !important;
+        background-color: #f2a50c !important;
       }
-      .syntax--invalid.syntax--deprecated {
-        color: hsl(0, 0%, 0%) !important;
-        background-color: hsl(40, 90%, 50%) !important;
+      .-invalid.-illegal {
+        color: #fff !important;
+        background-color: #ff1414 !important;
       }
-      .syntax--invalid.syntax--illegal {
-        color: white !important;
-        background-color: hsl(0, 100%, 54%) !important;
+      .-markup.-bold {
+        color: #986800;
+        font-weight: 700;
       }
-      .syntax--markup.syntax--bold {
-        color: hsl(41, 99%, 30%);
-        font-weight: bold;
+      .-markup.-changed {
+        color: #a625a4;
       }
-      .syntax--markup.syntax--changed {
-        color: hsl(301, 63%, 40%);
+      .-markup.-deleted {
+        color: #e35549;
       }
-      .syntax--markup.syntax--deleted {
-        color: hsl(5, 74%, 59%);
-      }
-      .syntax--markup.syntax--italic {
-        color: hsl(301, 63%, 40%);
+      .-markup.-italic {
+        color: #a625a4;
         font-style: italic;
       }
-      .syntax--markup.syntax--heading {
-        color: hsl(5, 74%, 59%);
+      .-markup.-heading {
+        color: #e35549;
       }
-      .syntax--markup.syntax--heading
-        .syntax--punctuation.syntax--definition.syntax--heading {
-        color: hsl(221, 87%, 60%);
+      .-markup.-heading .-punctuation.-definition.-heading {
+        color: #4078f1;
       }
-      .syntax--markup.syntax--link {
-        color: hsl(198, 99%, 37%);
+      .-markup.-link {
+        color: #0083bb;
       }
-      .syntax--markup.syntax--inserted {
-        color: hsl(119, 34%, 47%);
+      .-markup.-inserted {
+        color: #50a04f;
       }
-      .syntax--markup.syntax--quote {
-        color: hsl(41, 99%, 30%);
+      .-markup.-quote {
+        color: #986800;
       }
-      .syntax--markup.syntax--raw {
-        color: hsl(119, 34%, 47%);
+      .-markup.-raw {
+        color: #50a04f;
       }
-      .syntax--source.syntax--c .syntax--keyword.syntax--operator {
-        color: hsl(301, 63%, 40%);
+      .-source.-js .-keyword.-operator {
+        color: #0083bb;
       }
-      .syntax--source.syntax--cpp .syntax--keyword.syntax--operator {
-        color: hsl(301, 63%, 40%);
-      }
-      .syntax--source.syntax--cs .syntax--keyword.syntax--operator {
-        color: hsl(301, 63%, 40%);
-      }
-      .syntax--source.syntax--css .syntax--property-name,
-      .syntax--source.syntax--css .syntax--property-value {
-        color: hsl(230, 6%, 44%);
-      }
-      .syntax--source.syntax--css .syntax--property-name.syntax--support,
-      .syntax--source.syntax--css .syntax--property-value.syntax--support {
-        color: hsl(230, 8%, 24%);
-      }
-      .syntax--source.syntax--elixir
-        .syntax--source.syntax--embedded.syntax--source {
-        color: hsl(230, 8%, 24%);
-      }
-      .syntax--source.syntax--elixir .syntax--constant.syntax--language,
-      .syntax--source.syntax--elixir .syntax--constant.syntax--numeric,
-      .syntax--source.syntax--elixir .syntax--constant.syntax--definition {
-        color: hsl(221, 87%, 60%);
-      }
-      .syntax--source.syntax--elixir .syntax--variable.syntax--definition,
-      .syntax--source.syntax--elixir .syntax--variable.syntax--anonymous {
-        color: hsl(301, 63%, 40%);
-      }
-      .syntax--source.syntax--elixir
-        .syntax--parameter.syntax--variable.syntax--function {
-        color: hsl(41, 99%, 30%);
-        font-style: italic;
-      }
-      .syntax--source.syntax--elixir .syntax--quoted {
-        color: hsl(119, 34%, 47%);
-      }
-      .syntax--source.syntax--elixir .syntax--keyword.syntax--special-method,
-      .syntax--source.syntax--elixir .syntax--embedded.syntax--section,
-      .syntax--source.syntax--elixir
-        .syntax--embedded.syntax--source.syntax--empty {
-        color: hsl(5, 74%, 59%);
-      }
-      .syntax--source.syntax--elixir
-        .syntax--readwrite.syntax--module
-        .syntax--punctuation {
-        color: hsl(5, 74%, 59%);
-      }
-      .syntax--source.syntax--elixir .syntax--regexp.syntax--section,
-      .syntax--source.syntax--elixir .syntax--regexp.syntax--string {
-        color: hsl(344, 84%, 43%);
-      }
-      .syntax--source.syntax--elixir .syntax--separator,
-      .syntax--source.syntax--elixir .syntax--keyword.syntax--operator {
-        color: hsl(41, 99%, 30%);
-      }
-      .syntax--source.syntax--elixir .syntax--variable.syntax--constant {
-        color: hsl(41, 99%, 38%);
-      }
-      .syntax--source.syntax--elixir .syntax--array,
-      .syntax--source.syntax--elixir .syntax--scope,
-      .syntax--source.syntax--elixir .syntax--section {
-        color: hsl(230, 6%, 44%);
-      }
-      .syntax--source.syntax--gfm .syntax--markup {
-        -webkit-font-smoothing: auto;
-      }
-      .syntax--source.syntax--gfm .syntax--link .syntax--entity {
-        color: hsl(221, 87%, 60%);
-      }
-      .syntax--source.syntax--go .syntax--storage.syntax--type.syntax--string {
-        color: hsl(301, 63%, 40%);
-      }
-      .syntax--source.syntax--ini
-        .syntax--keyword.syntax--other.syntax--definition.syntax--ini {
-        color: hsl(5, 74%, 59%);
-      }
-      .syntax--source.syntax--java
-        .syntax--storage.syntax--modifier.syntax--import {
-        color: hsl(41, 99%, 38%);
-      }
-      .syntax--source.syntax--java .syntax--storage.syntax--type {
-        color: hsl(41, 99%, 38%);
-      }
-      .syntax--source.syntax--java
-        .syntax--keyword.syntax--operator.syntax--instanceof {
-        color: hsl(301, 63%, 40%);
-      }
-      .syntax--source.syntax--java-properties .syntax--meta.syntax--key-pair {
-        color: hsl(5, 74%, 59%);
-      }
-      .syntax--source.syntax--java-properties
-        .syntax--meta.syntax--key-pair
-        > .syntax--punctuation {
-        color: hsl(230, 8%, 24%);
-      }
-      .syntax--source.syntax--js .syntax--keyword.syntax--operator {
-        color: hsl(198, 99%, 37%);
-      }
-      .syntax--source.syntax--js
-        .syntax--keyword.syntax--operator.syntax--delete,
-      .syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--in,
-      .syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--of,
-      .syntax--source.syntax--js
-        .syntax--keyword.syntax--operator.syntax--instanceof,
-      .syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--new,
-      .syntax--source.syntax--js
-        .syntax--keyword.syntax--operator.syntax--typeof,
-      .syntax--source.syntax--js
-        .syntax--keyword.syntax--operator.syntax--void {
-        color: hsl(301, 63%, 40%);
-      }
-      .syntax--source.syntax--json
-        .syntax--meta.syntax--structure.syntax--dictionary.syntax--json
-        > .syntax--string.syntax--quoted.syntax--json {
-        color: hsl(5, 74%, 59%);
-      }
-      .syntax--source.syntax--json
-        .syntax--meta.syntax--structure.syntax--dictionary.syntax--json
-        > .syntax--string.syntax--quoted.syntax--json
-        > .syntax--punctuation.syntax--string {
-        color: hsl(5, 74%, 59%);
-      }
-      .syntax--source.syntax--json
-        .syntax--meta.syntax--structure.syntax--dictionary.syntax--json
-        > .syntax--value.syntax--json
-        > .syntax--string.syntax--quoted.syntax--json,
-      .syntax--source.syntax--json
-        .syntax--meta.syntax--structure.syntax--array.syntax--json
-        > .syntax--value.syntax--json
-        > .syntax--string.syntax--quoted.syntax--json,
-      .syntax--source.syntax--json
-        .syntax--meta.syntax--structure.syntax--dictionary.syntax--json
-        > .syntax--value.syntax--json
-        > .syntax--string.syntax--quoted.syntax--json
-        > .syntax--punctuation,
-      .syntax--source.syntax--json
-        .syntax--meta.syntax--structure.syntax--array.syntax--json
-        > .syntax--value.syntax--json
-        > .syntax--string.syntax--quoted.syntax--json
-        > .syntax--punctuation {
-        color: hsl(119, 34%, 47%);
-      }
-      .syntax--source.syntax--json
-        .syntax--meta.syntax--structure.syntax--dictionary.syntax--json
-        > .syntax--constant.syntax--language.syntax--json,
-      .syntax--source.syntax--json
-        .syntax--meta.syntax--structure.syntax--array.syntax--json
-        > .syntax--constant.syntax--language.syntax--json {
-        color: hsl(198, 99%, 37%);
-      }
-      .syntax--ng.syntax--interpolation {
-        color: hsl(5, 74%, 59%);
-      }
-      .syntax--ng.syntax--interpolation.syntax--begin,
-      .syntax--ng.syntax--interpolation.syntax--end {
-        color: hsl(221, 87%, 60%);
-      }
-      .syntax--ng.syntax--interpolation .syntax--function {
-        color: hsl(5, 74%, 59%);
-      }
-      .syntax--ng.syntax--interpolation .syntax--function.syntax--begin,
-      .syntax--ng.syntax--interpolation .syntax--function.syntax--end {
-        color: hsl(221, 87%, 60%);
-      }
-      .syntax--ng.syntax--interpolation .syntax--bool {
-        color: hsl(41, 99%, 30%);
-      }
-      .syntax--ng.syntax--interpolation .syntax--bracket {
-        color: hsl(230, 8%, 24%);
-      }
-      .syntax--ng.syntax--pipe,
-      .syntax--ng.syntax--operator {
-        color: hsl(230, 8%, 24%);
-      }
-      .syntax--ng.syntax--tag {
-        color: hsl(198, 99%, 37%);
-      }
-      .syntax--ng.syntax--attribute-with-value .syntax--attribute-name {
-        color: hsl(41, 99%, 38%);
-      }
-      .syntax--ng.syntax--attribute-with-value .syntax--string {
-        color: hsl(301, 63%, 40%);
-      }
-      .syntax--ng.syntax--attribute-with-value .syntax--string.syntax--begin,
-      .syntax--ng.syntax--attribute-with-value .syntax--string.syntax--end {
-        color: hsl(230, 8%, 24%);
-      }
-      .syntax--source.syntax--ruby
-        .syntax--constant.syntax--other.syntax--symbol
-        > .syntax--punctuation {
-        color: inherit;
-      }
-      .syntax--source.syntax--php .syntax--class.syntax--bracket {
-        color: hsl(230, 8%, 24%);
-      }
-      .syntax--source.syntax--python
-        .syntax--keyword.syntax--operator.syntax--logical.syntax--python {
-        color: hsl(301, 63%, 40%);
-      }
-      .syntax--source.syntax--python .syntax--variable.syntax--parameter {
-        color: hsl(41, 99%, 30%);
+      .-source.-js .-keyword.-operator.-delete,
+      .-source.-js .-keyword.-operator.-in,
+      .-source.-js .-keyword.-operator.-instanceof,
+      .-source.-js .-keyword.-operator.-new,
+      .-source.-js .-keyword.-operator.-of,
+      .-source.-js .-keyword.-operator.-typeof,
+      .-source.-js .-keyword.-operator.-void {
+        color: #a625a4;
       }
       @media screen and (prefers-color-scheme: dark) {
-        .syntax--comment {
-          color: rgb(128, 128, 128);
+        .-comment {
+          color: grey;
           font-style: italic;
         }
-        .syntax--comment .syntax--markup.syntax--link {
-          color: hsl(220, 10%, 40%);
+        .-comment .-markup.-link {
+          color: #5b6270;
         }
-        .syntax--entity.syntax--name.syntax--type {
-          color: hsl(39, 67%, 69%);
+        .-entity.-name.-type,
+        .-entity.-other.-inherited-class {
+          color: #e4bf7a;
         }
-        .syntax--entity.syntax--other.syntax--inherited-class {
-          color: hsl(39, 67%, 69%);
+        .-keyword,
+        .-keyword.-control,
+        .-keyword.-operator {
+          color: #c578dd;
         }
-        .syntax--keyword {
-          color: hsl(286, 60%, 67%);
+        .-keyword.-other.-special-method {
+          color: #61afef;
         }
-        .syntax--keyword.syntax--control {
-          color: hsl(286, 60%, 67%);
+        .-keyword.-other.-unit {
+          color: #d19965;
         }
-        .syntax--keyword.syntax--operator {
-          color: hsl(286, 60%, 67%);
+        .-storage,
+        .-storage.-type.-annotation,
+        .-storage.-type.-primitive {
+          color: #c578dd;
         }
-        .syntax--keyword.syntax--other.syntax--special-method {
-          color: hsl(207, 82%, 66%);
+        .-storage.-modifier.-import,
+        .-storage.-modifier.-package {
+          color: #aab1bf;
         }
-        .syntax--keyword.syntax--other.syntax--unit {
-          color: hsl(29, 54%, 61%);
+        .-constant,
+        .-constant.-variable {
+          color: #d19965;
         }
-        .syntax--storage {
-          color: hsl(286, 60%, 67%);
+        .-constant.-character.-escape {
+          color: #56b5c2;
         }
-        .syntax--storage.syntax--type.syntax--annotation,
-        .syntax--storage.syntax--type.syntax--primitive {
-          color: hsl(286, 60%, 67%);
+        .-constant.-numeric {
+          color: #d19965;
         }
-        .syntax--storage.syntax--modifier.syntax--package,
-        .syntax--storage.syntax--modifier.syntax--import {
-          color: hsl(220, 14%, 71%);
+        .-constant.-other.-color,
+        .-constant.-other.-symbol {
+          color: #56b5c2;
         }
-        .syntax--constant {
-          color: hsl(29, 54%, 61%);
+        .-variable {
+          color: #df6b75;
         }
-        .syntax--constant.syntax--variable {
-          color: hsl(29, 54%, 61%);
+        .-variable.-interpolation {
+          color: #be5046;
         }
-        .syntax--constant.syntax--character.syntax--escape {
-          color: hsl(187, 47%, 55%);
+        .-variable.-parameter {
+          color: #aab1bf;
         }
-        .syntax--constant.syntax--numeric {
-          color: hsl(29, 54%, 61%);
+        .-string {
+          color: #97c279;
         }
-        .syntax--constant.syntax--other.syntax--color {
-          color: hsl(187, 47%, 55%);
+        .-string .-embedded,
+        .-string > .-source {
+          color: #aab1bf;
         }
-        .syntax--constant.syntax--other.syntax--symbol {
-          color: hsl(187, 47%, 55%);
+        .-string.-regexp {
+          color: #56b5c2;
         }
-        .syntax--variable {
-          color: hsl(355, 65%, 65%);
+        .-string.-regexp .-source.-ruby.-embedded {
+          color: #e4bf7a;
         }
-        .syntax--variable.syntax--interpolation {
-          color: hsl(5, 48%, 51%);
+        .-string.-other.-link {
+          color: #df6b75;
         }
-        .syntax--variable.syntax--parameter {
-          color: hsl(220, 14%, 71%);
+        .-punctuation.-definition.-array,
+        .-punctuation.-definition.-function-parameters,
+        .-punctuation.-definition.-method-parameters,
+        .-punctuation.-definition.-parameters,
+        .-punctuation.-definition.-separator,
+        .-punctuation.-definition.-seperator {
+          color: #aab1bf;
         }
-        .syntax--string {
-          color: hsl(95, 38%, 62%);
+        .-punctuation.-definition.-heading,
+        .-punctuation.-definition.-identity {
+          color: #61afef;
         }
-        .syntax--string > .syntax--source,
-        .syntax--string .syntax--embedded {
-          color: hsl(220, 14%, 71%);
+        .-punctuation.-definition.-bold {
+          color: #e4bf7a;
+          font-weight: 700;
         }
-        .syntax--string.syntax--regexp {
-          color: hsl(187, 47%, 55%);
-        }
-        .syntax--string.syntax--regexp
-          .syntax--source.syntax--ruby.syntax--embedded {
-          color: hsl(39, 67%, 69%);
-        }
-        .syntax--string.syntax--other.syntax--link {
-          color: hsl(355, 65%, 65%);
-        }
-        .syntax--punctuation.syntax--definition.syntax--method-parameters,
-        .syntax--punctuation.syntax--definition.syntax--function-parameters,
-        .syntax--punctuation.syntax--definition.syntax--parameters,
-        .syntax--punctuation.syntax--definition.syntax--separator,
-        .syntax--punctuation.syntax--definition.syntax--seperator,
-        .syntax--punctuation.syntax--definition.syntax--array {
-          color: hsl(220, 14%, 71%);
-        }
-        .syntax--punctuation.syntax--definition.syntax--heading,
-        .syntax--punctuation.syntax--definition.syntax--identity {
-          color: hsl(207, 82%, 66%);
-        }
-        .syntax--punctuation.syntax--definition.syntax--bold {
-          color: hsl(39, 67%, 69%);
-          font-weight: bold;
-        }
-        .syntax--punctuation.syntax--definition.syntax--italic {
-          color: hsl(286, 60%, 67%);
+        .-punctuation.-definition.-italic {
+          color: #c578dd;
           font-style: italic;
         }
-        .syntax--punctuation.syntax--section.syntax--embedded {
-          color: hsl(5, 48%, 51%);
+        .-punctuation.-section.-embedded {
+          color: #be5046;
         }
-        .syntax--punctuation.syntax--section.syntax--method,
-        .syntax--punctuation.syntax--section.syntax--class,
-        .syntax--punctuation.syntax--section.syntax--inner-class {
-          color: hsl(220, 14%, 71%);
+        .-punctuation.-section.-class,
+        .-punctuation.-section.-inner-class,
+        .-punctuation.-section.-method {
+          color: #aab1bf;
         }
-        .syntax--support.syntax--class {
-          color: hsl(39, 67%, 69%);
+        .-support.-class {
+          color: #e4bf7a;
         }
-        .syntax--support.syntax--type {
-          color: hsl(187, 47%, 55%);
+        .-support.-function,
+        .-support.-type {
+          color: #56b5c2;
         }
-        .syntax--support.syntax--function {
-          color: hsl(187, 47%, 55%);
+        .-entity.-name.-function,
+        .-support.-function.-any-method {
+          color: #61afef;
         }
-        .syntax--support.syntax--function.syntax--any-method {
-          color: hsl(207, 82%, 66%);
+        .-entity.-name.-class,
+        .-entity.-name.-type.-class {
+          color: #e4bf7a;
         }
-        .syntax--entity.syntax--name.syntax--function {
-          color: hsl(207, 82%, 66%);
+        .-entity.-name.-section {
+          color: #61afef;
         }
-        .syntax--entity.syntax--name.syntax--class,
-        .syntax--entity.syntax--name.syntax--type.syntax--class {
-          color: hsl(39, 67%, 69%);
+        .-entity.-name.-tag {
+          color: #df6b75;
         }
-        .syntax--entity.syntax--name.syntax--section {
-          color: hsl(207, 82%, 66%);
+        .-entity.-other.-attribute-name {
+          color: #d19965;
         }
-        .syntax--entity.syntax--name.syntax--tag {
-          color: hsl(355, 65%, 65%);
+        .-entity.-other.-attribute-name.-id {
+          color: #61afef;
         }
-        .syntax--entity.syntax--other.syntax--attribute-name {
-          color: hsl(29, 54%, 61%);
+        .-meta.-class {
+          color: #e4bf7a;
         }
-        .syntax--entity.syntax--other.syntax--attribute-name.syntax--id {
-          color: hsl(207, 82%, 66%);
+        .-meta.-class.-body,
+        .-meta.-method,
+        .-meta.-method-call {
+          color: #aab1bf;
         }
-        .syntax--meta.syntax--class {
-          color: hsl(39, 67%, 69%);
+        .-meta.-definition.-variable {
+          color: #df6b75;
         }
-        .syntax--meta.syntax--class.syntax--body {
-          color: hsl(220, 14%, 71%);
+        .-meta.-link {
+          color: #d19965;
         }
-        .syntax--meta.syntax--method-call,
-        .syntax--meta.syntax--method {
-          color: hsl(220, 14%, 71%);
+        .-meta.-require {
+          color: #61afef;
         }
-        .syntax--meta.syntax--definition.syntax--variable {
-          color: hsl(355, 65%, 65%);
+        .-meta.-selector {
+          color: #c578dd;
         }
-        .syntax--meta.syntax--link {
-          color: hsl(29, 54%, 61%);
+        .-meta.-separator,
+        .-meta.-tag,
+        .-none {
+          color: #aab1bf;
         }
-        .syntax--meta.syntax--require {
-          color: hsl(207, 82%, 66%);
-        }
-        .syntax--meta.syntax--selector {
-          color: hsl(286, 60%, 67%);
-        }
-        .syntax--meta.syntax--separator {
-          color: hsl(220, 14%, 71%);
-        }
-        .syntax--meta.syntax--tag {
-          color: hsl(220, 14%, 71%);
-        }
-        .syntax--underline {
+        .-underline {
           text-decoration: underline;
         }
-        .syntax--none {
-          color: hsl(220, 14%, 71%);
+        .-invalid.-deprecated {
+          color: #513d14 !important;
+          background-color: #e0c184 !important;
         }
-        .syntax--invalid.syntax--deprecated {
-          color: hsl(40, 60%, 20%) !important;
-          background-color: hsl(40, 60%, 70%) !important;
+        .-invalid.-illegal {
+          color: #fff !important;
+          background-color: #e05151 !important;
         }
-        .syntax--invalid.syntax--illegal {
-          color: white !important;
-          background-color: hsl(0, 70%, 60%) !important;
+        .-markup.-bold {
+          color: #d19965;
+          font-weight: 700;
         }
-        .syntax--markup.syntax--bold {
-          color: hsl(29, 54%, 61%);
-          font-weight: bold;
+        .-markup.-changed {
+          color: #c578dd;
         }
-        .syntax--markup.syntax--changed {
-          color: hsl(286, 60%, 67%);
+        .-markup.-deleted {
+          color: #df6b75;
         }
-        .syntax--markup.syntax--deleted {
-          color: hsl(355, 65%, 65%);
-        }
-        .syntax--markup.syntax--italic {
-          color: hsl(286, 60%, 67%);
+        .-markup.-italic {
+          color: #c578dd;
           font-style: italic;
         }
-        .syntax--markup.syntax--heading {
-          color: hsl(355, 65%, 65%);
+        .-markup.-heading {
+          color: #df6b75;
         }
-        .syntax--markup.syntax--heading
-          .syntax--punctuation.syntax--definition.syntax--heading {
-          color: hsl(207, 82%, 66%);
+        .-markup.-heading .-punctuation.-definition.-heading {
+          color: #61afef;
         }
-        .syntax--markup.syntax--link {
-          color: hsl(187, 47%, 55%);
+        .-markup.-link {
+          color: #56b5c2;
         }
-        .syntax--markup.syntax--inserted {
-          color: hsl(95, 38%, 62%);
+        .-markup.-inserted {
+          color: #97c279;
         }
-        .syntax--markup.syntax--quote {
-          color: hsl(29, 54%, 61%);
+        .-markup.-quote {
+          color: #d19965;
         }
-        .syntax--markup.syntax--raw {
-          color: hsl(95, 38%, 62%);
+        .-markup.-raw {
+          color: #97c279;
         }
-        .syntax--source.syntax--c .syntax--keyword.syntax--operator {
-          color: hsl(286, 60%, 67%);
+        .-source.-js .-keyword.-operator {
+          color: #56b5c2;
         }
-        .syntax--source.syntax--cpp .syntax--keyword.syntax--operator {
-          color: hsl(286, 60%, 67%);
+        .-source.-js .-keyword.-operator.-delete,
+        .-source.-js .-keyword.-operator.-in,
+        .-source.-js .-keyword.-operator.-instanceof,
+        .-source.-js .-keyword.-operator.-new,
+        .-source.-js .-keyword.-operator.-of,
+        .-source.-js .-keyword.-operator.-typeof,
+        .-source.-js .-keyword.-operator.-void {
+          color: #c578dd;
         }
-        .syntax--source.syntax--cs .syntax--keyword.syntax--operator {
-          color: hsl(286, 60%, 67%);
-        }
-        .syntax--source.syntax--css .syntax--property-name,
-        .syntax--source.syntax--css .syntax--property-value {
-          color: hsl(220, 9%, 55%);
-        }
-        .syntax--source.syntax--css .syntax--property-name.syntax--support,
-        .syntax--source.syntax--css .syntax--property-value.syntax--support {
-          color: hsl(220, 14%, 71%);
-        }
-        .syntax--source.syntax--elixir
-          .syntax--source.syntax--embedded.syntax--source {
-          color: hsl(220, 14%, 71%);
-        }
-        .syntax--source.syntax--elixir .syntax--constant.syntax--language,
-        .syntax--source.syntax--elixir .syntax--constant.syntax--numeric,
-        .syntax--source.syntax--elixir .syntax--constant.syntax--definition {
-          color: hsl(207, 82%, 66%);
-        }
-        .syntax--source.syntax--elixir .syntax--variable.syntax--definition,
-        .syntax--source.syntax--elixir .syntax--variable.syntax--anonymous {
-          color: hsl(286, 60%, 67%);
-        }
-        .syntax--source.syntax--elixir
-          .syntax--parameter.syntax--variable.syntax--function {
-          color: hsl(29, 54%, 61%);
-          font-style: italic;
-        }
-        .syntax--source.syntax--elixir .syntax--quoted {
-          color: hsl(95, 38%, 62%);
-        }
-        .syntax--source.syntax--elixir .syntax--keyword.syntax--special-method,
-        .syntax--source.syntax--elixir .syntax--embedded.syntax--section,
-        .syntax--source.syntax--elixir
-          .syntax--embedded.syntax--source.syntax--empty {
-          color: hsl(355, 65%, 65%);
-        }
-        .syntax--source.syntax--elixir
-          .syntax--readwrite.syntax--module
-          .syntax--punctuation {
-          color: hsl(355, 65%, 65%);
-        }
-        .syntax--source.syntax--elixir .syntax--regexp.syntax--section,
-        .syntax--source.syntax--elixir .syntax--regexp.syntax--string {
-          color: hsl(5, 48%, 51%);
-        }
-        .syntax--source.syntax--elixir .syntax--separator,
-        .syntax--source.syntax--elixir .syntax--keyword.syntax--operator {
-          color: hsl(29, 54%, 61%);
-        }
-        .syntax--source.syntax--elixir .syntax--variable.syntax--constant {
-          color: hsl(39, 67%, 69%);
-        }
-        .syntax--source.syntax--elixir .syntax--array,
-        .syntax--source.syntax--elixir .syntax--scope,
-        .syntax--source.syntax--elixir .syntax--section {
-          color: hsl(220, 9%, 55%);
-        }
-        .syntax--source.syntax--gfm .syntax--markup {
-          -webkit-font-smoothing: auto;
-        }
-        .syntax--source.syntax--gfm .syntax--link .syntax--entity {
-          color: hsl(207, 82%, 66%);
-        }
-        .syntax--source.syntax--go
-          .syntax--storage.syntax--type.syntax--string {
-          color: hsl(286, 60%, 67%);
-        }
-        .syntax--source.syntax--ini
-          .syntax--keyword.syntax--other.syntax--definition.syntax--ini {
-          color: hsl(355, 65%, 65%);
-        }
-        .syntax--source.syntax--java
-          .syntax--storage.syntax--modifier.syntax--import {
-          color: hsl(39, 67%, 69%);
-        }
-        .syntax--source.syntax--java .syntax--storage.syntax--type {
-          color: hsl(39, 67%, 69%);
-        }
-        .syntax--source.syntax--java
-          .syntax--keyword.syntax--operator.syntax--instanceof {
-          color: hsl(286, 60%, 67%);
-        }
-        .syntax--source.syntax--java-properties .syntax--meta.syntax--key-pair {
-          color: hsl(355, 65%, 65%);
-        }
-        .syntax--source.syntax--java-properties
-          .syntax--meta.syntax--key-pair
-          > .syntax--punctuation {
-          color: hsl(220, 14%, 71%);
-        }
-        .syntax--source.syntax--js .syntax--keyword.syntax--operator {
-          color: hsl(187, 47%, 55%);
-        }
-        .syntax--source.syntax--js
-          .syntax--keyword.syntax--operator.syntax--delete,
-        .syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--in,
-        .syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--of,
-        .syntax--source.syntax--js
-          .syntax--keyword.syntax--operator.syntax--instanceof,
-        .syntax--source.syntax--js
-          .syntax--keyword.syntax--operator.syntax--new,
-        .syntax--source.syntax--js
-          .syntax--keyword.syntax--operator.syntax--typeof,
-        .syntax--source.syntax--js
-          .syntax--keyword.syntax--operator.syntax--void {
-          color: hsl(286, 60%, 67%);
-        }
-        .syntax--source.syntax--ts .syntax--keyword.syntax--operator {
-          color: hsl(187, 47%, 55%);
-        }
-        .syntax--source.syntax--flow .syntax--keyword.syntax--operator {
-          color: hsl(187, 47%, 55%);
-        }
-        .syntax--source.syntax--json
-          .syntax--meta.syntax--structure.syntax--dictionary.syntax--json
-          > .syntax--string.syntax--quoted.syntax--json {
-          color: hsl(355, 65%, 65%);
-        }
-        .syntax--source.syntax--json
-          .syntax--meta.syntax--structure.syntax--dictionary.syntax--json
-          > .syntax--string.syntax--quoted.syntax--json
-          > .syntax--punctuation.syntax--string {
-          color: hsl(355, 65%, 65%);
-        }
-        .syntax--source.syntax--json
-          .syntax--meta.syntax--structure.syntax--dictionary.syntax--json
-          > .syntax--value.syntax--json
-          > .syntax--string.syntax--quoted.syntax--json,
-        .syntax--source.syntax--json
-          .syntax--meta.syntax--structure.syntax--array.syntax--json
-          > .syntax--value.syntax--json
-          > .syntax--string.syntax--quoted.syntax--json,
-        .syntax--source.syntax--json
-          .syntax--meta.syntax--structure.syntax--dictionary.syntax--json
-          > .syntax--value.syntax--json
-          > .syntax--string.syntax--quoted.syntax--json
-          > .syntax--punctuation,
-        .syntax--source.syntax--json
-          .syntax--meta.syntax--structure.syntax--array.syntax--json
-          > .syntax--value.syntax--json
-          > .syntax--string.syntax--quoted.syntax--json
-          > .syntax--punctuation {
-          color: hsl(95, 38%, 62%);
-        }
-        .syntax--source.syntax--json
-          .syntax--meta.syntax--structure.syntax--dictionary.syntax--json
-          > .syntax--constant.syntax--language.syntax--json,
-        .syntax--source.syntax--json
-          .syntax--meta.syntax--structure.syntax--array.syntax--json
-          > .syntax--constant.syntax--language.syntax--json {
-          color: hsl(187, 47%, 55%);
-        }
-        .syntax--ng.syntax--interpolation {
-          color: hsl(355, 65%, 65%);
-        }
-        .syntax--ng.syntax--interpolation.syntax--begin,
-        .syntax--ng.syntax--interpolation.syntax--end {
-          color: hsl(207, 82%, 66%);
-        }
-        .syntax--ng.syntax--interpolation .syntax--function {
-          color: hsl(355, 65%, 65%);
-        }
-        .syntax--ng.syntax--interpolation .syntax--function.syntax--begin,
-        .syntax--ng.syntax--interpolation .syntax--function.syntax--end {
-          color: hsl(207, 82%, 66%);
-        }
-        .syntax--ng.syntax--interpolation .syntax--bool {
-          color: hsl(29, 54%, 61%);
-        }
-        .syntax--ng.syntax--interpolation .syntax--bracket {
-          color: hsl(220, 14%, 71%);
-        }
-        .syntax--ng.syntax--pipe,
-        .syntax--ng.syntax--operator {
-          color: hsl(220, 14%, 71%);
-        }
-        .syntax--ng.syntax--tag {
-          color: hsl(187, 47%, 55%);
-        }
-        .syntax--ng.syntax--attribute-with-value .syntax--attribute-name {
-          color: hsl(39, 67%, 69%);
-        }
-        .syntax--ng.syntax--attribute-with-value .syntax--string {
-          color: hsl(286, 60%, 67%);
-        }
-        .syntax--ng.syntax--attribute-with-value .syntax--string.syntax--begin,
-        .syntax--ng.syntax--attribute-with-value .syntax--string.syntax--end {
-          color: hsl(220, 14%, 71%);
-        }
-        .syntax--source.syntax--ruby
-          .syntax--constant.syntax--other.syntax--symbol
-          > .syntax--punctuation {
-          color: inherit;
-        }
-        .syntax--source.syntax--php .syntax--class.syntax--bracket {
-          color: hsl(220, 14%, 71%);
-        }
-        .syntax--source.syntax--python
-          .syntax--keyword.syntax--operator.syntax--logical.syntax--python {
-          color: hsl(286, 60%, 67%);
-        }
-        .syntax--source.syntax--python .syntax--variable.syntax--parameter {
-          color: hsl(29, 54%, 61%);
+        .-source.-flow .-keyword.-operator,
+        .-source.-ts .-keyword.-operator {
+          color: #56b5c2;
         }
       }
     </style>
