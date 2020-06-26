@@ -22,12 +22,21 @@
     "rollup-pluginutils": "^2.8.2"
   },
   "scripts": {
+    "//preinstall": "Sets up the precommit hooks on initial npm install",
     "preinstall": "git config core.hooksPath .githooks; chmod +x .githooks/pre-commit",
+    "//build": "outputs the npm package js to `dist`",
     "build": "babel src -d dist; npx prettier --write dist/*; rm dist/types.flow.js",
+    "//check": "checks status of sources for TODOs and other errors",
     "check": "node_modules/.bin/jest-runtime dev/check-docs.js",
+    "//docs": "builds the website into `docs`",
     "docs": "node_modules/.bin/jest-runtime dev/build-website.js",
+    "//flow": "typechecks source",
     "flow": "node_modules/.bin/flow",
+    "//serve": "serves the website for mobile development",
+    "serve": "cd docs; python -m SimpleHTTPServer 8000",
+    "//test": "runs all tests, pass it a name to scope down",
     "test": "node_modules/.bin/jest",
+    "//watchdocs": "rebuilds the website on any changes",
     "watchdocs": "./node_modules/.bin/nodemon -e js,html --watch website-src --watch dev --watch src --exec ./node_modules/.bin/jest-runtime dev/build-website.js"
   },
   "prettier": {
