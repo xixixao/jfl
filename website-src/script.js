@@ -24,10 +24,18 @@ const searchBarCancel = nullthrows(
 );
 invariant(searchBar instanceof HTMLInputElement);
 searchBar.addEventListener('input', onSearchUpdate);
-searchBarCancel.addEventListener('click', (event: MouseEvent) => {
+searchBarCancel.addEventListener('click', cancelSearch);
+searchBar.addEventListener('keyup', (event: KeyboardEvent) => {
+  if (event.code === 'Escape') {
+    cancelSearch();
+    searchBar.blur();
+  }
+});
+
+function cancelSearch() {
   searchBar.value = '';
   onSearchUpdate();
-});
+}
 
 function onSearchUpdate() {
   const searched = searchBar.value;
