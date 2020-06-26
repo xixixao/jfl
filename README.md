@@ -116,12 +116,12 @@ If this library isn't your cup of tea you might want to check the alternatives b
 <!-- prettier-ignore -->
 | Name |  Has static interface? | Supports Maps & Sets? | Immutable? | Well-typed |
 | ------- | -------------- | --------- | --------- | --------- |
-| [Lodash](https://lodash.com/)           | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Underscore](https://underscorejs.org/) | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Ramda](https://ramdajs.com/)           | ✅ | ❌ | ❌ | ✅ | ❌ |
-| [Sugar](https://sugarjs.com/)           | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Lazy](http://danieltao.com/lazy.js)    | ❌ | ❌ | ❌ | ✅ | ❌ |
-| [CollectJS](https://collect.js.org/)    | ✅ | ❌ | ❌ | ✅ | ❌ |
-| [Sanctuary](https://sanctuary.js.org/)  | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Folktale](https://folktale.origamitower.com/)  | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Mout](http://moutjs.com/)              | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Lodash](https://lodash.com/)           | ✅ | ❌ |  ❌ | ❌ |
+| [Underscore](https://underscorejs.org/) | ✅ | ❌ |  ❌ | ❌ |
+| [Ramda](https://ramdajs.com/)           | ✅ | ❌ |  ✅ | ❌ |
+| [Sugar](https://sugarjs.com/)           | ✅ | ❌ |  ❌ | ❌ |
+| [Lazy](http://danieltao.com/lazy.js)    | ❌ | ❌ |  ✅ | ❌ |
+| [CollectJS](https://collect.js.org/)    | ✅ | ❌ |  ✅ | ❌ |
+| [Sanctuary](https://sanctuary.js.org/)  | ✅ | ❌ |  ❌ | ❌ |
+| [Folktale](https://folktale.origamitower.com/)  | ✅ | ❌ | ❌ | ❌ |
+| [Mout](http://moutjs.com/)              | ✅ | ❌ | ❌ | ❌ |
