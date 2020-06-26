@@ -25,6 +25,7 @@
         /* Colors */
         --background-color: rgb(255, 255, 255);
         --code-text-color: rgb(56, 58, 66);
+        --error-background-color: rgb(245, 35, 75);
         --hover-background-color: rgb(0, 112, 245);
         --hover-text-color: rgb(255, 255, 255);
         --input-background-color: rgb(252, 252, 252);
@@ -45,12 +46,14 @@
 
         /* Images */
         --chevron-url: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hldnJvbi1yaWdodCI+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxNSAxMiA5IDYiPjwvcG9seWxpbmU+PC9zdmc+');
+        --cancel-url: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXIteCI+PGxpbmUgeDE9IjE4IiB5MT0iNiIgeDI9IjYiIHkyPSIxOCI+PC9saW5lPjxsaW5lIHgxPSI2IiB5MT0iNiIgeDI9IjE4IiB5Mj0iMTgiPjwvbGluZT48L3N2Zz4=');
       }
 
       @media screen and (prefers-color-scheme: dark) {
         :root {
           --background-color: rgb(30, 30, 30);
           --code-text-color: rgb(171, 178, 191);
+          --error-background-color: rgb(255, 65, 105);
           --hover-background-color: rgb(50, 114, 246);
           --hover-text-color: rgb(255, 255, 255);
           --input-background-color: rgb(54, 54, 54);
@@ -134,6 +137,26 @@
       }
       .sidebarSearch {
         padding: 16px;
+        position: relative;
+      }
+      .sidebarSearchCancel {
+        -webkit-mask-image: var(--cancel-url);
+        -webkit-mask-size: 1.2rem;
+        background-color: var(--text-color);
+        cursor: pointer;
+        display: none;
+        height: 1.25rem;
+        mask-image: var(--cancel-url);
+        mask-size: 1.2rem;
+        opacity: 0.3;
+        position: absolute;
+        right: 20px;
+        top: 22px;
+        transform: rotate(0);
+        width: 1.25rem;
+      }
+      .searched .sidebarSearchCancel {
+        display: block;
       }
       .sidebarNavigation {
         font-family: 'SF Pro Display', 'Helvetica Neue', 'Helvetica', 'Arial',
@@ -175,6 +198,7 @@
         transform: rotate(0);
         width: 1.25rem;
       }
+      .sidebar.searched .module::before,
       .sidebar .open .module::before {
         transform: rotate(90deg);
       }
@@ -190,7 +214,7 @@
         padding: 4px 8px;
         display: none;
       }
-      .sidebar .function {
+      .sidebar .moduleContent {
         margin-left: calc(var(--chevron-width) + 0.5rem);
         font-size: 0.85rem;
         display: none;
@@ -198,7 +222,16 @@
       .sidebar .open .section {
         display: block;
       }
-      .sidebar .open .function {
+      .sidebar.searched .section {
+        display: none;
+      }
+      .sidebar .open .moduleContent {
+        display: block;
+      }
+      .sidebar.searched .moduleContent {
+        display: none;
+      }
+      .sidebar.searched .moduleContent.matchesSearch {
         display: block;
       }
       .main {
@@ -228,9 +261,13 @@
         padding: 0.5rem;
         width: 100%;
       }
+      .searched input[type='text'],
       input[type='text']:focus {
         outline: none;
         box-shadow: 0px 0px 0px 2px var(--hover-background-color);
+      }
+      input[type='text'].noMatch {
+        box-shadow: 0px 0px 0px 2px var(--error-background-color);
       }
       ::placeholder {
         color: var(--input-placeholder-color);
@@ -1117,6 +1154,7 @@
       <div class="sidebarContent">
         <div class="sidebarSearch">
           <input type="text" placeholder="Search" />
+          <div class="sidebarSearchCancel"></div>
         </div>
         <div class="sidebarNavigation">
           <a href="#intro">
@@ -1126,17 +1164,17 @@
       <div class="moduleExpander">
         
     <a class="module">(jfl)</a>
-    <a class="function" href="#jfl">Overview</a>
+    <a class="moduleContent" href="#jfl">Overview</a>
   
         
         <div class="section">Type</div>
         
-      <a class="function" href="#nullthrows">
+      <a class="moduleContent function" href="#nullthrows">
         nullthrows
       </a>
     
 
-      <a class="function" href="#invariant">
+      <a class="moduleContent function" href="#invariant">
         invariant
       </a>
     
@@ -1147,67 +1185,67 @@
       <div class="moduleExpander">
         
     <a class="module">Ar (array)</a>
-    <a class="function" href="#ar">Overview</a>
+    <a class="moduleContent" href="#ar">Overview</a>
   
         
         <div class="section">Construct</div>
         
-      <a class="function" href="#Ar.from">
+      <a class="moduleContent function" href="#Ar.from">
         Ar.from
       </a>
     
 
-      <a class="function" href="#Ar.fromAsync">
+      <a class="moduleContent function" href="#Ar.fromAsync">
         Ar.fromAsync
       </a>
     
 
-      <a class="function" href="#Ar.keys">
+      <a class="moduleContent function" href="#Ar.keys">
         Ar.keys
       </a>
     
 
-      <a class="function" href="#Ar.entries">
+      <a class="moduleContent function" href="#Ar.entries">
         Ar.entries
       </a>
     
 
-      <a class="function" href="#Ar.range">
+      <a class="moduleContent function" href="#Ar.range">
         Ar.range
       </a>
     
 
-      <a class="function" href="#Ar.rangeInclusive">
+      <a class="moduleContent function" href="#Ar.rangeInclusive">
         Ar.rangeInclusive
       </a>
     
 
-      <a class="function" href="#Ar.rangeDescending">
+      <a class="moduleContent function" href="#Ar.rangeDescending">
         Ar.rangeDescending
       </a>
     
 
-      <a class="function" href="#Ar.rangeDynamic">
+      <a class="moduleContent function" href="#Ar.rangeDynamic">
         Ar.rangeDynamic
       </a>
     
 
-      <a class="function" href="#Ar.repeat">
+      <a class="moduleContent function" href="#Ar.repeat">
         Ar.repeat
       </a>
     
 
-      <a class="function" href="#Ar.fill">
+      <a class="moduleContent function" href="#Ar.fill">
         Ar.fill
       </a>
     
 
-      <a class="function" href="#Ar.generate">
+      <a class="moduleContent function" href="#Ar.generate">
         Ar.generate
       </a>
     
 
-      <a class="function" href="#Ar.mutable">
+      <a class="moduleContent function" href="#Ar.mutable">
         Ar.mutable
       </a>
     
@@ -1215,17 +1253,17 @@
 
         <div class="section">Check</div>
         
-      <a class="function" href="#Ar.isArray">
+      <a class="moduleContent function" href="#Ar.isArray">
         Ar.isArray
       </a>
     
 
-      <a class="function" href="#Ar.equals">
+      <a class="moduleContent function" href="#Ar.equals">
         Ar.equals
       </a>
     
 
-      <a class="function" href="#Ar.equalsNested">
+      <a class="moduleContent function" href="#Ar.equalsNested">
         Ar.equalsNested
       </a>
     
@@ -1233,57 +1271,57 @@
 
         <div class="section">Select</div>
         
-      <a class="function" href="#Ar.filter">
+      <a class="moduleContent function" href="#Ar.filter">
         Ar.filter
       </a>
     
 
-      <a class="function" href="#Ar.filterAsync">
+      <a class="moduleContent function" href="#Ar.filterAsync">
         Ar.filterAsync
       </a>
     
 
-      <a class="function" href="#Ar.filterNulls">
+      <a class="moduleContent function" href="#Ar.filterNulls">
         Ar.filterNulls
       </a>
     
 
-      <a class="function" href="#Ar.findKeys">
+      <a class="moduleContent function" href="#Ar.findKeys">
         Ar.findKeys
       </a>
     
 
-      <a class="function" href="#Ar.unique">
+      <a class="moduleContent function" href="#Ar.unique">
         Ar.unique
       </a>
     
 
-      <a class="function" href="#Ar.uniqueBy">
+      <a class="moduleContent function" href="#Ar.uniqueBy">
         Ar.uniqueBy
       </a>
     
 
-      <a class="function" href="#Ar.take">
+      <a class="moduleContent function" href="#Ar.take">
         Ar.take
       </a>
     
 
-      <a class="function" href="#Ar.drop">
+      <a class="moduleContent function" href="#Ar.drop">
         Ar.drop
       </a>
     
 
-      <a class="function" href="#Ar.takeWhile">
+      <a class="moduleContent function" href="#Ar.takeWhile">
         Ar.takeWhile
       </a>
     
 
-      <a class="function" href="#Ar.dropWhile">
+      <a class="moduleContent function" href="#Ar.dropWhile">
         Ar.dropWhile
       </a>
     
 
-      <a class="function" href="#Ar.dropWhileFromEnd">
+      <a class="moduleContent function" href="#Ar.dropWhileFromEnd">
         Ar.dropWhileFromEnd
       </a>
     
@@ -1291,32 +1329,32 @@
 
         <div class="section">Divide</div>
         
-      <a class="function" href="#Ar.chunk">
+      <a class="moduleContent function" href="#Ar.chunk">
         Ar.chunk
       </a>
     
 
-      <a class="function" href="#Ar.partition">
+      <a class="moduleContent function" href="#Ar.partition">
         Ar.partition
       </a>
     
 
-      <a class="function" href="#Ar.slice">
+      <a class="moduleContent function" href="#Ar.slice">
         Ar.slice
       </a>
     
 
-      <a class="function" href="#Ar.splice">
+      <a class="moduleContent function" href="#Ar.splice">
         Ar.splice
       </a>
     
 
-      <a class="function" href="#Ar.splitAt">
+      <a class="moduleContent function" href="#Ar.splitAt">
         Ar.splitAt
       </a>
     
 
-      <a class="function" href="#Ar.span">
+      <a class="moduleContent function" href="#Ar.span">
         Ar.span
       </a>
     
@@ -1324,32 +1362,32 @@
 
         <div class="section">Combine</div>
         
-      <a class="function" href="#Ar.prepend">
+      <a class="moduleContent function" href="#Ar.prepend">
         Ar.prepend
       </a>
     
 
-      <a class="function" href="#Ar.concat">
+      <a class="moduleContent function" href="#Ar.concat">
         Ar.concat
       </a>
     
 
-      <a class="function" href="#Ar.flatten">
+      <a class="moduleContent function" href="#Ar.flatten">
         Ar.flatten
       </a>
     
 
-      <a class="function" href="#Ar.zip">
+      <a class="moduleContent function" href="#Ar.zip">
         Ar.zip
       </a>
     
 
-      <a class="function" href="#Ar.zipWith">
+      <a class="moduleContent function" href="#Ar.zipWith">
         Ar.zipWith
       </a>
     
 
-      <a class="function" href="#Ar.product">
+      <a class="moduleContent function" href="#Ar.product">
         Ar.product
       </a>
     
@@ -1357,27 +1395,27 @@
 
         <div class="section">Transform</div>
         
-      <a class="function" href="#Ar.map">
+      <a class="moduleContent function" href="#Ar.map">
         Ar.map
       </a>
     
 
-      <a class="function" href="#Ar.mapAsync">
+      <a class="moduleContent function" href="#Ar.mapAsync">
         Ar.mapAsync
       </a>
     
 
-      <a class="function" href="#Ar.mapMaybe">
+      <a class="moduleContent function" href="#Ar.mapMaybe">
         Ar.mapMaybe
       </a>
     
 
-      <a class="function" href="#Ar.mapFlat">
+      <a class="moduleContent function" href="#Ar.mapFlat">
         Ar.mapFlat
       </a>
     
 
-      <a class="function" href="#Ar.scan">
+      <a class="moduleContent function" href="#Ar.scan">
         Ar.scan
       </a>
     
@@ -1385,22 +1423,22 @@
 
         <div class="section">Order</div>
         
-      <a class="function" href="#Ar.reverse">
+      <a class="moduleContent function" href="#Ar.reverse">
         Ar.reverse
       </a>
     
 
-      <a class="function" href="#Ar.sort">
+      <a class="moduleContent function" href="#Ar.sort">
         Ar.sort
       </a>
     
 
-      <a class="function" href="#Ar.sortBy">
+      <a class="moduleContent function" href="#Ar.sortBy">
         Ar.sortBy
       </a>
     
 
-      <a class="function" href="#Ar.sortUnstable">
+      <a class="moduleContent function" href="#Ar.sortUnstable">
         Ar.sortUnstable
       </a>
     
@@ -1411,47 +1449,47 @@
       <div class="moduleExpander">
         
     <a class="module">Cl (collection)</a>
-    <a class="function" href="#cl">Overview</a>
+    <a class="moduleContent" href="#cl">Overview</a>
   
         
         <div class="section">Check</div>
         
-      <a class="function" href="#Cl.equals">
+      <a class="moduleContent function" href="#Cl.equals">
         Cl.equals
       </a>
     
 
-      <a class="function" href="#Cl.equalsNested">
+      <a class="moduleContent function" href="#Cl.equalsNested">
         Cl.equalsNested
       </a>
     
 
-      <a class="function" href="#Cl.isEmpty">
+      <a class="moduleContent function" href="#Cl.isEmpty">
         Cl.isEmpty
       </a>
     
 
-      <a class="function" href="#Cl.count">
+      <a class="moduleContent function" href="#Cl.count">
         Cl.count
       </a>
     
 
-      <a class="function" href="#Cl.contains">
+      <a class="moduleContent function" href="#Cl.contains">
         Cl.contains
       </a>
     
 
-      <a class="function" href="#Cl.containsKey">
+      <a class="moduleContent function" href="#Cl.containsKey">
         Cl.containsKey
       </a>
     
 
-      <a class="function" href="#Cl.any">
+      <a class="moduleContent function" href="#Cl.any">
         Cl.any
       </a>
     
 
-      <a class="function" href="#Cl.every">
+      <a class="moduleContent function" href="#Cl.every">
         Cl.every
       </a>
     
@@ -1459,92 +1497,92 @@
 
         <div class="section">Select</div>
         
-      <a class="function" href="#Cl.find">
+      <a class="moduleContent function" href="#Cl.find">
         Cl.find
       </a>
     
 
-      <a class="function" href="#Cl.findX">
+      <a class="moduleContent function" href="#Cl.findX">
         Cl.findX
       </a>
     
 
-      <a class="function" href="#Cl.findKey">
+      <a class="moduleContent function" href="#Cl.findKey">
         Cl.findKey
       </a>
     
 
-      <a class="function" href="#Cl.findKeyX">
+      <a class="moduleContent function" href="#Cl.findKeyX">
         Cl.findKeyX
       </a>
     
 
-      <a class="function" href="#Cl.first">
+      <a class="moduleContent function" href="#Cl.first">
         Cl.first
       </a>
     
 
-      <a class="function" href="#Cl.firstX">
+      <a class="moduleContent function" href="#Cl.firstX">
         Cl.firstX
       </a>
     
 
-      <a class="function" href="#Cl.onlyX">
+      <a class="moduleContent function" href="#Cl.onlyX">
         Cl.onlyX
       </a>
     
 
-      <a class="function" href="#Cl.last">
+      <a class="moduleContent function" href="#Cl.last">
         Cl.last
       </a>
     
 
-      <a class="function" href="#Cl.lastX">
+      <a class="moduleContent function" href="#Cl.lastX">
         Cl.lastX
       </a>
     
 
-      <a class="function" href="#Cl.at">
+      <a class="moduleContent function" href="#Cl.at">
         Cl.at
       </a>
     
 
-      <a class="function" href="#Cl.atX">
+      <a class="moduleContent function" href="#Cl.atX">
         Cl.atX
       </a>
     
 
-      <a class="function" href="#Cl.atFromEnd">
+      <a class="moduleContent function" href="#Cl.atFromEnd">
         Cl.atFromEnd
       </a>
     
 
-      <a class="function" href="#Cl.atFromEndX">
+      <a class="moduleContent function" href="#Cl.atFromEndX">
         Cl.atFromEndX
       </a>
     
 
-      <a class="function" href="#Cl.atDynamic">
+      <a class="moduleContent function" href="#Cl.atDynamic">
         Cl.atDynamic
       </a>
     
 
-      <a class="function" href="#Cl.firstKey">
+      <a class="moduleContent function" href="#Cl.firstKey">
         Cl.firstKey
       </a>
     
 
-      <a class="function" href="#Cl.firstKeyX">
+      <a class="moduleContent function" href="#Cl.firstKeyX">
         Cl.firstKeyX
       </a>
     
 
-      <a class="function" href="#Cl.lastKey">
+      <a class="moduleContent function" href="#Cl.lastKey">
         Cl.lastKey
       </a>
     
 
-      <a class="function" href="#Cl.lastKeyX">
+      <a class="moduleContent function" href="#Cl.lastKeyX">
         Cl.lastKeyX
       </a>
     
@@ -1552,12 +1590,12 @@
 
         <div class="section">Transform</div>
         
-      <a class="function" href="#Cl.forEach">
+      <a class="moduleContent function" href="#Cl.forEach">
         Cl.forEach
       </a>
     
 
-      <a class="function" href="#Cl.reduce">
+      <a class="moduleContent function" href="#Cl.reduce">
         Cl.reduce
       </a>
     
@@ -1568,62 +1606,62 @@
       <div class="moduleExpander">
         
     <a class="module">Mp (map)</a>
-    <a class="function" href="#mp">Overview</a>
+    <a class="moduleContent" href="#mp">Overview</a>
   
         
         <div class="section">Construction</div>
         
-      <a class="function" href="#Mp.of">
+      <a class="moduleContent function" href="#Mp.of">
         Mp.of
       </a>
     
 
-      <a class="function" href="#Mp.from">
+      <a class="moduleContent function" href="#Mp.from">
         Mp.from
       </a>
     
 
-      <a class="function" href="#Mp.fromAsync">
+      <a class="moduleContent function" href="#Mp.fromAsync">
         Mp.fromAsync
       </a>
     
 
-      <a class="function" href="#Mp.fromValues">
+      <a class="moduleContent function" href="#Mp.fromValues">
         Mp.fromValues
       </a>
     
 
-      <a class="function" href="#Mp.fromKeys">
+      <a class="moduleContent function" href="#Mp.fromKeys">
         Mp.fromKeys
       </a>
     
 
-      <a class="function" href="#Mp.fromKeysAsync">
+      <a class="moduleContent function" href="#Mp.fromKeysAsync">
         Mp.fromKeysAsync
       </a>
     
 
-      <a class="function" href="#Mp.fromEntries">
+      <a class="moduleContent function" href="#Mp.fromEntries">
         Mp.fromEntries
       </a>
     
 
-      <a class="function" href="#Mp.unzip">
+      <a class="moduleContent function" href="#Mp.unzip">
         Mp.unzip
       </a>
     
 
-      <a class="function" href="#Mp.fromObject">
+      <a class="moduleContent function" href="#Mp.fromObject">
         Mp.fromObject
       </a>
     
 
-      <a class="function" href="#Mp.toObject">
+      <a class="moduleContent function" href="#Mp.toObject">
         Mp.toObject
       </a>
     
 
-      <a class="function" href="#Mp.mutable">
+      <a class="moduleContent function" href="#Mp.mutable">
         Mp.mutable
       </a>
     
@@ -1631,22 +1669,22 @@
 
         <div class="section">Checks</div>
         
-      <a class="function" href="#Mp.isMap">
+      <a class="moduleContent function" href="#Mp.isMap">
         Mp.isMap
       </a>
     
 
-      <a class="function" href="#Mp.equals">
+      <a class="moduleContent function" href="#Mp.equals">
         Mp.equals
       </a>
     
 
-      <a class="function" href="#Mp.equalsOrderIgnored">
+      <a class="moduleContent function" href="#Mp.equalsOrderIgnored">
         Mp.equalsOrderIgnored
       </a>
     
 
-      <a class="function" href="#Mp.equalsNested">
+      <a class="moduleContent function" href="#Mp.equalsNested">
         Mp.equalsNested
       </a>
     
@@ -1654,12 +1692,12 @@
 
         <div class="section">Combine</div>
         
-      <a class="function" href="#Mp.set">
+      <a class="moduleContent function" href="#Mp.set">
         Mp.set
       </a>
     
 
-      <a class="function" href="#Mp.merge">
+      <a class="moduleContent function" href="#Mp.merge">
         Mp.merge
       </a>
     
@@ -1667,7 +1705,7 @@
 
         <div class="section">Select</div>
         
-      <a class="function" href="#Mp.filter">
+      <a class="moduleContent function" href="#Mp.filter">
         Mp.filter
       </a>
     
@@ -1675,22 +1713,22 @@
 
         <div class="section">Transform</div>
         
-      <a class="function" href="#Mp.map">
+      <a class="moduleContent function" href="#Mp.map">
         Mp.map
       </a>
     
 
-      <a class="function" href="#Mp.mapAsync">
+      <a class="moduleContent function" href="#Mp.mapAsync">
         Mp.mapAsync
       </a>
     
 
-      <a class="function" href="#Mp.mapToEntries">
+      <a class="moduleContent function" href="#Mp.mapToEntries">
         Mp.mapToEntries
       </a>
     
 
-      <a class="function" href="#Mp.groupBy">
+      <a class="moduleContent function" href="#Mp.groupBy">
         Mp.groupBy
       </a>
     
@@ -1709,17 +1747,17 @@
       <div class="moduleExpander">
         
     <a class="module">Mth (math)</a>
-    <a class="function" href="#mth">Overview</a>
+    <a class="moduleContent" href="#mth">Overview</a>
   
         
         <div class="section">Checks</div>
         
-      <a class="function" href="#Mth.isOdd">
+      <a class="moduleContent function" href="#Mth.isOdd">
         Mth.isOdd
       </a>
     
 
-      <a class="function" href="#Mth.isEven">
+      <a class="moduleContent function" href="#Mth.isEven">
         Mth.isEven
       </a>
     
@@ -1727,32 +1765,32 @@
 
         <div class="section">Operations</div>
         
-      <a class="function" href="#Mth.pmod">
+      <a class="moduleContent function" href="#Mth.pmod">
         Mth.pmod
       </a>
     
 
-      <a class="function" href="#Mth.idiv">
+      <a class="moduleContent function" href="#Mth.idiv">
         Mth.idiv
       </a>
     
 
-      <a class="function" href="#Mth.divx">
+      <a class="moduleContent function" href="#Mth.divx">
         Mth.divx
       </a>
     
 
-      <a class="function" href="#Mth.idivx">
+      <a class="moduleContent function" href="#Mth.idivx">
         Mth.idivx
       </a>
     
 
-      <a class="function" href="#Mth.squared">
+      <a class="moduleContent function" href="#Mth.squared">
         Mth.squared
       </a>
     
 
-      <a class="function" href="#Mth.cubed">
+      <a class="moduleContent function" href="#Mth.cubed">
         Mth.cubed
       </a>
     
@@ -1760,47 +1798,47 @@
 
         <div class="section">Collections</div>
         
-      <a class="function" href="#Mth.min">
+      <a class="moduleContent function" href="#Mth.min">
         Mth.min
       </a>
     
 
-      <a class="function" href="#Mth.minBy">
+      <a class="moduleContent function" href="#Mth.minBy">
         Mth.minBy
       </a>
     
 
-      <a class="function" href="#Mth.max">
+      <a class="moduleContent function" href="#Mth.max">
         Mth.max
       </a>
     
 
-      <a class="function" href="#Mth.maxBy">
+      <a class="moduleContent function" href="#Mth.maxBy">
         Mth.maxBy
       </a>
     
 
-      <a class="function" href="#Mth.mean">
+      <a class="moduleContent function" href="#Mth.mean">
         Mth.mean
       </a>
     
 
-      <a class="function" href="#Mth.median">
+      <a class="moduleContent function" href="#Mth.median">
         Mth.median
       </a>
     
 
-      <a class="function" href="#Mth.sum">
+      <a class="moduleContent function" href="#Mth.sum">
         Mth.sum
       </a>
     
 
-      <a class="function" href="#Mth.sumFloat">
+      <a class="moduleContent function" href="#Mth.sumFloat">
         Mth.sumFloat
       </a>
     
 
-      <a class="function" href="#Mth.product">
+      <a class="moduleContent function" href="#Mth.product">
         Mth.product
       </a>
     
@@ -1808,17 +1846,17 @@
 
         <div class="section">Bases</div>
         
-      <a class="function" href="#Mth.fromBase">
+      <a class="moduleContent function" href="#Mth.fromBase">
         Mth.fromBase
       </a>
     
 
-      <a class="function" href="#Mth.baseConvert">
+      <a class="moduleContent function" href="#Mth.baseConvert">
         Mth.baseConvert
       </a>
     
 
-      <a class="function" href="#Mth.toBase">
+      <a class="moduleContent function" href="#Mth.toBase">
         Mth.toBase
       </a>
     
@@ -1829,12 +1867,12 @@
       <div class="moduleExpander">
         
     <a class="module">REx (regexp)</a>
-    <a class="function" href="#rex">Overview</a>
+    <a class="moduleContent" href="#rex">Overview</a>
   
         
         <div class="section">Check</div>
         
-      <a class="function" href="#REx.isRegExp">
+      <a class="moduleContent function" href="#REx.isRegExp">
         REx.isRegExp
       </a>
     
@@ -1842,31 +1880,28 @@
 
         <div class="section">Combine</div>
         
-      <a class="function" href="#REx.concat">
+      <a class="moduleContent function" href="#REx.concat">
         REx.concat
       </a>
     
-      
 
-        <div class="section">Transform</div>
-        
-      <a class="function" href="#REx.addFlags">
-        REx.addFlags
-      </a>
-    
-
-      <a class="function" href="#REx.removeFlags">
-        REx.removeFlags
-      </a>
-    
-
-      <a class="function" href="#REx.append">
+      <a class="moduleContent function" href="#REx.append">
         REx.append
       </a>
     
 
-      <a class="function" href="#REx.prepend">
+      <a class="moduleContent function" href="#REx.prepend">
         REx.prepend
+      </a>
+    
+
+      <a class="moduleContent function" href="#REx.addFlags">
+        REx.addFlags
+      </a>
+    
+
+      <a class="moduleContent function" href="#REx.removeFlags">
+        REx.removeFlags
       </a>
     
       
@@ -1876,22 +1911,22 @@
       <div class="moduleExpander">
         
     <a class="module">St (set)</a>
-    <a class="function" href="#st">Overview</a>
+    <a class="moduleContent" href="#st">Overview</a>
   
         
         <div class="section">Construction</div>
         
-      <a class="function" href="#St.from">
+      <a class="moduleContent function" href="#St.from">
         St.from
       </a>
     
 
-      <a class="function" href="#St.fromAsync">
+      <a class="moduleContent function" href="#St.fromAsync">
         St.fromAsync
       </a>
     
 
-      <a class="function" href="#St.mutable">
+      <a class="moduleContent function" href="#St.mutable">
         St.mutable
       </a>
     
@@ -1899,22 +1934,22 @@
 
         <div class="section">Checks</div>
         
-      <a class="function" href="#St.isSet">
+      <a class="moduleContent function" href="#St.isSet">
         St.isSet
       </a>
     
 
-      <a class="function" href="#St.equals">
+      <a class="moduleContent function" href="#St.equals">
         St.equals
       </a>
     
 
-      <a class="function" href="#St.equalsOrderIgnored">
+      <a class="moduleContent function" href="#St.equalsOrderIgnored">
         St.equalsOrderIgnored
       </a>
     
 
-      <a class="function" href="#St.equalsNested">
+      <a class="moduleContent function" href="#St.equalsNested">
         St.equalsNested
       </a>
     
@@ -1922,27 +1957,27 @@
 
         <div class="section">Combine</div>
         
-      <a class="function" href="#St.add">
+      <a class="moduleContent function" href="#St.add">
         St.add
       </a>
     
 
-      <a class="function" href="#St.union">
+      <a class="moduleContent function" href="#St.union">
         St.union
       </a>
     
 
-      <a class="function" href="#St.intersect">
+      <a class="moduleContent function" href="#St.intersect">
         St.intersect
       </a>
     
 
-      <a class="function" href="#St.diff">
+      <a class="moduleContent function" href="#St.diff">
         St.diff
       </a>
     
 
-      <a class="function" href="#St.flatten">
+      <a class="moduleContent function" href="#St.flatten">
         St.flatten
       </a>
     
@@ -1950,22 +1985,22 @@
 
         <div class="section">Select</div>
         
-      <a class="function" href="#St.filter">
+      <a class="moduleContent function" href="#St.filter">
         St.filter
       </a>
     
 
-      <a class="function" href="#St.filterAsync">
+      <a class="moduleContent function" href="#St.filterAsync">
         St.filterAsync
       </a>
     
 
-      <a class="function" href="#St.filterNulls">
+      <a class="moduleContent function" href="#St.filterNulls">
         St.filterNulls
       </a>
     
 
-      <a class="function" href="#St.findKeys">
+      <a class="moduleContent function" href="#St.findKeys">
         St.findKeys
       </a>
     
@@ -1973,17 +2008,17 @@
 
         <div class="section">Transform</div>
         
-      <a class="function" href="#St.map">
+      <a class="moduleContent function" href="#St.map">
         St.map
       </a>
     
 
-      <a class="function" href="#St.mapAsync">
+      <a class="moduleContent function" href="#St.mapAsync">
         St.mapAsync
       </a>
     
 
-      <a class="function" href="#St.mapFlat">
+      <a class="moduleContent function" href="#St.mapFlat">
         St.mapFlat
       </a>
     
@@ -1998,32 +2033,32 @@
       <div class="moduleExpander">
         
     <a class="module">Str (string)</a>
-    <a class="function" href="#str">Overview</a>
+    <a class="moduleContent" href="#str">Overview</a>
   
         
         <div class="section">Construct</div>
         
-      <a class="function" href="#Str.fromNumber">
+      <a class="moduleContent function" href="#Str.fromNumber">
         Str.fromNumber
       </a>
     
 
-      <a class="function" href="#Str.fromNumberInLocale">
+      <a class="moduleContent function" href="#Str.fromNumberInLocale">
         Str.fromNumberInLocale
       </a>
     
 
-      <a class="function" href="#Str.repeat">
+      <a class="moduleContent function" href="#Str.repeat">
         Str.repeat
       </a>
     
 
-      <a class="function" href="#Str.fill">
+      <a class="moduleContent function" href="#Str.fill">
         Str.fill
       </a>
     
 
-      <a class="function" href="#Str.toNumber">
+      <a class="moduleContent function" href="#Str.toNumber">
         Str.toNumber
       </a>
     
@@ -2031,82 +2066,57 @@
 
         <div class="section">Checks</div>
         
-      <a class="function" href="#Str.isEmpty">
+      <a class="moduleContent function" href="#Str.isEmpty">
         Str.isEmpty
       </a>
     
 
-      <a class="function" href="#Str.length">
+      <a class="moduleContent function" href="#Str.length">
         Str.length
       </a>
     
 
-      <a class="function" href="#Str.startsWith">
+      <a class="moduleContent function" href="#Str.startsWith">
         Str.startsWith
       </a>
     
 
-      <a class="function" href="#Str.startsWithCaseIgnored">
-        Str.startsWithCaseIgnored
-      </a>
-    
-
-      <a class="function" href="#Str.endsWith">
+      <a class="moduleContent function" href="#Str.endsWith">
         Str.endsWith
       </a>
     
 
-      <a class="function" href="#Str.endsWithCaseIgnored">
-        Str.endsWithCaseIgnored
-      </a>
-    
-
-      <a class="function" href="#Str.includes">
+      <a class="moduleContent function" href="#Str.includes">
         Str.includes
       </a>
     
 
-      <a class="function" href="#Str.includesCaseIgnored">
-        Str.includesCaseIgnored
+      <a class="moduleContent function" href="#Str.equals">
+        Str.equals
       </a>
     
 
-      <a class="function" href="#Str.matches">
-        Str.matches
-      </a>
-    
-
-      <a class="function" href="#Str.matchesCaseIgnored">
-        Str.matchesCaseIgnored
-      </a>
-    
-
-      <a class="function" href="#Str.indexOf">
+      <a class="moduleContent function" href="#Str.indexOf">
         Str.indexOf
       </a>
     
 
-      <a class="function" href="#Str.indexOfCaseIgnored">
-        Str.indexOfCaseIgnored
-      </a>
-    
-
-      <a class="function" href="#Str.lastIndexOf">
+      <a class="moduleContent function" href="#Str.lastIndexOf">
         Str.lastIndexOf
       </a>
     
 
-      <a class="function" href="#Str.lastIndexOfCaseIgnored">
-        Str.lastIndexOfCaseIgnored
+      <a class="moduleContent function" href="#Str.ignoreCase">
+        Str.ignoreCase
       </a>
     
 
-      <a class="function" href="#Str.countMatches">
+      <a class="moduleContent function" href="#Str.countMatches">
         Str.countMatches
       </a>
     
 
-      <a class="function" href="#Str.compare">
+      <a class="moduleContent function" href="#Str.compare">
         Str.compare
       </a>
     
@@ -2114,52 +2124,52 @@
 
         <div class="section">Select</div>
         
-      <a class="function" href="#Str.matchEvery">
+      <a class="moduleContent function" href="#Str.matchEvery">
         Str.matchEvery
       </a>
     
 
-      <a class="function" href="#Str.matchFirst">
+      <a class="moduleContent function" href="#Str.matchFirst">
         Str.matchFirst
       </a>
     
 
-      <a class="function" href="#Str.slice">
+      <a class="moduleContent function" href="#Str.slice">
         Str.slice
       </a>
     
 
-      <a class="function" href="#Str.take">
+      <a class="moduleContent function" href="#Str.take">
         Str.take
       </a>
     
 
-      <a class="function" href="#Str.drop">
+      <a class="moduleContent function" href="#Str.drop">
         Str.drop
       </a>
     
 
-      <a class="function" href="#Str.takeWhile">
+      <a class="moduleContent function" href="#Str.takeWhile">
         Str.takeWhile
       </a>
     
 
-      <a class="function" href="#Str.dropWhile">
+      <a class="moduleContent function" href="#Str.dropWhile">
         Str.dropWhile
       </a>
     
 
-      <a class="function" href="#Str.trim">
+      <a class="moduleContent function" href="#Str.trim">
         Str.trim
       </a>
     
 
-      <a class="function" href="#Str.trimStart">
+      <a class="moduleContent function" href="#Str.trimStart">
         Str.trimStart
       </a>
     
 
-      <a class="function" href="#Str.trimEnd">
+      <a class="moduleContent function" href="#Str.trimEnd">
         Str.trimEnd
       </a>
     
@@ -2167,22 +2177,22 @@
 
         <div class="section">Combine</div>
         
-      <a class="function" href="#Str.join">
+      <a class="moduleContent function" href="#Str.join">
         Str.join
       </a>
     
 
-      <a class="function" href="#Str.joinChars">
+      <a class="moduleContent function" href="#Str.joinChars">
         Str.joinChars
       </a>
     
 
-      <a class="function" href="#Str.joinWords">
+      <a class="moduleContent function" href="#Str.joinWords">
         Str.joinWords
       </a>
     
 
-      <a class="function" href="#Str.joinLines">
+      <a class="moduleContent function" href="#Str.joinLines">
         Str.joinLines
       </a>
     
@@ -2190,42 +2200,42 @@
 
         <div class="section">Divide</div>
         
-      <a class="function" href="#Str.split">
+      <a class="moduleContent function" href="#Str.split">
         Str.split
       </a>
     
 
-      <a class="function" href="#Str.splitAt">
+      <a class="moduleContent function" href="#Str.splitAt">
         Str.splitAt
       </a>
     
 
-      <a class="function" href="#Str.chunk">
+      <a class="moduleContent function" href="#Str.chunk">
         Str.chunk
       </a>
     
 
-      <a class="function" href="#Str.chunkFromEnd">
+      <a class="moduleContent function" href="#Str.chunkFromEnd">
         Str.chunkFromEnd
       </a>
     
 
-      <a class="function" href="#Str.splitChars">
+      <a class="moduleContent function" href="#Str.splitChars">
         Str.splitChars
       </a>
     
 
-      <a class="function" href="#Str.splitWords">
+      <a class="moduleContent function" href="#Str.splitWords">
         Str.splitWords
       </a>
     
 
-      <a class="function" href="#Str.splitLines">
+      <a class="moduleContent function" href="#Str.splitLines">
         Str.splitLines
       </a>
     
 
-      <a class="function" href="#Str.span">
+      <a class="moduleContent function" href="#Str.span">
         Str.span
       </a>
     
@@ -2233,37 +2243,37 @@
 
         <div class="section">Transform</div>
         
-      <a class="function" href="#Str.forEachCodePoint">
+      <a class="moduleContent function" href="#Str.forEachCodePoint">
         Str.forEachCodePoint
       </a>
     
 
-      <a class="function" href="#Str.replaceEvery">
+      <a class="moduleContent function" href="#Str.replaceEvery">
         Str.replaceEvery
       </a>
     
 
-      <a class="function" href="#Str.replaceFirst">
+      <a class="moduleContent function" href="#Str.replaceFirst">
         Str.replaceFirst
       </a>
     
 
-      <a class="function" href="#Str.replaceFirstCaseIgnored">
+      <a class="moduleContent function" href="#Str.replaceFirstCaseIgnored">
         Str.replaceFirstCaseIgnored
       </a>
     
 
-      <a class="function" href="#Str.capitalize">
+      <a class="moduleContent function" href="#Str.capitalize">
         Str.capitalize
       </a>
     
 
-      <a class="function" href="#Str.capitalizeWords">
+      <a class="moduleContent function" href="#Str.capitalizeWords">
         Str.capitalizeWords
       </a>
     
 
-      <a class="function" href="#Str.uppercase">
+      <a class="moduleContent function" href="#Str.uppercase">
         Str.uppercase
       </a>
     
@@ -3864,33 +3874,6 @@
         <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L21">Source</a></p>
       </div>
     
-    
-
-      <h3>Transform</h3>
-      
-      <div>
-        <a name="REx.addFlags"></a>
-        <h4>REx.addFlags</h4>
-        
-    <p>TODO</p>
-    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>addFlags</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>pattern</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;flags</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span></span></div></pre>
-    
-  
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L31">Source</a></p>
-      </div>
-    
-
-      <div>
-        <a name="REx.removeFlags"></a>
-        <h4>REx.removeFlags</h4>
-        
-    <p>TODO</p>
-    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>removeFlags</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>pattern</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;flags</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span></span></div></pre>
-    
-  
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L39">Source</a></p>
-      </div>
-    
 
       <div>
         <a name="REx.append"></a>
@@ -3900,7 +3883,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>append</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>pattern</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;appended</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L50">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L29">Source</a></p>
       </div>
     
 
@@ -3912,7 +3895,31 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>prepend</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>pattern</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;prepended</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L58">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L37">Source</a></p>
+      </div>
+    
+
+      <div>
+        <a name="REx.addFlags"></a>
+        <h4>REx.addFlags</h4>
+        
+    <p>TODO</p>
+    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>addFlags</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>pattern</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;flags</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span></span></div></pre>
+    
+  
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L45">Source</a></p>
+      </div>
+    
+
+      <div>
+        <a name="REx.removeFlags"></a>
+        <h4>REx.removeFlags</h4>
+        
+    <p>TODO</p>
+    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>removeFlags</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>pattern</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;flags</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span></span></div></pre>
+    
+  
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L59">Source</a></p>
       </div>
     
     
@@ -4284,18 +4291,6 @@
     
 
       <div>
-        <a name="Str.startsWithCaseIgnored"></a>
-        <h4>Str.startsWithCaseIgnored</h4>
-        
-    <p>Work in progress.</p>
-    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>startsWithCaseIgnored</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
-    
-  
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L222">Source</a></p>
-      </div>
-    
-
-      <div>
         <a name="Str.endsWith"></a>
         <h4>Str.endsWith</h4>
         
@@ -4303,19 +4298,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>endsWith</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;suffix</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L225">Source</a></p>
-      </div>
-    
-
-      <div>
-        <a name="Str.endsWithCaseIgnored"></a>
-        <h4>Str.endsWithCaseIgnored</h4>
-        
-    <p>Work in progress.</p>
-    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>endsWithCaseIgnored</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
-    
-  
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L233">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L222">Source</a></p>
       </div>
     
 
@@ -4327,43 +4310,19 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>includes</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;search</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;fromIndex</span><span class="syntax--keyword syntax--operator syntax--ternary syntax--js"><span>?</span><span>:</span></span><span>&nbsp;number</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;boolean</span></span></div></pre>
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>includes</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>c</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;true</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>includes</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>ab&nbsp;cd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span class="syntax--string syntax--regexp syntax--js"><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>/</span></span><span class="syntax--constant syntax--character syntax--character-class syntax--regexp"><span>\s</span></span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>/</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;true</span></span></span></div></pre>
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L248">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L242">Source</a></p>
       </div>
     
 
       <div>
-        <a name="Str.includesCaseIgnored"></a>
-        <h4>Str.includesCaseIgnored</h4>
+        <a name="Str.equals"></a>
+        <h4>Str.equals</h4>
         
-    <p>Work in progress.</p>
-    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>includesCaseIgnored</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
-    
+    <p>Returns whether `string` equals given `search`.</p>
+    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>equals</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;search</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;boolean</span></span></div></pre>
+    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>equals</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;true</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>equals</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span class="syntax--string syntax--regexp syntax--js"><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>/</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>/</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;true</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>includes</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>abcde</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span class="syntax--string syntax--regexp syntax--js"><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>/</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>/</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;false</span></span></span></div></pre>
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L257">Source</a></p>
-      </div>
-    
-
-      <div>
-        <a name="Str.matches"></a>
-        <h4>Str.matches</h4>
-        
-    <p>Returns whether `string` matches the regular expression `search`. <br /><br /> To compare two strings, use `a === b`.</p>
-    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>matches</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;search</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;boolean</span></span></div></pre>
-    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--support syntax--function syntax--dom syntax--js"><span>matches</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span class="syntax--string syntax--regexp syntax--js"><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>/</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>/</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;true</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>includes</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>abcde</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span class="syntax--string syntax--regexp syntax--js"><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>/</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>/</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;false</span></span></span></div></pre>
-  
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L271">Source</a></p>
-      </div>
-    
-
-      <div>
-        <a name="Str.matchesCaseIgnored"></a>
-        <h4>Str.matchesCaseIgnored</h4>
-        
-    <p>Work in progress.</p>
-    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>matchesCaseIgnored</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
-    
-  
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L276">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L261">Source</a></p>
       </div>
     
 
@@ -4375,19 +4334,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>indexOf</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;search</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;fromIndex</span><span class="syntax--keyword syntax--operator syntax--ternary syntax--js"><span>?</span><span>:</span></span><span>&nbsp;number</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--keyword syntax--operator syntax--ternary syntax--js"><span>?</span></span><span>number</span></span></div></pre>
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--support syntax--function syntax--js"><span>indexOf</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>c</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;2</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--support syntax--function syntax--js"><span>indexOf</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>ab&nbsp;cd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>/</span><span class="syntax--constant syntax--character syntax--escape syntax--js"><span>\s</span></span><span>/</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;2</span></span></span></div></pre>
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L291">Source</a></p>
-      </div>
-    
-
-      <div>
-        <a name="Str.indexOfCaseIgnored"></a>
-        <h4>Str.indexOfCaseIgnored</h4>
-        
-    <p>Work in progress.</p>
-    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>indexOfCaseIgnored</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
-    
-  
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L312">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L282">Source</a></p>
       </div>
     
 
@@ -4399,19 +4346,19 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>lastIndexOf</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L315">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L303">Source</a></p>
       </div>
     
 
       <div>
-        <a name="Str.lastIndexOfCaseIgnored"></a>
-        <h4>Str.lastIndexOfCaseIgnored</h4>
+        <a name="Str.ignoreCase"></a>
+        <h4>Str.ignoreCase</h4>
         
-    <p>Work in progress.</p>
-    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>lastIndexOfCaseIgnored</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
-    
+    <p>Returns whether given `predicateFn` returns true for `string` and `search` when letter casing is ignored.</p>
+    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>ignoreCase</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;search</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;</span><span class="syntax--meta syntax--function syntax--arrow syntax--json syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>predicateFn</span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>string</span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>string</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>search</span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>string</span></span><span>&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--function syntax--arrow syntax--js"><span>=&gt;</span></span></span><span>&nbsp;boolean</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
+    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--delimiter syntax--property syntax--period syntax--js"><span>.</span></span><span class="syntax--support syntax--variable syntax--property syntax--dom syntax--js"><span>ignoreCase</span></span><span class="syntax--meta syntax--brace syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>AbCD</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--delimiter syntax--property syntax--period syntax--js"><span>.</span></span><span class="syntax--variable syntax--other syntax--property syntax--js"><span>equals</span></span><span class="syntax--meta syntax--brace syntax--round syntax--js"><span>)</span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;true</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--delimiter syntax--property syntax--period syntax--js"><span>.</span></span><span class="syntax--support syntax--variable syntax--property syntax--dom syntax--js"><span>ignoreCase</span></span><span class="syntax--meta syntax--brace syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>AbCD</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--delimiter syntax--property syntax--period syntax--js"><span>.</span></span><span class="syntax--variable syntax--other syntax--property syntax--js"><span>equals</span></span><span class="syntax--meta syntax--brace syntax--round syntax--js"><span>)</span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;true</span></span></span></div></pre>
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L318">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L315">Source</a></p>
       </div>
     
 
@@ -4423,7 +4370,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>countMatches</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;search</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;number</span></span></div></pre>
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>countMatches</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>abcd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>c</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;1</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>countMatches</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>ab&nbsp;cd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span class="syntax--string syntax--regexp syntax--js"><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>/</span></span><span class="syntax--constant syntax--character syntax--character-class syntax--regexp"><span>\s</span></span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>/</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;1</span></span></span></div></pre>
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L329">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L336">Source</a></p>
       </div>
     
 
@@ -4432,10 +4379,10 @@
         <h4>Str.compare</h4>
         
     <p>Work in progress.</p>
-    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function syntax--method syntax--definition syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>compare</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--class syntax--todo"><span>TODO</span></span><span>:&nbsp;1658&nbsp;not&nbsp;sure&nbsp;this&nbsp;is&nbsp;needed</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--export syntax--js"><span class="syntax--keyword syntax--control syntax--js"><span>export</span></span><span>&nbsp;</span></span><span class="syntax--meta syntax--function syntax--js"><span class="syntax--storage syntax--type syntax--function syntax--js"><span>function</span></span><span>&nbsp;</span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>compareCaseIgnored</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div></pre>
+    <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function syntax--method syntax--definition syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>compare</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L338">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L345">Source</a></p>
       </div>
     
     
@@ -4450,7 +4397,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>matchEvery</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;search</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;$Array</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&lt;</span></span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span>$matchResult</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&gt;</span></span></span></div></pre>
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>matchEvery</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>a&nbsp;b1cd</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span class="syntax--string syntax--regexp syntax--js"><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>/</span></span><span class="syntax--constant syntax--character syntax--character-class syntax--regexp"><span>\w</span></span><span class="syntax--keyword syntax--operator syntax--quantifier syntax--regexp"><span>+</span></span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>/</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;[[&#39;a&#39;],&nbsp;[&#39;b&#39;],&nbsp;[&#39;cd&#39;]]</span></span></span></div></pre>
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L354">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L359">Source</a></p>
       </div>
     
 
@@ -4462,7 +4409,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>matchFirst</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;search</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--keyword syntax--operator syntax--ternary syntax--js"><span>?</span></span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span>$matchResult</span></span></div></pre>
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>matchFirst</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>apple</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span class="syntax--string syntax--regexp syntax--js"><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>/</span></span><span class="syntax--constant syntax--character syntax--character-class syntax--regexp"><span>\w</span></span><span class="syntax--keyword syntax--operator syntax--quantifier syntax--regexp"><span>+</span></span><span class="syntax--meta syntax--group syntax--regexp"><span class="syntax--punctuation syntax--definition syntax--group syntax--regexp"><span>(</span></span><span>pp</span><span class="syntax--punctuation syntax--definition syntax--group syntax--regexp"><span>)</span></span></span><span class="syntax--keyword syntax--operator syntax--quantifier syntax--regexp"><span>?</span></span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>/</span></span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;[&#39;app&#39;,&nbsp;&#39;pp&#39;]&nbsp;{index:&nbsp;0}</span></span></span></div></pre>
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L383">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L388">Source</a></p>
       </div>
     
 
@@ -4474,7 +4421,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>slice</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;startIndex</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;number</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;endIndex</span><span class="syntax--keyword syntax--operator syntax--ternary syntax--js"><span>?</span><span>:</span></span><span>&nbsp;number</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L395">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L400">Source</a></p>
       </div>
     
 
@@ -4486,7 +4433,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>take</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;n</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;number</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L404">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L409">Source</a></p>
       </div>
     
 
@@ -4498,7 +4445,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>drop</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;n</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;number</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L409">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L414">Source</a></p>
       </div>
     
 
@@ -4510,7 +4457,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>takeWhile</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;</span><span class="syntax--meta syntax--function syntax--arrow syntax--json syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>predicateFn</span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>string</span></span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--function syntax--arrow syntax--js"><span>=&gt;</span></span></span><span>&nbsp;boolean</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L414">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L419">Source</a></p>
       </div>
     
 
@@ -4522,7 +4469,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>dropWhile</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;</span><span class="syntax--meta syntax--function syntax--arrow syntax--json syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>predicateFn</span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>string</span></span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--function syntax--arrow syntax--js"><span>=&gt;</span></span></span><span>&nbsp;boolean</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L429">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L434">Source</a></p>
       </div>
     
 
@@ -4534,7 +4481,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>trim</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;search</span><span class="syntax--keyword syntax--operator syntax--ternary syntax--js"><span>?</span><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L453">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L458">Source</a></p>
       </div>
     
 
@@ -4546,7 +4493,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>trimStart</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;prefix</span><span class="syntax--keyword syntax--operator syntax--ternary syntax--js"><span>?</span><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L468">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L473">Source</a></p>
       </div>
     
 
@@ -4558,7 +4505,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>trimEnd</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;suffix</span><span class="syntax--keyword syntax--operator syntax--ternary syntax--js"><span>?</span><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L486">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L491">Source</a></p>
       </div>
     
     
@@ -4573,7 +4520,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>join</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>collection</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;Collection</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&lt;</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&gt;</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;glue</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L501">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L506">Source</a></p>
       </div>
     
 
@@ -4585,7 +4532,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>joinChars</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>chars</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;Collection</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&lt;</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&gt;</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L506">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L511">Source</a></p>
       </div>
     
 
@@ -4597,7 +4544,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>joinWords</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>words</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;Collection</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&lt;</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&gt;</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L511">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L516">Source</a></p>
       </div>
     
 
@@ -4609,7 +4556,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>joinLines</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>lines</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;Collection</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&lt;</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&gt;</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L516">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L521">Source</a></p>
       </div>
     
     
@@ -4624,7 +4571,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>split</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;delimiter</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;limit</span><span class="syntax--keyword syntax--operator syntax--ternary syntax--js"><span>?</span><span>:</span></span><span>&nbsp;number</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;$Array</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&lt;</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&gt;</span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L524">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L529">Source</a></p>
       </div>
     
 
@@ -4636,7 +4583,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>splitAt</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;n</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;number</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--meta syntax--brace syntax--square syntax--js"><span>[</span></span><span>string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--brace syntax--square syntax--js"><span>]</span></span></span></div></pre>
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--variable syntax--other syntax--object syntax--js"><span>Str</span></span><span class="syntax--meta syntax--method-call syntax--js"><span class="syntax--meta syntax--delimiter syntax--method syntax--period syntax--js"><span>.</span></span><span class="syntax--support syntax--function syntax--js"><span>split</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--string syntax--quoted syntax--double syntax--js"><span class="syntax--punctuation syntax--definition syntax--string syntax--begin syntax--js"><span>&quot;</span></span><span>hello</span><span class="syntax--punctuation syntax--definition syntax--string syntax--end syntax--js"><span>&quot;</span></span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--constant syntax--numeric syntax--decimal syntax--js"><span>2</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;[&quot;he&quot;,&nbsp;&quot;llo&quot;]</span></span></span></div></pre>
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L544">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L549">Source</a></p>
       </div>
     
 
@@ -4648,7 +4595,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>chunk</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L549">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L554">Source</a></p>
       </div>
     
 
@@ -4660,7 +4607,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>chunkFromEnd</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;size</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;number</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L552">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L557">Source</a></p>
       </div>
     
 
@@ -4672,7 +4619,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>splitChars</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;$Array</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&lt;</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&gt;</span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L576">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L581">Source</a></p>
       </div>
     
 
@@ -4684,7 +4631,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>splitWords</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;$Array</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&lt;</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&gt;</span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L581">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L586">Source</a></p>
       </div>
     
 
@@ -4696,7 +4643,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>splitLines</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;ignoreTrailingNewLine</span><span class="syntax--keyword syntax--operator syntax--ternary syntax--js"><span>?</span><span>:</span></span><span>&nbsp;boolean&nbsp;</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>=</span></span><span>&nbsp;</span><span class="syntax--constant syntax--language syntax--boolean syntax--false syntax--js"><span>false</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;$Array</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&lt;</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&gt;</span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L588">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L593">Source</a></p>
       </div>
     
 
@@ -4708,7 +4655,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function syntax--method syntax--definition syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>span</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--class syntax--todo"><span>TODO</span></span><span>:&nbsp;210</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--export syntax--js"><span class="syntax--keyword syntax--control syntax--js"><span>export</span></span><span>&nbsp;</span></span><span class="syntax--meta syntax--function syntax--js"><span class="syntax--storage syntax--type syntax--function syntax--js"><span>function</span></span><span>&nbsp;</span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>splice</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L600">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L605">Source</a></p>
       </div>
     
     
@@ -4723,7 +4670,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>forEachCodePoint</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;</span><span class="syntax--meta syntax--function syntax--arrow syntax--json syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>fn</span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>string</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>number</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--function syntax--arrow syntax--js"><span>=&gt;</span></span></span><span>&nbsp;boolean</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--keyword syntax--operator syntax--void syntax--js"><span>void</span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L607">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L612">Source</a></p>
       </div>
     
 
@@ -4735,7 +4682,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>replaceEvery</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;search</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;replacement</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;string</span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--meta syntax--brace syntax--round syntax--js"><span>(</span></span><span class="syntax--meta syntax--function syntax--arrow syntax--js"><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>match</span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>string</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--keyword syntax--operator syntax--spread syntax--js"><span>...</span></span><span class="syntax--variable syntax--parameter syntax--rest syntax--function syntax--js"><span>groupsAndOffset</span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>Array</span></span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&lt;</span></span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>any</span></span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&gt;</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--function syntax--arrow syntax--js"><span>=&gt;</span></span></span><span>&nbsp;string</span><span class="syntax--meta syntax--brace syntax--round syntax--js"><span>)</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L651">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L656">Source</a></p>
       </div>
     
 
@@ -4747,7 +4694,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>replaceFirst</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;search</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>RegExp</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;replacement</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;string</span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--keyword syntax--operator syntax--bitwise syntax--js"><span>|</span></span><span>&nbsp;</span><span class="syntax--meta syntax--brace syntax--round syntax--js"><span>(</span></span><span class="syntax--meta syntax--function syntax--arrow syntax--js"><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>match</span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>string</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span><span>&nbsp;</span><span class="syntax--keyword syntax--operator syntax--spread syntax--js"><span>...</span></span><span class="syntax--variable syntax--parameter syntax--rest syntax--function syntax--js"><span>groupsAndOffset</span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--support syntax--class syntax--js"><span>Array</span></span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&lt;</span></span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>any</span></span><span class="syntax--keyword syntax--operator syntax--comparison syntax--js"><span>&gt;</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--function syntax--arrow syntax--js"><span>=&gt;</span></span></span><span>&nbsp;string</span><span class="syntax--meta syntax--brace syntax--round syntax--js"><span>)</span></span><span class="syntax--meta syntax--delimiter syntax--object syntax--comma syntax--js"><span>,</span></span></span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L698">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L699">Source</a></p>
       </div>
     
 
@@ -4759,7 +4706,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function syntax--method syntax--definition syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>replaceFirstCaseIgnored</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--class syntax--todo"><span>TODO</span></span><span>:&nbsp;1337</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--export syntax--js"><span class="syntax--keyword syntax--control syntax--js"><span>export</span></span><span>&nbsp;</span></span><span class="syntax--meta syntax--function syntax--js"><span class="syntax--storage syntax--type syntax--function syntax--js"><span>function</span></span><span>&nbsp;</span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>replaceEveryCaseIgnored</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--class syntax--todo"><span>TODO</span></span><span>:</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--export syntax--js"><span class="syntax--keyword syntax--control syntax--js"><span>export</span></span><span>&nbsp;</span></span><span class="syntax--meta syntax--function syntax--js"><span class="syntax--storage syntax--type syntax--function syntax--js"><span>function</span></span><span>&nbsp;</span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>camelize</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L712">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L713">Source</a></p>
       </div>
     
 
@@ -4771,7 +4718,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function-call syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>capitalize</span></span><span class="syntax--meta syntax--arguments syntax--js"><span class="syntax--punctuation syntax--definition syntax--arguments syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span>string</span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span><span class="syntax--punctuation syntax--definition syntax--arguments syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;string</span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L719">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L720">Source</a></p>
       </div>
     
 
@@ -4783,7 +4730,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function syntax--method syntax--definition syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>capitalizeWords</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--class syntax--todo"><span>TODO</span></span><span>:</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--export syntax--js"><span class="syntax--keyword syntax--control syntax--js"><span>export</span></span><span>&nbsp;</span></span><span class="syntax--meta syntax--function syntax--js"><span class="syntax--storage syntax--type syntax--function syntax--js"><span>function</span></span><span>&nbsp;</span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>dasherize</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--class syntax--todo"><span>TODO</span></span><span>:</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--export syntax--js"><span class="syntax--keyword syntax--control syntax--js"><span>export</span></span><span>&nbsp;</span></span><span class="syntax--meta syntax--function syntax--js"><span class="syntax--storage syntax--type syntax--function syntax--js"><span>function</span></span><span>&nbsp;</span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>underscorize</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--class syntax--todo"><span>TODO</span></span><span>:&nbsp;15578</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--export syntax--js"><span class="syntax--keyword syntax--control syntax--js"><span>export</span></span><span>&nbsp;</span></span><span class="syntax--meta syntax--function syntax--js"><span class="syntax--storage syntax--type syntax--function syntax--js"><span>function</span></span><span>&nbsp;</span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>lowercase</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>string</span></span><span class="syntax--keyword syntax--operator syntax--assignment syntax--js"><span>:</span></span><span>&nbsp;</span><span class="syntax--variable syntax--parameter syntax--function syntax--js"><span>string</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>:&nbsp;string</span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L724">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L725">Source</a></p>
       </div>
     
 
@@ -4795,7 +4742,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--function syntax--method syntax--definition syntax--js"><span class="syntax--entity syntax--name syntax--function syntax--js"><span>uppercase</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--class syntax--todo"><span>TODO</span></span><span>:&nbsp;420</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--export syntax--js"><span class="syntax--keyword syntax--control syntax--js"><span>export</span></span><span>&nbsp;</span></span><span class="syntax--meta syntax--function syntax--js"><span class="syntax--storage syntax--type syntax--function syntax--js"><span>function</span></span><span>&nbsp;</span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>padStart</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--comment syntax--line syntax--double-slash syntax--js"><span class="syntax--punctuation syntax--definition syntax--comment syntax--js"><span>//</span></span><span>&nbsp;</span><span class="syntax--storage syntax--type syntax--class syntax--todo"><span>TODO</span></span><span>:&nbsp;317</span></span></span></div><div class="line"><span class="syntax--source syntax--js"><span class="syntax--meta syntax--export syntax--js"><span class="syntax--keyword syntax--control syntax--js"><span>export</span></span><span>&nbsp;</span></span><span class="syntax--meta syntax--function syntax--js"><span class="syntax--storage syntax--type syntax--function syntax--js"><span>function</span></span><span>&nbsp;</span><span class="syntax--entity syntax--name syntax--function syntax--js"><span>padEnd</span></span><span class="syntax--meta syntax--parameters syntax--js"><span class="syntax--punctuation syntax--definition syntax--parameters syntax--begin syntax--bracket syntax--round syntax--js"><span>(</span></span><span class="syntax--punctuation syntax--definition syntax--parameters syntax--end syntax--bracket syntax--round syntax--js"><span>)</span></span></span></span><span>&nbsp;</span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--begin syntax--bracket syntax--curly syntax--js"><span>{</span></span><span class="syntax--punctuation syntax--definition syntax--function syntax--body syntax--end syntax--bracket syntax--curly syntax--js"><span>}</span></span></span></div></pre>
     
   
-        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L735">Source</a></p>
+        <p class="functionFooter"><a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L736">Source</a></p>
       </div>
     
     
@@ -4806,6 +4753,58 @@
     <script>
       (function (_) {
   'use strict';
+
+  // 
+
+  const EMPTY = new Set(); // Returned whenever we can return an empty set
+
+  function m(set) {
+    return set.size === 0 ? (EMPTY) : set;
+  }
+
+  /**
+   * Convert any `collection` of values to a Set of values.
+   *
+   * Note that this is not a way to clone a set, if passed a set, the same
+   * set will be returned.
+   *
+   * @ex St.from([1, 2, 3])
+   * @ex St.from(Mp({a: 1, b: 2, c: 3}))
+   * @alias values, fromValues
+   * @see St
+   */
+  function from(collection) {
+    if (isSet(collection)) {
+      return collection;
+    }
+    return m(new Set(collection.values()));
+  }
+
+  /**
+   * TODO: keys
+
+  /// Checks
+
+  /**
+   * Returns whether given argument is a Set.
+   *
+   * @ex St.isSet(St(1, 2, 3))
+   * @see Ar.isArray, Mp.isMap
+   */
+  function isSet(argument) {
+    return argument instanceof Set;
+  }
+
+  // TODO:
+  // mapWithKey
+
+  /// Divide
+
+  // TODO:
+  // chunk
+  // partition
+
+  // TODO: has / includes
 
   // 
 
@@ -4830,19 +4829,287 @@
   // isSorted
   // isSortedBy
 
+  /**
+   * 
+   *
+   * This module provides functions which operate on collections (Arrays, Maps,
+   * Sets) and return read-only (immutable) arrays.
+   *
+   * @ex import {Ar} from 'jfl'
+   */
+
+  const EMPTY$1 = []; // Returned whenever we can return an empty array
+
+  function m$1(array) {
+    return array.length === 0 ? EMPTY$1 : array;
+  }
+
+  /**
+   * Convert any `collection` of values to an Array of values.
+   *
+   * Note that this is not a way to clone an array, if passed an array, the same
+   * array will be returned.
+   *
+   * @time O(n)
+   * @space O(n)
+   * @ex Ar.from(Set(1, 2, 3)) // [1, 2, 3]
+   * @ex Ar.from(Mp({a: 1, b: 2, c: 3})) // [1, 2, 3]
+   * @alias values, fromValues
+   * @see Ar
+   */
+  function from$1(collection) {
+    if (isArray(collection)) {
+      return (collection);
+    }
+    return m$1(Array.from(collection.values()));
+  }
+
+  /// Check
+
+  /**
+   * Returns whether given value is an Array.
+   *
+   * @time O(1)
+   * @space O(1)
+   * @ex Ar.isArray([1, 2, 3]) // true
+   * @see St.isSet, Mp.isMap
+   */
+  function isArray(argument) {
+    return Array.isArray(argument);
+  }
+
+  // TODO: includes
+  // TODO: maybeMap
+  // TODO: maybeMapAsync
+  // TODO: fillAsync
+  // TODO: append
+  // TODO: takeLast dropLast and rename to takeFirst and dropFirst?
+
+  // 
+
+  /// Checks
+
+  /**
+   * Returns true when `string` has zero length.
+   *
+   * @time O(1)
+   * @space O(1)
+   * @ex Str.isEmpty('') // true
+   * @ex Str.isEmpty('a') // false
+   * @see Str.length, Cl.isEmpty
+   */
+  function isEmpty(string) {
+    return string.length === 0;
+  }
+
+  /**
+   * Returns whether `string` includes `search`.
+   *
+   * If `fromIndex` is given then the occurence must be at or after it.
+   *
+   * @time O(n)
+   * @space Worst case O(2^m) (O(n) when `search` is a regex and
+   *        `fromIndex` is used)
+   * @ex Str.includes("abcd", "c") // true
+   * @ex Str.includes("ab cd", /\s/) // true
+   * @alias contains, search, find
+   * @see Str.indexOf, Str.matchFirst
+   */
+  function includes(
+    string,
+    search,
+    fromIndex,
+  ) {
+    return indexOf(string, search, fromIndex) != null;
+  }
+
+  /**
+   * Returns the index of the first occurence of `search` in `string` or null.
+   *
+   * If `fromIndex` is given then the occurence must be at or after it.
+   *
+   * @time O(n)
+   * @space Worst case O(2^m) (O(n) when `search` is a regex and
+   *        `fromIndex` is used)
+   * @ex Str.indexOf("abcd", "c") // 2
+   * @ex Str.indexOf("ab cd", "/\s/") // 2
+   * @alias search, firstIndexOf, find
+   * @see Str.includes, Str.matchFirst
+   */
+  function indexOf(
+    string,
+    search,
+    fromIndex,
+  ) {
+    if (fromIndex != null && fromIndex > string.length) {
+      return null;
+    }
+    if (isRegExp(search)) {
+      if (fromIndex != null) {
+        return string.slice(fromIndex).match(search)?.index;
+      } else {
+        return string.match(search)?.index;
+      }
+    } else {
+      const result = string.indexOf(search, fromIndex);
+      return result === -1 ? null : result;
+    }
+  }
+
+  /**
+   * Returns whether given `predicateFn` returns true for `string` and `search`
+   * when letter casing is ignored.
+   *
+   * @time O(1)
+   * @space Worst case O(2^m)
+   * @ex Str.ignoreCase("abcd", "AbCD", Str.equals) // true
+   * @ex Str.ignoreCase("abcd", "AbCD", Str.equals) // true
+   * @see Str.equals, Str.includes
+   */
+  function ignoreCase(
+    string,
+    search,
+    predicateFn,
+  ) {
+    if (isRegExp(search)) {
+      return predicateFn(string.toLowerCase(), addFlags(search, 'i'));
+    } else {
+      return predicateFn(string.toLowerCase(), search.toLowerCase());
+    }
+  }
+
+  /// Combine
+
+  /**
+   * TODO:
+   */
+  function join(collection, glue) {
+    return from$1(collection).join(glue);
+  }
+
+  // TODO:
+  function joinChars(chars) {
+    return join(chars, '');
+  }
+
+  /// Divide
+
+  // TODO: 28289
+  // doesn't return the remainder
+  function split(
+    string,
+    delimiter,
+    limit,
+  ) {
+    return string.split(delimiter, limit);
+  }
+
+  /**
+   * TODO:
+   */
+  function splitChars(string) {
+    return split(string, '');
+  }
+
+  // 
+
+  /// Check
+
+  /**
+   * TODO
+   */
+  function isRegExp(value) {
+    return value instanceof RegExp;
+  }
+
+  /**
+   * TODO
+   */
+  function addFlags(pattern, flags) {
+    if (flags.length === 1 && pattern.flags.includes(flags)) {
+      return pattern;
+    }
+    const newFlags = from(splitChars(pattern.flags + flags));
+    if (newFlags.size === pattern.flags.length) {
+      return pattern;
+    }
+    return new RegExp(pattern.source, joinChars(newFlags));
+  }
+
+  /**
+   * 
+   *
+   * This is the main module from which you can easily import all the others,
+   * plus a few utilities for working in Flow/TypeScript in general.
+   *
+   * @ex import {Ar, $Ar, Cl, Mp, $Mp, Mth, REx, St, $St, Str} from 'jfl'
+   * @ex import {nullthrows, invariant} from 'jfl'
+   */
+
+  /// Type
+
+  /**
+   * TODO
+   */
+  function nullthrows(
+    value,
+    message = 'Got unexpected null or undefined',
+  ) {
+    if (value != null) {
+      return value;
+    }
+    const error = new Error(message);
+    error.framesToPop = 1; // Skip nullthrows own stack frame.
+    throw error;
+  }
+
+  // TODO: invariant
+  function invariant(condition, message) {
+    if (!condition) {
+      throw new Error(message);
+    }
+  }
+
   // 
 
   const collapsible = document.querySelectorAll('.sidebar a.module');
   forEach(collapsible, link => {
     link.addEventListener(
       'click',
-      (e) => {
-        const parent = ((((e.target)).parentNode));
+      (event) => {
+        invariant(event.target instanceof Node);
+        const parent = event.target.parentNode;
+        invariant(parent instanceof Element);
         parent.classList.toggle('open');
       },
       true,
     );
   });
+
+  const sidebar = nullthrows(document.querySelector('.sidebar'));
+  const searchBar = document.querySelector('.sidebarSearch input');
+  const functionLinks = document.querySelectorAll('.sidebar a.function');
+  const searchBarCancel = nullthrows(
+    document.querySelector('.sidebarSearchCancel'),
+  );
+  invariant(searchBar instanceof HTMLInputElement);
+  searchBar.addEventListener('input', onSearchUpdate);
+  searchBarCancel.addEventListener('click', (event) => {
+    searchBar.value = '';
+    onSearchUpdate();
+  });
+
+  function onSearchUpdate() {
+    const searched = searchBar.value;
+    sidebar.classList.toggle('searched', !isEmpty(searched));
+    let hasMatch = false;
+    forEach(functionLinks, link => {
+      const matches = ignoreCase(link.textContent, searched, includes);
+      link.classList.toggle('matchesSearch', matches);
+      hasMatch = hasMatch || matches;
+    });
+    searchBar.classList.toggle('noMatch', !hasMatch);
+  }
 
 }())
 

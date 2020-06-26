@@ -218,9 +218,6 @@ export function startsWith(string: string, prefix: string | RegExp) {
   return string.startsWith(prefix);
 }
 
-// TODO: 975
-export function startsWithCaseIgnored() {}
-
 // TODO: 3545
 export function endsWith(string: string, suffix: string | RegExp) {
   if (isRegExp(suffix)) {
@@ -228,9 +225,6 @@ export function endsWith(string: string, suffix: string | RegExp) {
   }
   return string.endsWith(suffix);
 }
-
-// TODO: 324
-export function endsWithCaseIgnored() {}
 
 /**
  * Returns whether `string` includes `search`.
@@ -253,27 +247,24 @@ export function includes(
   return indexOf(string, search, fromIndex) != null;
 }
 
-// TODO: 2588
-export function includesCaseIgnored() {}
-
 /**
- * Returns whether `string` matches the regular expression `search`.
- *
- * To compare two strings, use `a === b`.
+ * Returns whether `string` equals given `search`.
  *
  * @time O(n)
  * @space Worst case O(2^m)
- * @ex Str.matches("abcd", /abcd/) // true
+ * @ex Str.equals("abcd", "abcd") // true
+ * @ex Str.equals("abcd", /abcd/) // true
  * @ex Str.includes("abcde", /abcd/) // false
  * @alias test, equals
  * @see Str.includes, Str.matchFirst
  */
-export function matches(string: string, search: RegExp): boolean {
-  return REx.append(REx.prepend(search, '^'), '$').test(string);
+export function equals(string: string, search: string | RegExp): boolean {
+  if (isRegExp(search)) {
+    return REx.append(REx.prepend(search, '^'), '$').test(string);
+  } else {
+    return string === search;
+  }
 }
-
-// TODO
-export function matchesCaseIgnored() {}
 
 /**
  * Returns the index of the first occurence of `search` in `string` or null.
@@ -308,14 +299,30 @@ export function indexOf(
   }
 }
 
-// TODO: 334 this is indexOfCI
-export function indexOfCaseIgnored() {}
-
 // TODO: 570 this is lastIndexOf
 export function lastIndexOf() {}
 
-// TODO:
-export function lastIndexOfCaseIgnored() {}
+/**
+ * Returns whether given `predicateFn` returns true for `string` and `search`
+ * when letter casing is ignored.
+ *
+ * @time O(1)
+ * @space Worst case O(2^m)
+ * @ex Str.ignoreCase("abcd", "AbCD", Str.equals) // true
+ * @ex Str.ignoreCase("abcd", "AbCD", Str.equals) // true
+ * @see Str.equals, Str.includes
+ */
+export function ignoreCase(
+  string: string,
+  search: string | RegExp,
+  predicateFn: (string: string, search: string | RegExp) => boolean,
+) {
+  if (isRegExp(search)) {
+    return predicateFn(string.toLowerCase(), REx.addFlags(search, 'i'));
+  } else {
+    return predicateFn(string.toLowerCase(), search.toLowerCase());
+  }
+}
 
 /**
  * Returns the number of times `search` occurs in `string`.
@@ -336,8 +343,6 @@ export function countMatches(string: string, search: string | RegExp): number {
 }
 
 export function compare() {}
-// TODO: 1658 not sure this is needed
-export function compareCaseIgnored() {}
 
 /// Select
 
@@ -355,7 +360,7 @@ export function matchEvery(
   string: string,
   search: string | RegExp,
 ): $Array<RegExp$matchResult> {
-  if (isRegExp(search) && !includes(search.flags, 'g')) {
+  if (isRegExp(search)) {
     search = REx.addFlags(search, 'g');
   }
   return Array.from(string.matchAll(search));
@@ -384,7 +389,7 @@ export function matchFirst(
   string: string,
   search: string | RegExp,
 ): ?RegExp$matchResult {
-  if (isRegExp(search) && includes(search.flags, 'g')) {
+  if (isRegExp(search)) {
     search = REx.removeFlags(search, 'g');
   }
   return string.match(search);
@@ -656,11 +661,7 @@ export function replaceEvery(
     | ((match: string, ...groupsAndOffset: Array<any>) => string),
 ) {
   if (isRegExp(search)) {
-    if (!includes(search.flags, 'g')) {
-      return string.replace(REx.addFlags(search, 'g'), replacement);
-    } else {
-      return string.replace(search, replacement);
-    }
+    return string.replace(REx.addFlags(search, 'g'), replacement);
   }
 
   const searchLength = search.length;
@@ -702,7 +703,7 @@ export function replaceFirst(
     | string
     | ((match: string, ...groupsAndOffset: Array<any>) => string),
 ) {
-  if (isRegExp(search) && includes(search.flags, 'g')) {
+  if (isRegExp(search)) {
     return string.replace(REx.removeFlags(search, 'g'), replacement);
   }
   return string.replace(search, replacement);

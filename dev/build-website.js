@@ -127,7 +127,7 @@ function formatModuleLink(moduleAlias, moduleName) {
   const name = formatModuleName(moduleAlias, moduleName);
   return `
     <a class="module">${name}</a>
-    <a class="function" href="#${link}">Overview</a>
+    <a class="moduleContent" href="#${link}">Overview</a>
   `;
 }
 
@@ -155,7 +155,7 @@ function formatFunctionLinks(moduleAlias, functions) {
     functions,
     ({functionName}) =>
       `
-      <a class="function" href="#${formatFunctionName(
+      <a class="moduleContent function" href="#${formatFunctionName(
         moduleAlias,
         functionName,
       )}">

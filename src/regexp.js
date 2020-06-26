@@ -23,27 +23,6 @@ export function concat(...patterns: $Array<RegExp>): RegExp {
   return new RegExp(Str.join(sources, ''), Cl.lastX(patterns).flags);
 }
 
-/// Transform
-
-/**
- * TODO
- */
-export function addFlags(pattern: RegExp, flags: string): RegExp {
-  const newFlags = St.from(Str.splitChars(pattern.flags + flags));
-  return new RegExp(pattern.source, Str.joinChars(newFlags));
-}
-
-/**
- * TODO
- */
-export function removeFlags(pattern: RegExp, flags: string): RegExp {
-  const newFlags = St.diff(
-    Str.splitChars(pattern.flags),
-    Str.splitChars(flags),
-  );
-  return new RegExp(pattern.source, Str.joinChars(newFlags));
-}
-
 /**
  * TODO
  */
@@ -58,4 +37,35 @@ export function append(pattern: RegExp, appended: string | RegExp): RegExp {
 export function prepend(pattern: RegExp, prepended: string | RegExp): RegExp {
   const prependedSource = isRegExp(prepended) ? prepended.source : prepended;
   return new RegExp(prependedSource + pattern.source, pattern.flags);
+}
+
+/**
+ * TODO
+ */
+export function addFlags(pattern: RegExp, flags: string): RegExp {
+  if (flags.length === 1 && pattern.flags.includes(flags)) {
+    return pattern;
+  }
+  const newFlags = St.from(Str.splitChars(pattern.flags + flags));
+  if (newFlags.size === pattern.flags.length) {
+    return pattern;
+  }
+  return new RegExp(pattern.source, Str.joinChars(newFlags));
+}
+
+/**
+ * TODO
+ */
+export function removeFlags(pattern: RegExp, flags: string): RegExp {
+  if (flags.length === 1 && !pattern.flags.includes(flags)) {
+    return pattern;
+  }
+  const newFlags = St.diff(
+    Str.splitChars(pattern.flags),
+    Str.splitChars(flags),
+  );
+  if (newFlags.size === pattern.flags.length) {
+    return pattern;
+  }
+  return new RegExp(pattern.source, Str.joinChars(newFlags));
 }

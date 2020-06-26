@@ -8,6 +8,11 @@ const {test, tru, eq, eqq, eqqq, not, nil, throws} = setup(
   Cl.equalsNested,
 );
 
+test('ignoreCase', () => {
+  tru(Str.ignoreCase('abc', 'AbC', Str.equals));
+  tru(Str.ignoreCase('abc', /AbC/, Str.equals));
+});
+
 test('repeat', () => {
   eqqq(Str.repeat('a', NaN), '');
   eqqq(Str.repeat('a', 7), 'aaaaaaa');
