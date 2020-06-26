@@ -74,6 +74,12 @@ test('replaceEvery', () => {
   eqqq(Str.replaceEvery('a', 'a', 'apple'), 'apple');
   eqqq(Str.replaceEvery('aa', 'a', 'apple'), 'appleapple');
   eqqq(Str.replaceEvery('a-a', 'a', 'apple'), 'apple-apple');
+
+  eqqq(Str.replaceEvery('a-a', /a/, 'apple'), 'apple-apple');
+  eqqq(
+    Str.replaceEvery('aa-a', /a+/, substring => '' + substring.length),
+    '2-1',
+  );
 });
 
 test('splitWords', () => {

@@ -217,10 +217,29 @@ function formatDoc(signature, doc) {
       ? highlight(Str.joinLines(doc.examples))
       : null;
   return `
-    <p>${doc.text}</p>
-    ${signature != null ? highlight(signature) : ''}
+    <p>${formatDocText(doc.text)}</p>
+    ${formatSignature(signature)}
     ${highlightedCode ?? ''}
   `;
+}
+
+function formatDocText(text) {
+  return Str.replaceEvery(
+    text,
+    /https?:\/\/([\w.]+)(\S*)(\/\w+\/?)(?=\.?\s)/,
+    (link, domain, path, page) =>
+      `<a href="${link}">${domain}${
+        Str.isEmpty(path) ? '' : '/...'
+      }${page}</a>`,
+  );
+}
+
+function formatSignature(signature) {
+  if (signature == null) {
+    return '';
+  }
+  let $$ = Str.replaceFirst(signature, ': %checks', ': bool');
+  return highlight($$);
 }
 
 const highlighter = new Highlighter({scopePrefix: 'syntax--'});

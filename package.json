@@ -16,6 +16,7 @@
     "highlights": "^3.1.4",
     "jest": "^26.0.1",
     "jest-repl": "^26.0.1",
+    "nodemon": "^2.0.4",
     "prettier": "2.0.5",
     "rollup": "^2.18.0",
     "rollup-pluginutils": "^2.8.2"
