@@ -156,24 +156,46 @@ test('fill', () => {
   );
 });
 
-test('take', () => {
-  eq(Ar.take([1, 2, 3], 2), [1, 2]);
+test('takeFirst', () => {
+  eq(Ar.takeFirst([1, 2, 3], 2), [1, 2]);
 });
 
-test('takeWhile', () => {
+test('dropFirst', () => {
+  eq(Ar.dropFirst([1, 2, 3], 2), [3]);
+});
+
+test('takeLast', () => {
+  eq(Ar.takeLast([1, 2, 3], 2), [2, 3]);
+});
+
+test('dropLast', () => {
+  eq(Ar.dropLast([1, 2, 3], 2), [1]);
+});
+
+test('takeFirstWhile', () => {
   eq(
-    Ar.takeWhile([1, 2, 3], n => Mth.isOdd(n)),
+    Ar.takeFirstWhile([1, 2, 3], n => Mth.isOdd(n)),
     [1],
   );
 });
 
-test('drop', () => {
-  eq(Ar.drop([1, 2, 3], 2), [3]);
+test('dropFirstWhile', () => {
+  eq(
+    Ar.dropFirstWhile([1, 2, 3], n => Mth.isOdd(n)),
+    [2, 3],
+  );
 });
 
-test('dropWhileFromEnd', () => {
+test('takeLastWhile', () => {
   eq(
-    Ar.dropWhileFromEnd([1, 2, 3, 4, 6, 5, 7], n => Mth.isOdd(n)),
+    Ar.takeLastWhile([1, 2, 3, 4, 6, 5, 7], n => Mth.isOdd(n)),
+    [5, 7],
+  );
+});
+
+test('dropLastWhile', () => {
+  eq(
+    Ar.dropLastWhile([1, 2, 3, 4, 6, 5, 7], n => Mth.isOdd(n)),
     [1, 2, 3, 4, 6],
   );
 });
@@ -247,16 +269,16 @@ test('splice', () => {
   eq(Ar.splice([1, 2, 4, 5], 2, 0, 3), [1, 2, 3, 4, 5]);
 });
 
-test('takeWhile', () => {
+test('takeFirstWhile', () => {
   eq(
-    Ar.takeWhile([1, 2, 3], n => Mth.isOdd(n)),
+    Ar.takeFirstWhile([1, 2, 3], n => Mth.isOdd(n)),
     [1],
   );
 });
 
-test('dropWhile', () => {
+test('dropFirstWhile', () => {
   eq(
-    Ar.dropWhile([1, 2, 3], n => Mth.isOdd(n)),
+    Ar.dropFirstWhile([1, 2, 3], n => Mth.isOdd(n)),
     [2, 3],
   );
 });

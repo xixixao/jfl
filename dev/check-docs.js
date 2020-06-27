@@ -37,10 +37,13 @@ function checkDescriptions(modules) {
 }
 
 function checkTODOs(modules) {
-  const fileNamesToTODOCounts = Mp.pull(
-    modules,
-    ({moduleName}) => moduleName,
-    ({moduleSource}) => getTODOs(moduleSource),
+  const fileNamesToTODOCounts = Mp.filter(
+    Mp.pull(
+      modules,
+      ({moduleName}) => moduleName,
+      ({moduleSource}) => getTODOs(moduleSource),
+    ),
+    todoCount => todoCount > 0,
   );
   if (Cl.isEmpty(fileNamesToTODOCounts)) {
     console.log('✅ No files with TODOs!');

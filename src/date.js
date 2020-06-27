@@ -10,7 +10,7 @@
 // Duration -> TimeDuration
 // Instant
 
-// they didn't bother much with the port so might be useful to drop
+// they didn't bother much with the port so might be useful to dropFirst
 // some Java-only stuff
 
 // Consider simplifying to avoid Year, YearMonth, Month, MonthDay, DayOfWeek

@@ -362,8 +362,8 @@ export function merge<K, V>(
 /// Select
 
 // TODO: diffByKey
-// TODO: drop
-// TODO: take
+// TODO: dropFirst
+// TODO: takeFirst
 // TODO: filter
 // TODO: filterAsync
 // TODO: filterKeys

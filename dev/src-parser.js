@@ -107,9 +107,9 @@ function parseDoc(doc) {
   $$ = Ar.map($$, line => Str.trim(line, /[\s*/]*/));
   $$ = Ar.filter($$, line => line !== '@flow');
 
-  let $$2 = Ar.takeWhile($$, line => !Str.startsWith(line, '@'));
-  $$2 = Ar.dropWhile($$2, line => line === '');
-  $$2 = Ar.dropWhileFromEnd($$2, line => line === '');
+  let $$2 = Ar.takeFirstWhile($$, line => !Str.startsWith(line, '@'));
+  $$2 = Ar.dropFirstWhile($$2, line => line === '');
+  $$2 = Ar.dropLastWhile($$2, line => line === '');
   $$2 = Ar.map($$2, line => (line === '' ? '<br /><br />' : line));
   const text = Str.joinWords($$2);
 

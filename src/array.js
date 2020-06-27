@@ -256,7 +256,7 @@ export function repeat<V>(value: V, count: number): $Array<V> {
 /**
  * Create an array filled with `count` results of calling `fn`.
  *
- * `fn` take as the first argument the index where the current invocation's
+ * `fn` takeFirst as the first argument the index where the current invocation's
  * result will be placed.
  *
  * @time O(n)
@@ -275,7 +275,7 @@ export function fill<V>(count: number, fn: number => V): $Array<V> {
 /**
  * Create an array filled with `count` results of calling `fn`.
  *
- * `fn` take as the first argument the index where the current invocation's
+ * `fn` takeFirst as the first argument the index where the current invocation's
  * result will be placed.
  *
  * @time O(n)
@@ -538,10 +538,10 @@ export function uniqueBy<V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.take([1, 2, 3], 2) // [1, 2]
- * @see Ar.drop, Ar.splitAt, Ar.takeWhile
+ * @ex Ar.takeFirst([1, 2, 3], 2) // [1, 2]
+ * @see Ar.dropFirst, Ar.splitAt, Ar.takeFirstWhile
  */
-export function take<V>(collection: Collection<V>, n: number): $Array<V> {
+export function takeFirst<V>(collection: Collection<V>, n: number): $Array<V> {
   return slice(collection, 0, n);
 }
 
@@ -550,11 +550,35 @@ export function take<V>(collection: Collection<V>, n: number): $Array<V> {
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.drop([1, 2, 3], 2) // [3]
- * @see Ar.take, Ar.splitAt, Ar.dropWhile
+ * @ex Ar.dropFirst([1, 2, 3], 2) // [3]
+ * @see Ar.takeFirst, Ar.splitAt, Ar.dropFirstWhile
  */
-export function drop<V>(collection: Collection<V>, n: number): $Array<V> {
+export function dropFirst<V>(collection: Collection<V>, n: number): $Array<V> {
   return slice(collection, n);
+}
+
+/**
+ * Create an array containing the last `n` items of `collection`.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.takeLast([1, 2, 3], 2) // [2, 3]
+ * @see Ar.dropLast, Ar.splitAt, Ar.takeLastWhile
+ */
+export function takeLast<V>(collection: Collection<V>, n: number): $Array<V> {
+  return slice(collection, -n);
+}
+
+/**
+ * Create an array containing all but the last `n` items of `collection`.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.dropLast([1, 2, 3], 2) // [1]
+ * @see Ar.takeLast, Ar.splitAt, Ar.dropLastWhile
+ */
+export function dropLast<V>(collection: Collection<V>, n: number): $Array<V> {
+  return slice(collection, 0, -n);
 }
 
 /**
@@ -563,10 +587,10 @@ export function drop<V>(collection: Collection<V>, n: number): $Array<V> {
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.takeWhile([1, 3, 4, 7], Mth.isOdd) // [1]
- * @see Ar.take
+ * @ex Ar.takeFirstWhile([1, 3, 4, 7], Mth.isOdd) // [1]
+ * @see Ar.takeFirst
  */
-export function takeWhile<K, V>(
+export function takeFirstWhile<K, V>(
   collection: KeyedCollection<K, V>,
   predicateFn: (V, K) => boolean,
 ): $Array<V> {
@@ -586,10 +610,10 @@ export function takeWhile<K, V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.dropWhile([1, 3, 4, 7], Mth.isOdd) // [3, 4, 7]
- * @see Ar.drop
+ * @ex Ar.dropFirstWhile([1, 3, 4, 7], Mth.isOdd) // [3, 4, 7]
+ * @see Ar.dropFirst
  */
-export function dropWhile<K, V>(
+export function dropFirstWhile<K, V>(
   collection: KeyedCollection<K, V>,
   predicateFn: (V, K) => boolean,
 ): $Array<V> {
@@ -605,16 +629,43 @@ export function dropWhile<K, V>(
 }
 
 /**
+ * Create an array containing all the items of `collection` following
+ * the first item when iterating from the end for which `predicateFn`
+ * returns false.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.takeLastWhile([1, 3, 4, 5, 7], Mth.isOdd) // [5, 7]
+ * @see Ar.takeFirstWhile, Ar.dropLastWhile
+ */
+export function takeLastWhile<V>(
+  collection: Collection<V>,
+  predicateFn: V => boolean,
+): $Array<V> {
+  let result = Array.from(collection.values());
+  result.reverse();
+  for (let i = 0; i < result.length; i++) {
+    if (predicateFn(result[i])) {
+      continue;
+    }
+    result.splice(i);
+    break;
+  }
+  result.reverse();
+  return m(result);
+}
+
+/**
  * Create an array containing all the items of `collection` preceding and
  * including the first item when iterating from the end for which `predicateFn`
  * returns false.
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.dropWhileFromEnd([1, 3, 4, 7], Mth.isOdd) // [1, 3, 4]
- * @see Ar.dropWhile
+ * @ex Ar.dropLastWhile([1, 3, 4, 7], Mth.isOdd) // [1, 3, 4]
+ * @see Ar.dropFirstWhile
  */
-export function dropWhileFromEnd<V>(
+export function dropLastWhile<V>(
   collection: Collection<V>,
   predicateFn: V => boolean,
 ): $Array<V> {
@@ -711,7 +762,7 @@ export function partition<K, V>(
  * @space O(n)
  * @ex Ar.slice([1, 2, 3, 4, 5], 1, 2) // [2, 3]
  * @ex Ar.slice([1, 2, 3, 4, 5], -2, -1) // [3, 4]
- * @see Ar.take, Ar.drop, Ar.sliceFromEnd, Ar.splice
+ * @see Ar.takeFirst, Ar.dropFirst, Ar.sliceFromEnd, Ar.splice
  */
 export function slice<V>(
   collection: Collection<V>,
@@ -779,7 +830,7 @@ export function splice<V>(
  * @time O(n)
  * @space O(n)
  * @ex Ar.split([1, 2, 3], 2) // [[1, 2], [3]]
- * @see Ar.drop, Ar.take, Ar.span
+ * @see Ar.dropFirst, Ar.takeFirst, Ar.span
  */
 export function splitAt<V>(
   collection: Collection<V>,
@@ -807,7 +858,7 @@ export function splitAt<V>(
  * @space O(n)
  * @ex Ar.span([1, 3, 4, 7], Mth.isOdd)
  * @alias break
- * @see Ar.splitAt, Ar.takeWhile, Ar.dropWhile
+ * @see Ar.splitAt, Ar.takeFirstWhile, Ar.dropFirstWhile
  */
 export function span<K, V>(
   collection: KeyedCollection<K, V>,
@@ -1221,6 +1272,3 @@ export function sortUnstable<V>(
 function defaultCompareFn(a: any, b: any): number {
   return a > b ? 1 : a < b ? -1 : 0;
 }
-
-// TODO: fillAsync
-// TODO: takeLast dropLast and rename to takeFirst and dropFirst?

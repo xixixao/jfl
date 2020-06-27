@@ -365,8 +365,8 @@ export function filterKeys<K, V>(
 /**
  * TODO: filterWithKeys (possibly combine with filter, using swapped order)
  * TODO:
- * drop
- * take
+ * dropFirst
+ * takeFirst
 
 /// Transform
 

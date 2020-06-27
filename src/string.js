@@ -127,7 +127,7 @@ export function repeat(string: string, count: number): string {
 /**
  * Create a new string by concatenating `count` results of calling `fn`.
  *
- * `fn` take as the first argument the position in the final string where the
+ * `fn` takeFirst as the first argument the position in the final string where the
  * current invocation's result will be placed.
  *
  * @time O(m)
@@ -391,7 +391,7 @@ export function matchFirst(
   return string.match(search);
 }
 
-// TODO: 8925 figure out how it plays with take and drop - but should have
+// TODO: 8925 figure out how it plays with takeFirst and dropFirst - but should have
 // done it already for Ar
 export function slice(
   string: string,
@@ -402,17 +402,17 @@ export function slice(
 }
 
 // TODO: takes number
-export function take(string: string, n: number): string {
+export function takeFirst(string: string, n: number): string {
   return string.slice(0, n);
 }
 
 // TODO: more readable slice alias
-export function drop(string: string, n: number): string {
+export function dropFirst(string: string, n: number): string {
   return string.slice(n);
 }
 
 // TODO:
-export function takeWhile(
+export function takeFirstWhile(
   string: string,
   predicateFn: string => boolean,
 ): string {
@@ -427,7 +427,7 @@ export function takeWhile(
 }
 
 // TODO:
-export function dropWhile(
+export function dropFirstWhile(
   string: string,
   predicateFn: string => boolean,
 ): string {
@@ -540,7 +540,7 @@ export function split(
  * @time O(n)
  * @space O(n)
  * @ex Str.split("hello", 2) // ["he", "llo"]
- * @see Ar.drop, Ar.take, Ar.span
+ * @see Ar.dropFirst, Ar.takeFirst, Ar.span
  */
 export function splitAt(string: string, n: number): [string, string] {
   return [string.slice(0, n), string.slice(n)];
