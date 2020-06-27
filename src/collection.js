@@ -1,4 +1,11 @@
-// @flow
+/**
+ * @flow
+ *
+ * This module provides functions which operate on collections (`Array`s,
+ * `Map`s, `Set`s) and return a scalar or key/value type.
+ *
+ * @ex import {Cl} from 'jfl'
+ */
 
 'use strict';
 

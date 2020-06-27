@@ -1,4 +1,11 @@
-// @flow
+/**
+ * @flow
+ *
+ * This module provides functions which operate on collections (`Array`s,
+ * `Map`s, `Set`s) and return read-only (immutable) `Map`s.
+ *
+ * @ex import {Mp, $Mp} from 'jfl'
+ */
 
 'use strict';
 
@@ -13,10 +20,10 @@ function m<K, V>(map: $Map<K, V>): $Map<K, V> {
   return map.size === 0 ? (EMPTY: any) : map;
 }
 
-/// Construction
+/// Construct
 
 /**
- * Create a map.
+ * Create a Map.
  *
  * If your keys aren't strings, prefer `Mp.of`.
  *
@@ -32,7 +39,7 @@ export function $Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
 }
 
 /**
- * Create a map from given `pairs` of keys and values.
+ * Create a Map from given `pairs` of keys and values.
  *
  * @ex Mp.of([0, 2], [4, 2])
  * @see Mp, Mp.from, Mp.fromEntries
@@ -44,7 +51,7 @@ export function of<K, V>(...pairs: $Array<[K, V]>): $Map<K, V> {
 /**
  * Convert any keyed `collection` to a Map.
  *
- * Note that this is not a way to clone a map, if passed a map, the same
+ * Note that this is not a way to clone a Map, if passed a Map, the same
  * map will be returned.
  *
  * @ex Mp.from([1, 2, 3])
@@ -78,40 +85,54 @@ export async function fromAsync<K, V>(
 }
 
 /**
- * TODO:
- * @ex Mp.fromValues()
+ * Create a Map where each value comes from `collection` and its key is
+ * the result of calling `getKey` on it.
+ * 
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.fromValues([2, 3], n => n ** 2) // $Mp({4: 2, 9: 3})
  * @see Mp.fromKeys
  */
-export function fromValues<K, V>(
-  collection: Collection<V>,
-  getKey: V => K,
-): $Map<K, V> {
+export function fromValues<KFrom, KTo, VTo>(
+  collection: KeyedCollection<KFrom, VTo>,
+  getKey: (VTo, KFrom) => KTo,
+): $Map<KTo, VTo> {
   const result = new Map();
-  for (const item of collection.values()) {
-    result.set(getKey(item), item);
+  for (const [key, item] of collection.entries()) {
+    result.set(getKey(item, key), item);
   }
   return m(result);
 }
 
 /**
- * TODO:
+ * Create a Map where each key comes from `collection` and its value is
+ * the result of calling `getValue` on it.
+ * 
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.fromKeys([2, 3], n => n ** 2) // $Mp({2: 4, 3: 9})
  * @see Mp.fromValues
- * */
-export function fromKeys<K, V>(
-  collection: Collection<K>,
-  getValue: K => V,
-): $Map<K, V> {
+ */
+export function fromKeys<KFrom, KTo, VTo>(
+  collection: KeyedCollection<KFrom, KTo>,
+  getValue: (KTo, KFrom) => VTo,
+): $Map<KTo, VTo> {
   const result = new Map();
-  for (const key of collection.values()) {
-    result.set(key, getValue(key));
+  for (const [key, item] of collection.entries()) {
+    result.set(item, getValue(item, key));
   }
   return m(result);
 }
 
 /**
- * TODO:
+ * Create a promise of a Map where each key comes from `collection` and
+ * its value is the result of calling `getValue` on it.
+ * 
+ * @time O(n)
+ * @space O(n)
+ * @ex await Mp.fromKeysAsync([2, 3], async n => n ** 2) // $Mp({2: 4, 3: 9})
  * @see Mp.fromKeys
- * */
+ */
 export async function fromKeysAsync<KFrom, KTo, VTo>(
   collection: KeyedCollection<KFrom, KTo>,
   getValue: (KTo, KFrom) => Promise<VTo>,
@@ -127,8 +148,13 @@ export async function fromKeysAsync<KFrom, KTo, VTo>(
 }
 
 /**
-  *@see Mp.fromKeys, Mp.mapToEntries
-  */
+ * Create a Map from a `collection` of entries, i.e. (key, value) pairs.
+ * 
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.fromEntries($St([2, 3])) // $Mp({2: 3})
+ * @see Mp.fromKeys, Mp.mapToEntries
+ */
 export function fromEntries<K, V>(collection: Collection<[K, V]>): $Map<K, V> {
   return m(new Map(collection.values()));
 }
@@ -163,20 +189,8 @@ export function unzip<K, V>(
 /**
  * Create a JavaScript Object from a string-keyed Map.
  *
- * @ex Mp.toObject(Mp({a: 1, b: 2}))
- * @see Mp
- */
-export function fromObject<K: string, V>(
-  object: $ReadOnly<{[key: K]: V}>,
-): KeyedCollection<K, V> {
-  return m((new Map(Object.entries(object)): any));
-}
-
-/**
- * Create a JavaScript Object from a string-keyed Map.
- *
- * @ex Mp.toObject(Mp({a: 1, b: 2}))
- * @see Mp
+ * @ex Mp.toObject(Mp({a: 1, b: 2})) // {a: 1, b: 2}
+ * @see $Mp
  */
 export function toObject<K: string, V>(
   collection: KeyedCollection<K, V>,
@@ -188,11 +202,10 @@ export function toObject<K: string, V>(
   return result;
 }
 
-
 /**
  * Convert any keyed `collection` to a mutable Map.
  *
- * If a map is given, it will be cloned.
+ * If a Map is given, it will be cloned.
  *
  * @ex Mp.from([1, 2, 3])
  * @ex Mp.from(Set(1, 2, 3))
@@ -202,7 +215,7 @@ export function mutable<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
   return new Map(collection.entries());
 }
 
-/// Checks
+/// Check
 
 /**
  * Returns whether given value is a Map.
@@ -428,7 +441,7 @@ export function map<KFrom, VFrom, VTo>(
 }
 
 /**
- * Create a promise of a map by calling given async `fn` on each value and key
+ * Create a promise of a Map by calling given async `fn` on each value and key
  * of `collection`.
  *
  * Executes `fn` on all items in `collection` concurrently.
