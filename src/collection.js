@@ -151,18 +151,36 @@ export function containsKey<K, V>(
   }
 }
 
+declare function any<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => boolean,
+): boolean;
+declare function any(
+  collection: Collection<boolean>,
+  predicateFn: void,
+): boolean;
+
 /**
- * Returns whether some values satisfy `predicateFn`.
+ * Returns whether some values in `collection` satisfy `predicateFn`.
+ *
+ * When no `predicateFn` is given returns true when `collection` contains
+ * at least one `true` value.
  *
  * @time O(n)
  * @space O(1)
  * @ex Cl.any([1, 5, 4], n => Mth.isEven(n)) // true
+ * @ex Cl.any([true, false]) // true
  * @see Cl.every
  */
-export function any<K, V>(
-  collection: KeyedCollection<K, V>,
-  predicateFn: (V, K, KeyedCollection<K, V>) => boolean,
-): boolean {
+export function any(collection, predicateFn) {
+  if (predicateFn == null) {
+    for (const item of collection.values()) {
+      if (item) {
+        return true;
+      }
+    }
+    return false;
+  }
   for (const [key, item] of collection.entries()) {
     if (predicateFn(item, key, collection)) {
       return true;
@@ -171,18 +189,34 @@ export function any<K, V>(
   return false;
 }
 
+declare function every(collection: Collection<boolean>): boolean;
+declare function every<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => boolean,
+): boolean;
+
 /**
- * Returns whether all values satisfy `predicateFn`.
+ * Returns whether all values in `collection` satisfy `predicateFn`.
+ *
+ * When no `predicateFn` is given returns true when `collection` contains
+ * only `true` values.
  *
  * @time O(n)
  * @space O(1)
+ * @ex Cl.every([], n => Mth.isOdd(n)) // true
  * @ex Cl.every([1, 5, 3], n => Mth.isOdd(n)) // true
+ * @ex Cl.every([true, true]) // true
  * @see Cl.any
  */
-export function every<K, V>(
-  collection: KeyedCollection<K, V>,
-  predicateFn: (V, K, KeyedCollection<K, V>) => boolean,
-): boolean {
+export function every(collection, predicateFn) {
+  if (predicateFn == null) {
+    for (const item of collection.values()) {
+      if (!item) {
+        return false;
+      }
+    }
+    return true;
+  }
   for (const [key, item] of collection.entries()) {
     if (!predicateFn(item, key, collection)) {
       return false;
@@ -190,6 +224,10 @@ export function every<K, V>(
   }
   return true;
 }
+
+// TODO
+// isSorted;
+// isSortedBy;
 
 /// Select
 
@@ -474,7 +512,7 @@ export function atFromEndX<V>(collection: Collection<V>, index: number): V {
  */
 export function atDynamic<V>(collection: Collection<V>, index: number): ?V {
   if (index < 0) {
-    return at(collection, count(collection) - index);
+    return at(collection, count(collection) + index);
   } else {
     return at(collection, index);
   }
@@ -610,7 +648,3 @@ export function reduce(collection, fn, initialValue) {
   }
   return acc;
 }
-
-// TODO
-// isSorted
-// isSortedBy

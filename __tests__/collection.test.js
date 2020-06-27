@@ -76,6 +76,16 @@ test('containsKey', () => {
 });
 
 test('any', () => {
+  not.tru(Cl.any([]));
+  not.tru(Cl.any($St()));
+  not.tru(Cl.any($Mp()));
+  not.tru(Cl.any([false, false]));
+  not.tru(Cl.any($St(false, false)));
+  not.tru(Cl.any($Mp({k: false, m: false, n: false})));
+  tru(Cl.any([false, true]));
+  tru(Cl.any($St(false, true)));
+  tru(Cl.any($Mp({k: false, m: true, n: false})));
+
   not.tru(Cl.any([], x => x === 'b'));
   not.tru(Cl.any($St(), x => x === 'b'));
   not.tru(Cl.any($Mp(), x => x === 'boris'));
@@ -88,6 +98,16 @@ test('any', () => {
 });
 
 test('every', () => {
+  tru(Cl.every([]));
+  tru(Cl.every($St()));
+  tru(Cl.every($Mp()));
+  not.tru(Cl.every([false, true]));
+  not.tru(Cl.every($St(false, true)));
+  not.tru(Cl.every($Mp({k: false, m: true, n: false})));
+  tru(Cl.every([true, true]));
+  tru(Cl.every($St(true, true)));
+  tru(Cl.every($Mp({k: true, m: true, n: true})));
+
   tru(Cl.every([], x => x === 'b'));
   tru(Cl.every($St(), x => x === 'b'));
   tru(Cl.every($Mp(), x => x === 'boris'));
@@ -249,6 +269,45 @@ test('atX', () => {
   is(Cl.atX(['a', 'b', 'c'], 1), 'b');
   is(Cl.atX($St('a', 'b', 'c'), 1), 'b');
   is(Cl.atX($Mp({k: 'adam', m: 'boris', n: 'cecil'}), 1), 'boris');
+});
+
+test('atFromEnd', () => {
+  nil(Cl.atFromEnd([], 1));
+  nil(Cl.atFromEnd($St(), 1));
+  nil(Cl.atFromEnd($Mp(), 1));
+  is(Cl.atFromEnd(['a', 'b', 'c', 'd'], 0), 'd');
+  is(Cl.atFromEnd(['a', 'b', 'c', 'd'], 1), 'c');
+  is(Cl.atFromEnd($St('a', 'b', 'c', 'd'), 0), 'd');
+  is(Cl.atFromEnd($St('a', 'b', 'c', 'd'), 1), 'c');
+  is(Cl.atFromEnd($Mp({k: 'a', m: 'b', n: 'c', o: 'd'}), 0), 'd');
+  is(Cl.atFromEnd($Mp({k: 'a', m: 'b', n: 'c', o: 'd'}), 1), 'c');
+});
+
+test('atFromEndX', () => {
+  throws(() => Cl.atFromEndX([], 1));
+  throws(() => Cl.atFromEndX($St(), 1));
+  throws(() => Cl.atFromEndX($Mp(), 1));
+  is(Cl.atFromEndX(['a', 'b', 'c', 'd'], 1), 'c');
+  is(Cl.atFromEndX($St('a', 'b', 'c', 'd'), 1), 'c');
+  is(Cl.atFromEndX($Mp({k: 'a', m: 'b', n: 'c', o: 'd'}), 1), 'c');
+});
+
+test('atDynamic', () => {
+  nil(Cl.atDynamic([], 1));
+  nil(Cl.atDynamic($St(), 1));
+  nil(Cl.atDynamic($Mp(), 1));
+  is(Cl.atDynamic(['a', 'b', 'c', 'd'], 0), 'a');
+  is(Cl.atDynamic(['a', 'b', 'c', 'd'], 1), 'b');
+  is(Cl.atDynamic(['a', 'b', 'c', 'd'], -1), 'd');
+  is(Cl.atDynamic(['a', 'b', 'c', 'd'], -2), 'c');
+  is(Cl.atDynamic($St('a', 'b', 'c', 'd'), 0), 'a');
+  is(Cl.atDynamic($St('a', 'b', 'c', 'd'), 1), 'b');
+  is(Cl.atDynamic($St('a', 'b', 'c', 'd'), -1), 'd');
+  is(Cl.atDynamic($St('a', 'b', 'c', 'd'), -2), 'c');
+  is(Cl.atDynamic($Mp({k: 'a', m: 'b', n: 'c', o: 'd'}), 0), 'a');
+  is(Cl.atDynamic($Mp({k: 'a', m: 'b', n: 'c', o: 'd'}), 1), 'b');
+  is(Cl.atDynamic($Mp({k: 'a', m: 'b', n: 'c', o: 'd'}), -1), 'd');
+  is(Cl.atDynamic($Mp({k: 'a', m: 'b', n: 'c', o: 'd'}), -2), 'c');
 });
 
 test('firstKey', () => {
