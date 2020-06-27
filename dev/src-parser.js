@@ -5,10 +5,7 @@ import type {$Array} from '../src/types.flow';
 import * as fs from 'fs';
 import * as path from 'path';
 import {promisify} from 'util';
-import {Ar, Cl, REx, Str} from '../src';
-const readFile = promisify(fs.readFile);
-
-const srcDirectoryPath = path.join(__dirname, '../src');
+import {Ar, Cl, REx, Str, nullthrows} from '../src';
 
 type Doc = {text: string, examples?: $Array<string>};
 type Source = $Array<{|
@@ -22,14 +19,18 @@ type Source = $Array<{|
       doc: Doc,
       functionName: string,
       lineNumber: number,
+      testLineNumber: ?number,
       signature: string,
     }>,
   }>,
 |}>;
 
+const srcDirectoryPath = path.join(__dirname, '../src');
+const testDirectoryPath = path.join(__dirname, '../__tests__');
+
 export async function loadAndParseModulesAsync(): Promise<Source> {
   const indexPath = path.join(srcDirectoryPath, 'index.js');
-  const indexSource = await readFile(indexPath, 'utf8');
+  const indexSource = await readFileX(indexPath);
   let $$ = indexSource;
   $$ = Str.matchEvery($$, /export \* as (\w+) from '\.\/(\w+)';/);
   $$ = Ar.map($$, ([_, moduleAlias, moduleName]) => [moduleAlias, moduleName]);
@@ -43,14 +44,17 @@ export async function loadAndParseModulesAsync(): Promise<Source> {
 
 async function loadAndParseModuleAsync(moduleName) {
   const sourcePath = path.join(srcDirectoryPath, moduleName + '.js');
-  const moduleSource = await readFile(sourcePath, 'utf8');
+  const moduleSource = await readFileX(sourcePath);
+  const testPath = path.join(testDirectoryPath, moduleName + '.test.js');
+  const testSource = (await readFile(testPath)) ?? '';
+  const testLines = Str.splitLines(testSource);
   const moduleDoc = parseModuleDoc(moduleSource);
   const moduleLines = Str.splitLines(moduleSource);
   let $$ = moduleSource;
   $$ = Str.matchEvery($$, /\/\/\/ (\w+)(((\s|\S)(?!\/\/\/))*)/);
   const sections = Ar.map($$, ([_, sectionName, sectionSource]) => ({
     sectionName,
-    functions: parseSectionFunctions(moduleLines, sectionSource),
+    functions: parseSectionFunctions(moduleLines, testLines, sectionSource),
   }));
   return {moduleDoc, sections};
 }
@@ -61,7 +65,7 @@ function parseModuleDoc(moduleSource) {
   return parseDoc(doc);
 }
 
-function parseSectionFunctions(moduleLines, sectionSource) {
+function parseSectionFunctions(moduleLines, testLines, sectionSource) {
   let $$ = sectionSource;
   $$ = Str.matchEvery(
     $$,
@@ -76,12 +80,17 @@ function parseSectionFunctions(moduleLines, sectionSource) {
     isAsync: isAsync != null,
     functionName,
     // Yeah this is slow, we're reaching limits of this hacky parsing
-    lineNumber: Cl.findKeyX(moduleLines, line =>
-      Str.includes(line, `function ${functionName}`),
+    lineNumber: nullthrows(
+      findLineIncludes(moduleLines, `function ${functionName}`),
     ),
+    testLineNumber: findLineIncludes(testLines, `test('${functionName}`),
     signature:
       (isAsync != null ? 'async function ' : '') + functionName + params,
   }));
+}
+
+function findLineIncludes(lines, search) {
+  return Cl.findKey(lines, line => Str.includes(line, search));
 }
 
 function parseDoc(doc) {
@@ -104,4 +113,19 @@ function parseDoc(doc) {
   const examples = Ar.map($$3, example => Str.trimStart(example, '@ex '));
 
   return {text, examples};
+}
+
+async function readFileX(path: string): Promise<string> {
+  return await promisify(fs.readFile)(path, 'utf8');
+}
+
+async function readFile(path: string): Promise<?string> {
+  try {
+    return await promisify(fs.readFile)(path, 'utf8');
+  } catch (e) {
+    if (e.code === 'ENOENT') {
+      return Promise.resolve(null);
+    }
+    throw e;
+  }
 }

@@ -115,15 +115,25 @@ function formatModuleSections(moduleAlias, moduleName, sections) {
 function formatFunctions(moduleAlias, moduleName, functions) {
   return mapAndJoin(
     functions,
-    ({functionName, doc, signature, lineNumber}) => `
+    ({functionName, doc, signature, lineNumber, testLineNumber}) => `
       <div>
         <a name="${formatFunctionName(moduleAlias, functionName)}"></a>
         <h4>${formatFunctionName(moduleAlias, functionName)}</h4>
         ${formatDoc(signature, doc)}
-        <p class="functionFooter"><a target="_blank" href="${getSourceHref(
-          moduleName,
-          lineNumber,
-        )}">Source</a></p>
+        <p class="functionFooter">
+          <a target="_blank" href="${getSourceHref(
+            moduleName,
+            lineNumber,
+          )}">Source</a>
+          ${
+            testLineNumber != null
+              ? `<a target="_blank" href="${getTestHref(
+                  moduleName,
+                  testLineNumber,
+                )}">Tests</a>`
+              : ''
+          }          
+        </p>
       </div>
     `,
   );
@@ -168,10 +178,16 @@ function highlight(code) {
   });
 }
 
-const repoSourceURL = 'https://github.com/xixixao/jfl/blob/master/src/';
+const repoURL = 'https://github.com/xixixao/jfl/blob/master/';
 
 function getSourceHref(moduleName, lineNumber) {
-  return repoSourceURL + moduleName + '.js' + '#L' + (lineNumber + 1);
+  return repoURL + 'src/' + moduleName + '.js' + '#L' + (lineNumber + 1);
+}
+
+function getTestHref(moduleName, lineNumber) {
+  return (
+    repoURL + '__tests__/' + moduleName + '.test.js' + '#L' + (lineNumber + 1)
+  );
 }
 
 function mapAndJoin<V>(collection: Collection<V>, fn: V => string): string {
