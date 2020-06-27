@@ -1,20 +1,8 @@
-## Test
+## Test, Build, Format
 
-```sh
-npm test
-```
-
-## Build
-
-```sh
-npm run build
-```
+See package.json "scripts", run them via `npm run ___`
 
 ## Format
-
-```sh
-npx prettier --write --parser flow src/* test/*
-```
 
 ## Principles
 
