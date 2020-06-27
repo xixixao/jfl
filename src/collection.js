@@ -3,6 +3,7 @@
 'use strict';
 
 import type {Collection, KeyedCollection, $Array} from './types.flow';
+import {defaultCompareFn} from './_internal';
 
 import * as Ar from './array';
 import * as Mp from './map';
@@ -225,9 +226,81 @@ export function every(collection, predicateFn) {
   return true;
 }
 
-// TODO
-// isSorted;
-// isSortedBy;
+/**
+ * Returns whether given `collection` is sorted.
+ *
+ * The result of calling `compareFn` on values `a` and `b` determines their
+ * order:
+ *   negative number: `a`, `b`
+ *   positive number: `b`, `a`
+ *   zero: the order stays the same as it was in `collection`
+ * The default `compareFn` is `(a, b) => a > b ? 1 : a < b ? -1 : 0`,
+ * which sorts numbers and strings in ascending order (from small to large,
+ * from early in the alphabet to later in the alphabet).
+ *
+ * @time O(n)
+ * @space O(1)
+ * @ex Cl.isSorted([2, 4, 3]) // true
+ * @ex Cl.isSorted($St('b', 'c', 'd')) // true
+ * @see Ar.sort
+ */
+export function isSorted<V>(
+  collection: Collection<V>,
+  compareFn?: (a: V, b: V) => number = defaultCompareFn,
+): boolean {
+  const valueIterator = collection.values();
+  const firstIteration = valueIterator.next();
+  if (firstIteration.done) {
+    return true;
+  }
+  let previous = firstIteration.value;
+  for (const value of valueIterator) {
+    if (compareFn(value, previous) < 0) {
+      return false;
+    }
+    previous = value;
+  }
+  return true;
+}
+
+/**
+ * Returns whether given `collection` is sorted by the scalar computed
+ * by calling `scalarFn` on each value.
+ *
+ * The result of calling `compareFn` on values `a` and `b` determines their
+ * order:
+ *   negative number: `a`, `b`
+ *   positive number: `b`, `a`
+ *   zero: the order stays the same as it was in `collection`
+ * The default `compareFn` is `(a, b) => a > b ? 1 : a < b ? -1 : 0`,
+ * which sorts numbers and strings in ascending order (from small to large,
+ * from early in the alphabet to later in the alphabet).
+ *
+ * @time O(n)
+ * @space O(1)
+ * @ex Cl.isSortedBy([3, 4, 1, 2], n => n % 3) // true
+ * @see Ar.sortBy
+ */
+export function isSortedBy<V, S>(
+  collection: Collection<V>,
+  scalarFn: V => S,
+  compareFn?: (a: S, b: S) => number = defaultCompareFn,
+): boolean {
+  const valueIterator = collection.values();
+  const firstIteration = valueIterator.next();
+  if (firstIteration.done) {
+    return true;
+  }
+  let previous = scalarFn(firstIteration.value);
+  for (const value of valueIterator) {
+    const next = scalarFn(value);
+    if (compareFn(next, previous) < 0) {
+      return false;
+    }
+    previous = next;
+  }
+  return true;
+}
 
 /// Select
 
@@ -359,23 +432,20 @@ export function firstX<V>(collection: Collection<V>): V {
  * @see Cl.firstX
  */
 export function onlyX<V>(collection: Collection<V>): V {
-  let result = null;
-  let foundFirst = false;
-  for (const item of collection.values()) {
-    if (foundFirst) {
-      throw new Error(
-        'Expected exactly one item in collection, but there were more',
-      );
-    }
-    result = item;
-    foundFirst = true;
-  }
-  if (!foundFirst) {
+  const valueIterator = collection.values();
+  const firstIteration = valueIterator.next();
+  if (firstIteration.done) {
     throw new Error(
       'Expected exactly one item in collection, but the collection was empty.',
     );
   }
-  return (result: any);
+  const result = firstIteration.value;
+  if (!valueIterator.next().done) {
+    throw new Error(
+      'Expected exactly one item in collection, but there were more',
+    );
+  }
+  return result;
 }
 
 /**
@@ -633,17 +703,9 @@ export function reduce(collection, fn, initialValue) {
       return collection.reduce(fn, initialValue);
     }
   }
-  let acc;
-  let isFirst = true;
-  if (!noInitialValue) {
-    acc = initialValue;
-  }
-  for (const [key, item] of collection.entries()) {
-    if (noInitialValue && isFirst) {
-      acc = item;
-      isFirst = false;
-      continue;
-    }
+  const entriesIterator = collection.entries();
+  let acc = noInitialValue ? entriesIterator.next().value[1] : initialValue;
+  for (const [key, item] of entriesIterator) {
     acc = fn(acc, item, key, collection);
   }
   return acc;

@@ -121,6 +121,26 @@ test('every', () => {
   tru(Cl.every($Mp({k: 'boris', m: 'boris', n: 'boris'}), x => x === 'boris'));
 });
 
+test('isSorted', () => {
+  tru(Cl.isSorted([]));
+  tru(Cl.isSorted($St()));
+  tru(Cl.isSorted($Mp()));
+
+  tru(Cl.isSorted([1, 2, 3]));
+  tru(Cl.isSorted($St('a', 'b', 'c')));
+  tru(Cl.isSorted($Mp({n: 'a', m: 'b', k: 'c'})));
+
+  not.tru(Cl.isSorted([3, 1, 2]));
+  not.tru(Cl.isSorted($St('c', 'b', 'a')));
+  not.tru(Cl.isSorted($Mp({k: 'a', m: 'c', n: 'b'})));
+
+  tru(Cl.isSorted($St('c', 'a', 'b'), (a, b) => a.length - b.length));
+});
+
+test('isSortedBy', () => {
+  tru(Cl.isSortedBy([3, 1, 5, 2], n => n % 3));
+});
+
 test('find', () => {
   nil(Cl.find([], x => Mth.isOdd(x)));
   nil(Cl.find($St(), x => Mth.isOdd(x)));

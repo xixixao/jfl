@@ -11,6 +11,7 @@
 
 import type {Collection, KeyedCollection, $Array} from './types.flow';
 
+import {defaultCompareFn} from './_internal';
 import * as Cl from './collection';
 import * as Mp from './map';
 
@@ -1183,6 +1184,7 @@ export function reverse<V>(collection: Collection<V>): $Array<V> {
  * @time Worst case O(n^2)
  * @space O(n)
  * @ex Ar.sort([3, 2, 4, 1]) // [1, 2, 3, 4]
+ * @ex Ar.sort(['c', 'b', 'd', 'a']) // ['a', 'b', 'c', 'd']
  * @see Ar.sortBy, Ar.sortUnstable
  */
 export function sort<V>(
@@ -1248,6 +1250,9 @@ export function sortBy<V, S>(
 /**
  * Create an array of values in `collection` sorted.
  *
+ * This sort doesn't preserve the order of elements when `compareFn` returns 0
+ * which makes it more memory efficient.
+ *
  * The result of calling `compareFn` on values `a` and `b` determines their
  * order:
  *   negative number: `a`, `b`
@@ -1256,9 +1261,6 @@ export function sortBy<V, S>(
  * The default `compareFn` is `(a, b) => a > b ? 1 : a < b ? -1 : 0`,
  * which sorts numbers and strings in ascending order (from small to large,
  * from early in the alphabet to later in the alphabet).
- *
- * This sort doesn't preserve the order of elements when `compareFn` returns 0
- * which makes it more memory efficient.
  *
  * @time Worst case O(n^2)
  * @space O(n)
@@ -1270,8 +1272,4 @@ export function sortUnstable<V>(
   compareFn?: (V, V) => number = defaultCompareFn,
 ): $Array<V> {
   return m(Array.from(collection.values()).sort(compareFn));
-}
-
-function defaultCompareFn(a: any, b: any): number {
-  return a > b ? 1 : a < b ? -1 : 0;
 }
