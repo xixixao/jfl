@@ -5871,12 +5871,131 @@
       </div>
     </div>
     <script>
-      (function () {
+      (function (_) {
   'use strict';
 
-  // 
+  const EMPTY = new Set();
+  function m(set) {
+    return set.size === 0 ? (EMPTY) : set;
+  }
+  function from(collection) {
+    if (isSet(collection)) {
+      return collection;
+    }
+    return m(new Set(collection.values()));
+  }
+  function isSet(argument) {
+    return argument instanceof Set;
+  }
 
-  // import {Cl, Str, invariant, nullthrows} from '../src/index';
+  function forEach(
+    collection,
+    fn,
+  ) {
+    return collection.forEach(fn);
+  }
+
+  const EMPTY$1 = [];
+  function m$1(array) {
+    return array.length === 0 ? EMPTY$1 : array;
+  }
+  function from$1(collection) {
+    if (isArray(collection)) {
+      return (collection);
+    }
+    return m$1(Array.from(collection.values()));
+  }
+  function isArray(argument) {
+    return Array.isArray(argument);
+  }
+
+  function isEmpty(string) {
+    return string.length === 0;
+  }
+  function includes(
+    string,
+    search,
+    fromIndex,
+  ) {
+    return indexOf(string, search, fromIndex) != null;
+  }
+  function indexOf(
+    string,
+    search,
+    fromIndex,
+  ) {
+    if (fromIndex != null && fromIndex > string.length) {
+      return null;
+    }
+    if (isRegExp(search)) {
+      if (fromIndex != null) {
+        return string.slice(fromIndex).match(search)?.index;
+      } else {
+        return string.match(search)?.index;
+      }
+    } else {
+      const result = string.indexOf(search, fromIndex);
+      return result === -1 ? null : result;
+    }
+  }
+  function ignoreCase(
+    string,
+    search,
+    predicateFn,
+  ) {
+    if (isRegExp(search)) {
+      return predicateFn(string.toLowerCase(), addFlags(search, 'i'));
+    } else {
+      return predicateFn(string.toLowerCase(), search.toLowerCase());
+    }
+  }
+  function join(collection, glue) {
+    return from$1(collection).join(glue);
+  }
+  function joinChars(chars) {
+    return join(chars, '');
+  }
+  function split(
+    string,
+    delimiter,
+    limit,
+  ) {
+    return string.split(delimiter, limit);
+  }
+  function splitChars(string) {
+    return split(string, '');
+  }
+
+  function isRegExp(value) {
+    return value instanceof RegExp;
+  }
+  function addFlags(pattern, flags) {
+    if (flags.length === 1 && pattern.flags.includes(flags)) {
+      return pattern;
+    }
+    const newFlags = from(splitChars(pattern.flags + flags));
+    if (newFlags.size === pattern.flags.length) {
+      return pattern;
+    }
+    return new RegExp(pattern.source, joinChars(newFlags));
+  }
+
+  function nullthrows(
+    value,
+    message = 'Got unexpected null or undefined',
+  ) {
+    if (value != null) {
+      return value;
+    }
+    const error = new Error(message);
+    error.framesToPop = 1;
+    throw error;
+  }
+  function invariant(condition, message) {
+    if (!condition) {
+      throw new Error(message);
+    }
+  }
 
   const sidebar = nullthrows(document.querySelector('.sidebar'));
   const searchBar = document.querySelector('.sidebarSearch input');
@@ -5885,8 +6004,7 @@
   );
   const moduleLinks = document.querySelectorAll('.sidebar a.module');
   const functionLinks = document.querySelectorAll('.sidebar a.function');
-
-  Cl.forEach(moduleLinks, link => {
+  forEach(moduleLinks, link => {
     link.addEventListener(
       'click',
       (event) => {
@@ -5900,7 +6018,6 @@
       true,
     );
   });
-
   invariant(searchBar instanceof HTMLInputElement);
   searchBar.addEventListener('input', onSearchUpdate);
   searchBarCancel.addEventListener('click', cancelSearch);
@@ -5910,25 +6027,23 @@
       searchBar.blur();
     }
   });
-
   function cancelSearch() {
     searchBar.value = '';
     onSearchUpdate();
   }
-
   function onSearchUpdate() {
     const searched = searchBar.value;
-    sidebar.classList.toggle('searched', !Str.isEmpty(searched));
+    sidebar.classList.toggle('searched', !isEmpty(searched));
     let hasMatch = false;
-    Cl.forEach(functionLinks, link => {
-      const matches = Str.ignoreCase(link.textContent, searched, Str.includes);
+    forEach(functionLinks, link => {
+      const matches = ignoreCase(link.textContent, searched, includes);
       link.classList.toggle('matchesSearch', matches);
       hasMatch = hasMatch || matches;
     });
     searchBar.classList.toggle('noMatch', !hasMatch);
   }
 
-}());
+}())
 
     </script>
   </body>

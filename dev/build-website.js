@@ -8,6 +8,7 @@ import {promisify} from 'util';
 import {Ar, Cl, Str} from '../src';
 import type {KeyedCollection} from '../src/types.flow';
 import rollupFlowPlugin from './rollup-flow-plugin';
+import rollupCleanupPlugin from 'rollup-plugin-cleanup';
 import {loadAndParseModulesAsync} from './src-parser';
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
@@ -207,7 +208,10 @@ function mapAndJoin<K, V>(
 async function formatScript() {
   const inputOptions = {
     input: path.join(websiteSrcDirPath, 'script.js'),
-    plugins: [rollupFlowPlugin({pretty: true})],
+    plugins: [
+      rollupFlowPlugin({pretty: true}),
+      rollupCleanupPlugin({sourcemap: false}),
+    ],
     onwarn: (warning, warn) => {
       if (!warning.code === 'CIRCULAR_DEPENDENCY') {
         warn(warning);
