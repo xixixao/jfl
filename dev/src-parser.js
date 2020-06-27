@@ -128,7 +128,12 @@ function parseDoc(doc) {
   $$2 = Ar.dropFirstWhile($$2, line => line === '');
   $$2 = Ar.dropLastWhile($$2, line => line === '');
   $$2 = Ar.map($$2, line => (line === '' ? '<br /><br />' : line));
-  const text = Str.joinWords($$2);
+  $$2 = Str.joinWords($$2);
+  const text = Str.replaceEvery(
+    $$2,
+    /`([\w.]+)`/,
+    (_, name) => `<span class="inlineCode">${name}</span>`,
+  );
 
   let $$3 = Ar.filter($$, line => Str.startsWith(line, '@ex'));
   const examples = Ar.map($$3, example => Str.trimStart(example, '@ex '));

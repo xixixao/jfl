@@ -117,8 +117,12 @@ function formatFunctions(moduleAlias, moduleName, functions) {
     functions,
     ({functionName, doc, signature, lineNumber, testLineNumber}) => `
       <div>
-        <a name="${formatFunctionName(moduleAlias, functionName)}"></a>
-        <h4>${formatFunctionName(moduleAlias, functionName)}</h4>
+        <a
+          class="headlineLink"
+          name="${formatFunctionName(moduleAlias, functionName)}"
+          href="#${formatFunctionName(moduleAlias, functionName)}">
+          <h4>${formatFunctionName(moduleAlias, functionName)}</h4>
+        </a>
         ${formatDoc(signature, doc)}
         <p class="functionFooter">
           <a target="_blank" href="${getSourceHref(

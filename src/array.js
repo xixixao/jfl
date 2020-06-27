@@ -415,7 +415,8 @@ export function equalsNested<V>(
 /// Select
 
 /**
- * Create a new array by filtering out values for which `fn` returns false.
+ * Create a new array by filtering out values from `collection for which
+ * `predicateFn` returns false.
  *
  * @time O(n)
  * @space O(n)
@@ -437,7 +438,7 @@ export function filter<K, V>(
 
 /**
  * Create a promise of an array by filtering out values in `collection`
- * for which async `fn` returns false.
+ * for which async `predicateFn` returns false.
  *
  * Executes `predicateFn` on all items in `collection` concurrently.
  *
@@ -463,7 +464,8 @@ export async function filterAsync<K, V>(
 }
 
 /**
- * Create a new array by filtering out `null`s and `undefined`s.
+ * Create a new array by filtering out `null`s and `undefined`s from
+ * `collection`.
  *
  * Here because its type is more specific then the generic `filter` function.
  *
