@@ -851,12 +851,13 @@ export function splitAt<V>(
 }
 
 /**
- * Create a tuple of arrays containing all the items of `collection` following
- * and preceding the first item for which `predicateFn` returns false.
+ * Create two arrays, the first containing all the items of `collection`
+ * preceding the first item for which `predicateFn` returns false, the second
+ * containing the rest.
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.span([1, 3, 4, 7], Mth.isOdd)
+ * @ex Ar.span([1, 3, 4, 7], Mth.isOdd) // [[1], [3, 4, 7]]
  * @alias break
  * @see Ar.splitAt, Ar.takeFirstWhile, Ar.dropFirstWhile
  */
