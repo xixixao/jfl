@@ -141,17 +141,20 @@ function formatFunctions(moduleAlias, moduleName, functions) {
 
 function formatDoc(signature, doc) {
   const highlightedCode =
-    doc.examples != null && !Cl.isEmpty(doc.examples)
+    doc != null && !Cl.isEmpty(doc.examples)
       ? highlight(Str.joinLines(doc.examples))
       : null;
   return `
-    <p>${formatDocText(doc.text)}</p>
+    <p>${formatDocText(doc?.text)}</p>
     ${formatSignature(signature)}
     ${highlightedCode ?? ''}
   `;
 }
 
 function formatDocText(text) {
+  if (text == null) {
+    return 'Work in progress';
+  }
   return Str.replaceEvery(
     text,
     /https?:\/\/([\w.]+)(\S*)(\/\w+\/?)(?=\.?\s)/,

@@ -461,7 +461,18 @@ export function mapToEntries<KFrom, VFrom, KTo, VTo>(
   return m(result);
 }
 
-// TODO: pull
+export function pull<VFrom, KTo, VTo>(
+  collection: Collection<VFrom>,
+  keyFn: VFrom => KTo,
+  valueFn: VFrom => VTo,
+): $Map<KTo, VTo> {
+  const result = new Map();
+  for (const item of collection.values()) {
+    result.set(keyFn(item), valueFn(item));
+  }
+  return m(result);
+}
+
 
 // TODO: group (ala group_keys_by_values), consider dropping group_by
 // given JS doesn't have the arraykey limitation

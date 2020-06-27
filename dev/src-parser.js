@@ -7,28 +7,31 @@ import * as path from 'path';
 import {promisify} from 'util';
 import {Ar, Cl, REx, Str, nullthrows} from '../src';
 
-type Doc = {text: string, examples?: $Array<string>};
-type Source = $Array<{|
+type ParsedSource = $Array<{|
   moduleAlias: ?string,
   moduleName: string,
-  moduleDoc: Doc,
+  moduleDoc: ?Doc,
+  moduleSource: string,
   sections: $Array<{
     sectionName: string,
-    functions: $Array<{
-      isAsync: boolean,
-      doc: Doc,
-      functionName: string,
-      lineNumber: number,
-      testLineNumber: ?number,
-      signature: string,
-    }>,
+    functions: $Array<ParsedFunction>,
   }>,
+  functions: $Array<ParsedFunction>,
 |}>;
+type ParsedFunction = {
+  isAsync: boolean,
+  doc: ?Doc,
+  functionName: string,
+  lineNumber: number,
+  testLineNumber: ?number,
+  signature: string,
+};
+type Doc = {text: string, examples: $Array<string>};
 
 const srcDirectoryPath = path.join(__dirname, '../src');
 const testDirectoryPath = path.join(__dirname, '../__tests__');
 
-export async function loadAndParseModulesAsync(): Promise<Source> {
+export async function loadAndParseModulesAsync(): Promise<ParsedSource> {
   const indexPath = path.join(srcDirectoryPath, 'index.js');
   const indexSource = await readFileX(indexPath);
   let $$ = indexSource;
@@ -56,7 +59,8 @@ async function loadAndParseModuleAsync(moduleName) {
     sectionName,
     functions: parseSectionFunctions(moduleLines, testLines, sectionSource),
   }));
-  return {moduleDoc, sections};
+  const functions = Ar.mapFlat(sections, ({functions}) => functions);
+  return {moduleDoc, moduleSource, sections, functions};
 }
 
 function parseModuleDoc(moduleSource) {
@@ -95,7 +99,7 @@ function findLineIncludes(lines, search) {
 
 function parseDoc(doc) {
   if (doc == null) {
-    return {text: 'Work in progress.'};
+    return null;
   }
   let $$ = doc;
   $$ = Str.trim($$, /[\s*/]*/);
