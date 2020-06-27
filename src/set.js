@@ -23,7 +23,7 @@ function m<V>(set: $Set<V>): $Set<V> {
 /// Construction
 
 /**
- * Create a set.
+ * Create a `Set`.
  *
  * Can contain any JS value. Maintains uniqueness.
  *
@@ -36,9 +36,9 @@ export function $St<V>(...args: $Array<V>): $Set<V> {
 }
 
 /**
- * Convert any `collection` of values to a Set of values.
+ * Convert any `collection` of values to a `Set` of values.
  *
- * Note that this is not a way to clone a set, if passed a set, the same
+ * Note that this is not a way to clone a Set, if passed a `Set`, the same
  * set will be returned.
  *
  * @ex St.from([1, 2, 3])
@@ -55,7 +55,7 @@ export function from<V>(collection: Collection<V>): $Set<V> {
 
 /**
  * Convert any `collection` of awaitable promises of values to a single
- * promise of a Set of values.
+ * promise of a `Set` of values.
  *
  * @ex St.fromAsync([(async () => 1)(), (async () => 2)()])
  * @alias all
@@ -68,9 +68,9 @@ export async function fromAsync<V>(
 }
 
 /**
- * Convert any `collection` of values to a mutable Set of values.
+ * Convert any `collection` of values to a mutable `Set` of values.
  *
- * If a set is given it will be cloned.
+ * If a `Set` is given it will be cloned.
  *
  * @ex St.mutable($St(1, 2, 3)) // Set {1, 2, 3}
  * @see St.from
@@ -85,7 +85,7 @@ export function mutable<V>(collection: Collection<V>): Set<V> {
 /// Checks
 
 /**
- * Returns whether given argument is a Set.
+ * Returns whether given argument is a `Set`.
  *
  * @ex St.isSet(St(1, 2, 3))
  * @see Ar.isArray, Mp.isMap
@@ -95,7 +95,7 @@ export function isSet(argument: mixed): %checks {
 }
 
 /**
- * Returns whether given Sets are equal.
+ * Returns whether given `Set`s are equal.
  *
  * All items must be strictly equal.
  *
@@ -126,7 +126,7 @@ export function equals<V>(set: $Set<V>, ...sets: $Array<$Set<V>>): boolean {
 }
 
 /**
- * Returns whether given Sets contain the same values.
+ * Returns whether given `Set`s contain the same values.
  *
  * All items must be strictly equal.
  *
@@ -157,7 +157,7 @@ export function equalsOrderIgnored<V>(
 }
 
 /**
- * Returns whether given Sets and any nested collections are equal.
+ * Returns whether given `Set`s and any nested collections are equal.
  *
  * Any contained collections must deeply equal, all other items must be
  * strictly equal.
@@ -194,7 +194,7 @@ export function equalsNested<V>(
 /// Combine
 
 /**
- * Create a Set which is a union of all values in given `collections`.
+ * Create a `Set` which is a union of all values in given `collections`.
  *
  * @ex St.union(St(1, 2, 3), St(1, 4, 5))
  * @alias join, flatten
@@ -207,7 +207,7 @@ export function add<V>(collection: Collection<V>, value: V): $Set<V> {
 }
 
 /**
- * Create a Set which is a union of all values in given `collections`.
+ * Create a `Set` which is a union of all values in given `collections`.
  *
  * @ex St.union(St(1, 2, 3), St(1, 4, 5))
  * @alias join, flatten
@@ -218,7 +218,7 @@ export function union<V>(...collections: $Array<Collection<V>>): $Set<V> {
 }
 
 /**
- * Create a Set which is an intersection of all values in given `collections`.
+ * Create a `Set` which is an intersection of all values in given `collections`.
  *
  * @ex St.intersect(St(1, 2, 3), St(2, 3, 6), St(0, 1, 2))
  * @see St.union, St.diff
@@ -246,7 +246,7 @@ export function intersect<V>(...collections: $Array<Collection<V>>): $Set<V> {
 }
 
 /**
- * Create a Set which has the values from `collection` that do not appear in
+ * Create a `Set` which has the values from `collection` that do not appear in
  * any of the given `collections`.
  *
  * @ex St.diff(St(1, 2, 3), St(2, 4), St(1, 2, 4))
@@ -270,7 +270,7 @@ export function diff<V>(
 }
 
 /**
- * Create a Set which is a union of all values in given `collections`.
+ * Create a `Set` which is a union of all values in given `collections`.
  *
  * @ex St.flatten([St(1, 2, 3), St(1, 4, 5)])
  * @alias join, union
@@ -351,7 +351,7 @@ export function filterNulls<V>(collection: Collection<?V>): $Set<V> {
 }
 
 /**
- * Create a set of keys corresponding to values passing given `predicateFn`.
+ * Create a `Set` of keys corresponding to values passing given `predicateFn`.
  *
  * @ex St.filterKeys([1, 2, 3], n => Mth.isOdd(n)) // $St(1, 3)
  * @see St.filter, Ar.filterKeys
@@ -395,7 +395,7 @@ export function map<VFrom, VTo>(
 }
 
 /**
- * Create a promise of a set by calling given async `fn` on each value of
+ * Create a promise of a `Set` by calling given async `fn` on each value of
  * `collection`.
  *
  * Executes `fn` on all items in `collection` concurrently.

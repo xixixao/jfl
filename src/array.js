@@ -24,7 +24,7 @@ function m<V>(array: $Array<V>): $Array<V> {
 /// Construct
 
 /**
- * Create an Array.
+ * Create an `Array`.
  *
  * Prefer array literal `[1, 2, 3]` unless you need a function. This function
  * always returns a reference to the same empty array when called with no
@@ -41,9 +41,9 @@ export function $Ar<V>(...args: $Array<V>): $Array<V> {
 }
 
 /**
- * Convert any `collection` of values to an Array of values.
+ * Convert any `collection` of values to an `Array` of values.
  *
- * Note that this is not a way to clone an Array, if passed an Array, the same
+ * Note that this is not a way to clone an Array, if passed an `Array`, the same
  * array will be returned.
  *
  * @time O(n)
@@ -62,7 +62,7 @@ export function from<V>(collection: Collection<V>): $Array<V> {
 
 /**
  * Convert any `collection` of awaitable promises of values to a single
- * promise of an Array of values.
+ * promise of an `Array` of values.
  *
  * @time O(n)
  * @space O(n)
@@ -77,9 +77,9 @@ export function fromAsync<V>(
 }
 
 /**
- * Convert any `collection` with keys to an Array of keys.
+ * Convert any `collection` with keys to an `Array` of keys.
  *
- * Notably the keys of a Set are just its values. The keys of an Array are
+ * Notably the keys of a `Set` are just its values. The keys of an `Array` are
  * its indices.
  *
  * @time O(n)
@@ -94,9 +94,9 @@ export function keys<K>(collection: KeyedCollection<K, any>): $Array<K> {
 }
 
 /**
- * Convert any `collection` with keys to an Array of key value pairs.
+ * Convert any `collection` with keys to an `Array` of key value pairs.
  *
- * Notably the keys of a Set are just its values. The keys of an Array are
+ * Notably the keys of a `Set` are just its values. The keys of an `Array` are
  * its indices.
  *
  * @time O(n)
@@ -113,7 +113,7 @@ export function entries<K, V>(
 }
 
 /**
- * Create an Array of numbers.
+ * Create an `Array` of numbers.
  *
  * The start of the range is inclusive, the end is exclusive. By default
  * increments by 1.
@@ -144,7 +144,7 @@ export function range(
 }
 
 /**
- * Create an Array of numbers.
+ * Create an `Array` of numbers.
  *
  * A version of `Ar.range` where the end is inclusive.
  *
@@ -173,7 +173,7 @@ export function rangeInclusive(
 }
 
 /**
- * Create an Array of numbers.
+ * Create an `Array` of numbers.
  *
  * A version of `Ar.range` where the array of numbers has decreasing order. By
  * default increments by -1.
@@ -204,7 +204,7 @@ export function rangeDescending(
 }
 
 /**
- * Create an Array of numbers.
+ * Create an `Array` of numbers.
  *
  * A version of `Ar.range` where the array of numbers has increasing or
  * decreasing order, depending on given range limits. Both limits are inclusive.
@@ -238,7 +238,7 @@ export function rangeDynamic(
 }
 
 /**
- * Create an Array filled with a `count` of given `value`s.
+ * Create an `Array` filled with a `count` of given `value`s.
  *
  * The `value` will be referenced, not cloned.
  *
@@ -256,7 +256,7 @@ export function repeat<V>(value: V, count: number): $Array<V> {
 }
 
 /**
- * Create an Array filled with `count` results of calling `fn`.
+ * Create an `Array` filled with `count` results of calling `fn`.
  *
  * `fn` takeFirst as the first argument the index where the current invocation's
  * result will be placed.
@@ -275,7 +275,7 @@ export function fill<V>(count: number, fn: number => V): $Array<V> {
 }
 
 /**
- * Create a promise of an Array filled with `count` results of calling `fn`.
+ * Create a promise of an `Array` filled with `count` results of calling `fn`.
  *
  * `fn` takeFirst as the first argument the index where the current invocation's
  * result will be placed.
@@ -293,7 +293,7 @@ export function fillAsync<V>(
 }
 
 /**
- * Create an Array using a `seed` value and a function which given the seed
+ * Create an `Array` using a `seed` value and a function which given the seed
  * returns an item to be contained in the array and a new seed value.
  *
  * To mark the end of the array, `fn` must return `null` or `undefined`.
@@ -320,9 +320,9 @@ export function generate<V, S>(seed: S, fn: S => ?[V, S]): $Array<V> {
 }
 
 /**
- * Convert any `collection` of values to a mutable Array of values.
+ * Convert any `collection` of values to a mutable `Array` of values.
  *
- * If an Array is given it will be cloned.
+ * If an `Array` is given it will be cloned.
  *
  * This function is useful for complicated or performance sensitive computation
  * inside a function. Avoid passing arrays as mutable around your codebase
@@ -340,7 +340,7 @@ export function mutable<V>(collection: Collection<V>): Array<V> {
 /// Check
 
 /**
- * Returns whether given value is an Array.
+ * Returns whether given value is an `Array`.
  *
  * @time O(1)
  * @space O(1)
@@ -352,7 +352,7 @@ export function isArray(argument: mixed): %checks {
 }
 
 /**
- * Returns whether given Arrays are equal.
+ * Returns whether given `Array`s are equal.
  *
  * All items must be strictly equal.
  *
@@ -383,7 +383,7 @@ export function equals<V>(
 }
 
 /**
- * Returns whether given Arrays and any nested collections are equal.
+ * Returns whether given `Array`s and any nested collections are equal.
  *
  * Any contained collections must deeply equal, all other items must be
  * strictly equal.
@@ -439,7 +439,7 @@ export function filter<K, V>(
 }
 
 /**
- * Create a promise of an Array by filtering out values in `collection`
+ * Create a promise of an `Array` by filtering out values in `collection`
  * for which async `predicateFn` returns false.
  *
  * Executes `predicateFn` on all items in `collection` concurrently.
@@ -487,7 +487,7 @@ export function filterNulls<V>(collection: Collection<?V>): $Array<V> {
 }
 
 /**
- * Create an Array of keys corresponding to values passing given `predicateFn`.
+ * Create an `Array` of keys corresponding to values passing given `predicateFn`.
  *
  * @time O(n)
  * @space O(n)
@@ -508,7 +508,7 @@ export function filterKeys<K, V>(
 }
 
 /**
- * Create an Array of values from `collection` with each value included only
+ * Create an `Array` of values from `collection` with each value included only
  * once.
  *
  * @time O(n)
@@ -521,7 +521,7 @@ export function unique<V>(collection: Collection<V>): $Array<V> {
 }
 
 /**
- * Create an Array of values from `collection` with each value included only
+ * Create an `Array` of values from `collection` with each value included only
  * once, where value equivalence is determined by calling `identityFn` on
  * each value. Later values overwrite previous ones.
  *
@@ -538,7 +538,7 @@ export function uniqueBy<K, V>(
 }
 
 /**
- * Create an Array containing the first `n` items of `collection`.
+ * Create an `Array` containing the first `n` items of `collection`.
  *
  * @time O(n)
  * @space O(n)
@@ -550,7 +550,7 @@ export function takeFirst<V>(collection: Collection<V>, n: number): $Array<V> {
 }
 
 /**
- * Create an Array containing all but the first `n` items of `collection`.
+ * Create an `Array` containing all but the first `n` items of `collection`.
  *
  * @time O(n)
  * @space O(n)
@@ -562,7 +562,7 @@ export function dropFirst<V>(collection: Collection<V>, n: number): $Array<V> {
 }
 
 /**
- * Create an Array containing the last `n` items of `collection`.
+ * Create an `Array` containing the last `n` items of `collection`.
  *
  * @time O(n)
  * @space O(n)
@@ -574,7 +574,7 @@ export function takeLast<V>(collection: Collection<V>, n: number): $Array<V> {
 }
 
 /**
- * Create an Array containing all but the last `n` items of `collection`.
+ * Create an `Array` containing all but the last `n` items of `collection`.
  *
  * @time O(n)
  * @space O(n)
@@ -586,7 +586,7 @@ export function dropLast<V>(collection: Collection<V>, n: number): $Array<V> {
 }
 
 /**
- * Create an Array containing all the items of `collection` preceding the item
+ * Create an `Array` containing all the items of `collection` preceding the item
  * for which `predicateFn` returns false.
  *
  * @time O(n)
@@ -609,7 +609,7 @@ export function takeFirstWhile<K, V>(
 }
 
 /**
- * Create an Array containing all the items of `collection` following and
+ * Create an `Array` containing all the items of `collection` following and
  * including the first item for which `predicateFn` returns false.
  *
  * @time O(n)
@@ -633,7 +633,7 @@ export function dropFirstWhile<K, V>(
 }
 
 /**
- * Create an Array containing all the items of `collection` following
+ * Create an `Array` containing all the items of `collection` following
  * the first item when iterating from the end for which `predicateFn`
  * returns false.
  *
@@ -660,7 +660,7 @@ export function takeLastWhile<V>(
 }
 
 /**
- * Create an Array containing all the items of `collection` preceding and
+ * Create an `Array` containing all the items of `collection` preceding and
  * including the first item when iterating from the end for which `predicateFn`
  * returns false.
  *
@@ -689,7 +689,7 @@ export function dropLastWhile<V>(
 /// Divide
 
 /**
- * Create an Array of arrays which are chunks of given `collection` of `size`.
+ * Create an `Array` of arrays which are chunks of given `collection` of `size`.
  *
  * If the `collection` doesn't divide evenly, the final chunk will be smaller
  * than the rest.
@@ -725,7 +725,7 @@ export function chunk<V>(
 }
 
 /**
- * Create a tuple of Arrays containing items of `collection` which match and
+ * Create a tuple of `Array`s containing items of `collection` which match and
  * don't match `predicateFn` respectively.
  *
  * More effecient combination of `Ar.filter` and `Ar.filter` combined
@@ -754,9 +754,9 @@ export function partition<K, V>(
 }
 
 /**
- * Create an Array containing a subset of values in `collection`.
+ * Create an `Array` containing a subset of values in `collection`.
  *
- * Note that this is not a way to clone an Array, if given an Array and indices
+ * Note that this is not a way to clone an Array, if given an `Array` and indices
  * corresponding to its full size it returns the original array.
  *
  * Either index can be negative, in which case they are counted from the end
@@ -805,10 +805,10 @@ export function slice<V>(
 }
 
 /**
- * Create an Array containing a subset of values in `collection` with any given
+ * Create an `Array` containing a subset of values in `collection` with any given
  * `item`s added.
  *
- * Note that unlikely Array.prototype.splice this function returns the new
+ * Note that unlikely `Array`.prototype.splice this function returns the new
  * array, not the deleted items.
  *
  * @time O(n)
@@ -952,7 +952,7 @@ export function flatten<V>(
 type TupleOfValues<Cs> = $TupleMap<Cs, <V>(Collection<V>) => V>;
 
 /**
- * Join `collections` into an Array of tuples of values from each collection.
+ * Join `collections` into an `Array` of tuples of values from each collection.
  *
  * The resulting array has the same length as the smallest given collection.
  * Excess values are ignored.
@@ -986,7 +986,7 @@ export function zip<Cs: $Array<Collection<mixed>>>(
 }
 
 /**
- * Join multiple `collections` into an Array of values resulting form calling
+ * Join multiple `collections` into an `Array` of values resulting form calling
  * `fn` on items from each collection.
  *
  * Note that this function has unusual order of arguments because JavaScript
@@ -1006,7 +1006,7 @@ export function zipWith<I, Cs: $Array<Collection<I>>, O>(
 }
 
 /**
- * Join `collections` into an Array of tuples of values of all combinations
+ * Join `collections` into an `Array` of tuples of values of all combinations
  * from each collection.
  *
  * The resulting array has the length which is the product of the lengths
@@ -1059,7 +1059,7 @@ export function map<KFrom, VFrom, VTo>(
 }
 
 /**
- * Create a promise of an Array by calling given async `fn` on each value of
+ * Create a promise of an `Array` by calling given async `fn` on each value of
  * `collection`.
  *
  * Executes `fn` on all items in `collection` concurrently.
@@ -1129,7 +1129,7 @@ export function mapFlat<KFrom, VFrom, VTo>(
 }
 
 /**
- * Create an Array of values based on a reduction of given `collection`.
+ * Create an `Array` of values based on a reduction of given `collection`.
  *
  * Similar to `Cl.reduce` but instead of returning the final value accumulates
  * all the intermediate accumulators.
@@ -1156,7 +1156,7 @@ export function scan<I, O>(
 /// Order
 
 /**
- * Create an Array containing the items of `collection` in reverse order.
+ * Create an `Array` containing the items of `collection` in reverse order.
  *
  * @time O(n)
  * @space O(n)
@@ -1168,7 +1168,7 @@ export function reverse<V>(collection: Collection<V>): $Array<V> {
 }
 
 /**
- * Create an Array of values in `collection` sorted.
+ * Create an `Array` of values in `collection` sorted.
  *
  * The result of calling `compareFn` on values `a` and `b` determines their
  * order:
@@ -1208,7 +1208,7 @@ export function sort<V>(
 }
 
 /**
- * Create an Array of values in `collection` sorted by the scalar computed
+ * Create an `Array` of values in `collection` sorted by the scalar computed
  * by calling `scalarFn` on each value.
  *
  * The result of calling `compareFn` on scalars `a` and `b` determines the
@@ -1249,7 +1249,7 @@ export function sortBy<V, S>(
 }
 
 /**
- * Create an Array of values in `collection` sorted.
+ * Create an `Array` of values in `collection` sorted.
  *
  * This sort doesn't preserve the order of elements when `compareFn` returns 0
  * which makes it more memory efficient.

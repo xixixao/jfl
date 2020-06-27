@@ -23,7 +23,7 @@ function m<K, V>(map: $Map<K, V>): $Map<K, V> {
 /// Construct
 
 /**
- * Create a Map.
+ * Create a `Map`.
  *
  * If your keys aren't strings, prefer `Mp.of`.
  *
@@ -39,7 +39,7 @@ export function $Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
 }
 
 /**
- * Create a Map from given `pairs` of keys and values.
+ * Create a `Map` from given `pairs` of keys and values.
  *
  * @ex Mp.of([0, 2], [4, 2])
  * @see Mp, Mp.from, Mp.fromEntries
@@ -49,9 +49,9 @@ export function of<K, V>(...pairs: $Array<[K, V]>): $Map<K, V> {
 }
 
 /**
- * Convert any keyed `collection` to a Map.
+ * Convert any keyed `collection` to a `Map`.
  *
- * Note that this is not a way to clone a Map, if passed a Map, the same
+ * Note that this is not a way to clone a Map, if passed a `Map`, the same
  * map will be returned.
  *
  * @ex Mp.from([1, 2, 3])
@@ -66,7 +66,7 @@ export function from<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
 }
 
 /**
- * Convert any keyed `collection` of promises to a Map.
+ * Convert any keyed `collection` of promises to a `Map`.
  *
  * @ex Mp.fromAsync([(async () => 1)(), (async () => 2)()])
  * @see Mp.from, Ar.fromAsync
@@ -85,7 +85,7 @@ export async function fromAsync<K, V>(
 }
 
 /**
- * Create a Map where each value comes from `collection` and its key is
+ * Create a `Map` where each value comes from `collection` and its key is
  * the result of calling `getKey` on it.
  * 
  * @time O(n)
@@ -105,7 +105,7 @@ export function fromValues<KFrom, KTo, VTo>(
 }
 
 /**
- * Create a Map where each key comes from `collection` and its value is
+ * Create a `Map` where each key comes from `collection` and its value is
  * the result of calling `getValue` on it.
  * 
  * @time O(n)
@@ -125,7 +125,7 @@ export function fromKeys<KFrom, KTo, VTo>(
 }
 
 /**
- * Create a promise of a Map where each key comes from `collection` and
+ * Create a promise of a `Map` where each key comes from `collection` and
  * its value is the result of calling `getValue` on it.
  * 
  * @time O(n)
@@ -148,7 +148,7 @@ export async function fromKeysAsync<KFrom, KTo, VTo>(
 }
 
 /**
- * Create a Map from a `collection` of entries, i.e. (key, value) pairs.
+ * Create a `Map` from a `collection` of entries, i.e. (key, value) pairs.
  * 
  * @time O(n)
  * @space O(n)
@@ -160,13 +160,14 @@ export function fromEntries<K, V>(collection: Collection<[K, V]>): $Map<K, V> {
 }
 
 /**
- * Create a Map from given `keys` and `values`.
+ * Create a `Map` from given `keys` and `values`.
  *
  * If there are more `keys` than `values` or vice versa, ignores the
  * excess items.
  *
+ * @ex Mp.unzip([1, 2], [3, 4]) // $Mp({1: 3, 2: 4})
  * @alias listsToMap, fromZip, associate
- * @see Mp.fromEntries
+ * @see Mp.fromEntries, Mp.pull
  */
 export function unzip<K, V>(
   keys: Collection<K>,
@@ -187,7 +188,7 @@ export function unzip<K, V>(
 }
 
 /**
- * Create a JavaScript Object from a string-keyed Map.
+ * Create an `Object` from a string-keyed `Map`.
  *
  * @ex Mp.toObject(Mp({a: 1, b: 2})) // {a: 1, b: 2}
  * @see $Mp
@@ -203,12 +204,11 @@ export function toObject<K: string, V>(
 }
 
 /**
- * Convert any keyed `collection` to a mutable Map.
+ * Convert any keyed `collection` to a mutable `Map`.
  *
- * If a Map is given, it will be cloned.
+ * If a `Map` is given, it will be cloned.
  *
- * @ex Mp.from([1, 2, 3])
- * @ex Mp.from(Set(1, 2, 3))
+ * @ex Mp.mutable($Mp({a: 1, b: 2})) // Map {a => 1, b => 2}
  * @see Mp.of, Mp.fromEntries
  */
 export function mutable<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
@@ -218,10 +218,7 @@ export function mutable<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
 /// Check
 
 /**
- * Returns whether given value is a Map.
- *
- * Use `instanceof Map` directly if you need the type system to pick up
- * the refinement.
+ * Returns whether given value is a `Map`.
  *
  * @ex Mp.isMap([1, 2, 3])
  * @see St.isSet, Ar.isArray
@@ -231,7 +228,7 @@ export function isMap(argument: mixed): %checks {
 }
 
 /**
- * Returns whether given Maps are equal.
+ * Returns whether given `Map`s are equal.
  *
  * All values and keys must be strictly equal.
  *
@@ -265,7 +262,7 @@ export function equals<K, V>(
 }
 
 /**
- * Returns whether given Maps contain the same key/value pairs.
+ * Returns whether given `Map`s contain the same key/value pairs.
  *
  * All values and keys must be strictly equal.
  *
@@ -296,7 +293,7 @@ export function equalsOrderIgnored<K, V>(
 }
 
 /**
- * Returns whether given Maps are equal.
+ * Returns whether given `Map`s are equal.
  *
  * Any collection values or keys must deeply equal, all other values
  * and keys must be strictly equal.
@@ -337,9 +334,11 @@ export function equalsNested<K, V>(
 /// Combine
 
 /**
- * Create a new Map by adding or replacing `value` under `key` in given
+ * Create a new `Map` by adding or replacing `value` under `key` in given
  * keyed `collection`.
  *
+ * @time O(1)
+ * @space O(1)
  * @ex Mp.set(Mp({a: 1}), 'b', 2)
  * @see Mp.merge
  */
@@ -354,7 +353,7 @@ export function set<K, V>(
 }
 
 /**
- * Create a new Map by merging all given `collections`. Later values will
+ * Create a new `Map` by merging all given `collections`. Later values will
  * override earlier values.
  *
  * @ex Mp.merge(Mp({a: 1, b: 2}), Mp({a: 2, c: 3}))
@@ -424,7 +423,7 @@ export function filter<K, V>(
 
 
 /**
- * Create a new map by calling given `fn` on each value and key of `collection`.
+ * Create a new `Map` by calling given `fn` on each value and key of `collection`.
  *
  * @ex Mp.map([1, 2], (x, i) => x * 2)
  * @see Mp.fromValues
@@ -441,7 +440,7 @@ export function map<KFrom, VFrom, VTo>(
 }
 
 /**
- * Create a promise of a Map by calling given async `fn` on each value and key
+ * Create a promise of a `Map` by calling given async `fn` on each value and key
  * of `collection`.
  *
  * Executes `fn` on all items in `collection` concurrently.
@@ -473,7 +472,7 @@ export async function mapAsync<KFrom, VFrom, VTo>(
 // TODO: mapAsync
 
 /**
- * Create a new map by calling given `fn` on each key and value of
+ * Create a new `Map` by calling given `fn` on each key and value of
  * `collection`.
  *
  * `fn` must return new entries to populate the map.
@@ -510,10 +509,10 @@ export function pull<KFrom, VFrom, KTo, VTo>(
 // given JS doesn't have the arraykey limitation
 
 /**
- * Create a new map by grouping values from `collection` for which `fn`
+ * Create a new `Map` by grouping values from `collection` for which `fn`
  * returns the same key.
  *
- * The new map has Arrays of original values as its values.
+ * The new `Map` has `Array`s of original values as its values.
  * Values for which `fn` returns null or undefined are ommited.
  *
  * @ex Mp.group([1, 2, 3], n => Mth.isOdd(n))
