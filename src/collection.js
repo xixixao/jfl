@@ -55,10 +55,7 @@ export function equals<V, C: Collection<V>>(
  * @ex Cl.equalsNested([[1], [2], 3], [[1], [2], 3]) // true
  * @see Ar.equalsNested, St.equalsNested, Mp.equalsNested
  */
-export function equalsNested<V, C: mixed>(
-  first: C,
-  ...rest: $Array<C>
-): boolean {
+export function equalsNested<C: mixed>(first: C, ...rest: $Array<C>): boolean {
   const isArray = Ar.isArray(first);
   const isSet = St.isSet(first);
   const isMap = Mp.isMap(first);

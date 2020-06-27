@@ -1,6 +1,6 @@
 // @flow
 
-import {Ar, Cl, Str, invariant, nullthrows} from '../src/index';
+import {Cl, Str, invariant, nullthrows} from '../src/index';
 
 const sidebar = nullthrows(document.querySelector('.sidebar'));
 const searchBar = document.querySelector('.sidebarSearch input');

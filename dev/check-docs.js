@@ -3,9 +3,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {promisify} from 'util';
+import {Ar, Cl, Mp, nullthrows, St, Str} from '../src';
 const readdir = promisify(fs.readdir);
 const readFile = promisify(fs.readFile);
-import {Ar, St, Cl, Mp, REx, nullthrows, Str} from '../src';
 
 const srcDirectoryPath = path.join(__dirname, '../src');
 (async () => {

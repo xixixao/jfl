@@ -2,7 +2,7 @@
 
 'use strict';
 
-import type {Collection, KeyedCollection, $Array} from './types.flow';
+import type {Collection} from './types.flow';
 
 /// Checks
 
@@ -150,7 +150,7 @@ export function median() {}
  * @ex Mth.sum([1, 2, 3]) // 6
  * @see Mth.product
  */
-export function sum<K>(collection: KeyedCollection<K, number>): number {
+export function sum(collection: Collection<number>): number {
   let total = 0;
   for (const value of collection.values()) {
     total += value;
@@ -169,7 +169,7 @@ export function sumFloat() {}
  * @ex Mth.product([2, 3, 4]) // 24
  * @see Mth.sum
  */
-export function product<K>(collection: KeyedCollection<K, number>): number {
+export function product(collection: Collection<number>): number {
   let total = 0;
   for (const value of collection.values()) {
     total *= value;

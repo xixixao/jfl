@@ -864,7 +864,7 @@ type TupleOfValues<Cs> = $TupleMap<Cs, <V>(Collection<V>) => V>;
  * @alias zipAll
  * @see Ar.zipWith
  */
-export function zip<V, Cs: $Array<Collection<mixed>>>(
+export function zip<Cs: $Array<Collection<mixed>>>(
   ...collections: Cs
 ): $Array<TupleOfValues<Cs>> {
   if (collections.length < 1) {
@@ -919,7 +919,7 @@ export function zipWith<I, Cs: $Array<Collection<I>>, O>(
  * @alias zipAll
  * @see Ar.zipWith
  */
-export function product<V, Cs: $Array<Collection<mixed>>>(
+export function product<Cs: $Array<Collection<mixed>>>(
   ...collections: Cs
 ): $Array<TupleOfValues<Cs>> {
   if (collections.length < 1) {
@@ -1141,7 +1141,7 @@ export function sortBy<V, S>(
     i++;
   }
   result
-    .sort(([aItem, a, ai], [bItem, b, bi]) => compareFn(a, b) || ai - bi)
+    .sort(([_aItem, a, ai], [_bItem, b, bi]) => compareFn(a, b) || ai - bi)
     .forEach(([item], i) => {
       (result: any)[i] = item;
     });

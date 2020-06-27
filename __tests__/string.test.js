@@ -1,12 +1,9 @@
 // @flow
 
-const {Ar, Cl, St, $St, Mp, $Mp, Mth, Str} = require('..');
-const {setup} = require('../dev/test-util.js');
+import {Cl, Str} from '../src';
+import {setup} from '../dev/test-util.js';
 
-const {test, tru, eq, eqq, eqqq, not, nil, throws} = setup(
-  Cl.equals,
-  Cl.equalsNested,
-);
+const {test, tru, eq, eqqq, throws} = setup(Cl.equals, Cl.equalsNested);
 
 test('ignoreCase', () => {
   tru(Str.ignoreCase('abc', 'AbC', Str.equals));

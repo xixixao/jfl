@@ -1,9 +1,9 @@
 // @flow
 
-const {Ar, Cl, St, $St, Mp, $Mp, Mth} = require('..');
-const {setup} = require('../dev/test-util.js');
+import {$Mp, $St, Cl, Mp, Mth, St} from '..';
+import {setup} from '../dev/test-util.js';
 
-const {test, tru, eq, eqq, eqqq, not, nil, throws} = setup(
+const {test, tru, eq, eqqq, not, nil, throws} = setup(
   Cl.equals,
   Cl.equalsNested,
 );

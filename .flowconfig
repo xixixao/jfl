@@ -9,5 +9,5 @@
 [options]
 esproposal.export_star_as=enable
 esproposal.optional_chaining=enable
-
+exact_by_default=true
 [strict]

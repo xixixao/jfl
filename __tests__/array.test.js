@@ -1,7 +1,7 @@
 // @flow
 
-import {Ar, $Ar, Cl, St, $St, Mp, $Mp, Mth} from '..';
-const {setup} = require('../dev/test-util.js');
+import {$Ar, $Mp, $St, Ar, Cl, Mth} from '..';
+import {setup} from '../dev/test-util.js';
 
 const {test, tru, eq, eqq, eqqq, not, throws} = setup(
   Ar.equals,

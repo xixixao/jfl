@@ -1,13 +1,9 @@
 // @flow
 
-import type {Collection, KeyedCollection, $Array} from './types.flow';
-
-import {isRegExp} from './regexp';
 import * as Ar from './array';
-import * as Cl from './collection';
-import * as Mth from './math';
 import * as REx from './regexp';
-import * as St from './set';
+import {isRegExp} from './regexp';
+import type {$Array, Collection} from './types.flow';
 
 /// Construct
 
@@ -336,7 +332,7 @@ export function ignoreCase(
 export function countMatches(string: string, search: string | RegExp): number {
   const result = string.matchAll(search);
   let count = 0;
-  for (let value of result) {
+  for (let _ of result) {
     count++;
   }
   return count;
