@@ -28,7 +28,7 @@ Cl.forEach(moduleLinks, link => {
 invariant(searchBar instanceof HTMLInputElement);
 searchBar.addEventListener('input', onSearchUpdate);
 searchBarCancel.addEventListener('click', cancelSearch);
-searchBar.addEventListener('keyup', (event: KeyboardEvent) => {
+nullthrows(document.body).addEventListener('keyup', (event: KeyboardEvent) => {
   if (event.code === 'Escape') {
     cancelSearch();
     searchBar.blur();
