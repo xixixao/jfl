@@ -84,9 +84,9 @@ export function equalsNested<C: mixed>(first: C, ...rest: $Array<C>): boolean {
  *
  * @time O(1)
  * @space O(1)
- * @ex Cl.isEmpty(Ar()) // true
- * @ex Cl.isEmpty(Mp()) // true
- * @ex Cl.isEmpty(St()) // true
+ * @ex Cl.isEmpty($Ar()) // true
+ * @ex Cl.isEmpty($Mp()) // true
+ * @ex Cl.isEmpty($St()) // true
  * @see Cl.count, Str.isEmpty
  */
 export function isEmpty<V>(collection: Collection<V>): boolean {
@@ -99,7 +99,7 @@ export function isEmpty<V>(collection: Collection<V>): boolean {
  * @time O(1)
  * @space O(1)
  * @ex Cl.count([1, 2, 3]) // 3
- * @ex Cl.count(Mp({a: 1, b: 3})) // 2
+ * @ex Cl.count($Mp({a: 1, b: 3})) // 2
  * @alias length, size
  * @see Cl.isEmpty, Str.length
  */
@@ -114,8 +114,8 @@ export function count<V>(collection: Collection<V>): number {
  * @time O(n) (O(1) for Sets)
  * @space O(1)
  * @ex Cl.contains([2, 4, 3], 1) // true
- * @ex Cl.contains(St(2, 4, 3), 4) // true
- * @ex Cl.contains(Mp({a: 1, b: 3}), 1) // true
+ * @ex Cl.contains($St(2, 4, 3), 4) // true
+ * @ex Cl.contains($Mp({a: 1, b: 3}), 1) // true
  * @see Cl.findKey
  */
 export function contains<V>(collection: Collection<V>, value: V): boolean {
@@ -136,8 +136,8 @@ export function contains<V>(collection: Collection<V>, value: V): boolean {
  * @time O(1)
  * @space O(1)
  * @ex Cl.contains([2, 4, 3], 1)
- * @ex Cl.contains(St(2, 4, 3), 4)
- * @ex Cl.contains(Mp({a: 1, b: 3}), 'a')
+ * @ex Cl.contains($St(2, 4, 3), 4)
+ * @ex Cl.contains($Mp({a: 1, b: 3}), 'a')
  * @see Cl.findKey
  */
 export function containsKey<K, V>(
@@ -324,7 +324,7 @@ export function findKeyX<K, V>(
  *
  * @time O(1)
  * @space O(1)
- * @ex Cl.first(Ar()) // null
+ * @ex Cl.first($Ar()) // null
  * @ex Cl.first([1, 3]) // 1
  * @see Cl.firstX
  */
@@ -383,7 +383,7 @@ export function onlyX<V>(collection: Collection<V>): V {
  *
  * @time O(n) (O(1) for Arrays)
  * @space O(1)
- * @ex Cl.last(Ar()) // null
+ * @ex Cl.last($Ar()) // null
  * @ex Cl.last([1, 3]) // 3
  * @see Cl.lastx
  */
@@ -428,9 +428,9 @@ export function lastX<V>(collection: Collection<V>): V {
  *
  * @time O(n) (O(1) for Arrays)
  * @space O(1)
- * @ex Cl.at(St(), 2) // null
- * @ex Cl.at(St('a', 'b', 'c'), 2) // 'c'
- * @see Cl.atx, Cl.contains, Ar.get
+ * @ex Cl.at($St(), 2) // null
+ * @ex Cl.at($St('a', 'b', 'c'), 2) // 'c'
+ * @see Cl.atx, Cl.contains, Mp.getX
  */
 export function at<V>(collection: Collection<V>, index: number): ?V {
   if (Array.isArray(collection)) {
@@ -451,8 +451,8 @@ export function at<V>(collection: Collection<V>, index: number): ?V {
  *
  * @time O(n) (O(1) for Arrays)
  * @space O(1)
- * @ex Cl.atX(St('a', 'b', 'c'), 2) // 'c'
- * @see Cl.at
+ * @ex Cl.atX($St('a', 'b', 'c'), 2) // 'c'
+ * @see Cl.at, Mp.getX
  */
 export function atX<V>(collection: Collection<V>, index: number): V {
   if (isEmpty(collection)) {
@@ -523,8 +523,8 @@ export function atDynamic<V>(collection: Collection<V>, index: number): ?V {
  *
  * @time O(1)
  * @space O(1)
- * @ex Cl.firstKey(Mp()) // null
- * @ex Cl.firstKey(Mp({a: 1, b: 2})) // 'a'
+ * @ex Cl.firstKey($Mp()) // null
+ * @ex Cl.firstKey($Mp({a: 1, b: 2})) // 'a'
  * @see Cl.firstKeyX
  */
 export function firstKey<K, V>(collection: KeyedCollection<K, V>): ?K {
@@ -539,7 +539,7 @@ export function firstKey<K, V>(collection: KeyedCollection<K, V>): ?K {
  *
  * @time O(1)
  * @space O(1)
- * @ex Cl.firstKeyX(Mp({a: 1, b: 2})) // 1
+ * @ex Cl.firstKeyX($Mp({a: 1, b: 2})) // 1
  * @see Cl.firstKey
  */
 export function firstKeyX<K, V>(collection: KeyedCollection<K, V>): K {
@@ -554,8 +554,8 @@ export function firstKeyX<K, V>(collection: KeyedCollection<K, V>): K {
  *
  * @time O(n)
  * @space O(1)
- * @ex Cl.lastKey(Mp()) // null
- * @ex Cl.lastKey(Mp({a: 1, b: 2})) // 'b'
+ * @ex Cl.lastKey($Mp()) // null
+ * @ex Cl.lastKey($Mp({a: 1, b: 2})) // 'b'
  * @see Cl.lastKeyX
  */
 export function lastKey<K, V>(collection: KeyedCollection<K, V>): ?K {
@@ -571,7 +571,7 @@ export function lastKey<K, V>(collection: KeyedCollection<K, V>): ?K {
  *
  * @time O(n)
  * @space O(1)
- * @ex Cl.lastKeyX(Mp({a: 1, b: 2})) // 'b'
+ * @ex Cl.lastKeyX($Mp({a: 1, b: 2})) // 'b'
  * @see Cl.lastKey
  */
 export function lastKeyX<K, V>(collection: KeyedCollection<K, V>): K {

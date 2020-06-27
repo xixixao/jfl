@@ -361,6 +361,25 @@ export function merge<K, V>(
 
 /// Select
 
+/**
+ * Returns the value in `map` for given `key` or throws.
+ *
+ * If you don't know whether the map contains the key use `Map.prototype.get`.
+ *
+ * @time O(1)
+ * @space O(1)
+ * @ex Mp.getX($Mp({a: 2}), 'a') // 2
+ * @see Cl.atx
+ */
+export function getX<K, V>(map: $Map<K, V>, key: K): V {
+  if (!map.has(key)) {
+    throw new Error(
+      `Expected given map to have given key but it didn't.`,
+    );
+  }
+  return (map.get(key): any);
+}
+
 // TODO: diffByKey
 // TODO: dropFirst
 // TODO: takeFirst
@@ -461,14 +480,14 @@ export function mapToEntries<KFrom, VFrom, KTo, VTo>(
   return m(result);
 }
 
-export function pull<VFrom, KTo, VTo>(
-  collection: Collection<VFrom>,
-  keyFn: VFrom => KTo,
-  valueFn: VFrom => VTo,
+export function pull<KFrom, VFrom, KTo, VTo>(
+  collection: KeyedCollection<KFrom, VFrom>,
+  keyFn: (VFrom, KFrom) => KTo,
+  valueFn: (VFrom, KFrom) => VTo,
 ): $Map<KTo, VTo> {
   const result = new Map();
-  for (const item of collection.values()) {
-    result.set(keyFn(item), valueFn(item));
+  for (const [key, item] of collection.entries()) {
+    result.set(keyFn(item, key), valueFn(item, key));
   }
   return m(result);
 }
@@ -508,7 +527,16 @@ export function groupBy<V, KTo>(
 // TODO: countValues
 // TODO: flatten
 // TODO: fillKeys
-// TODO: flip
+
+export function flip<K, V>(
+  collection: KeyedCollection<K, V>,
+): $Map<V, K> {
+  const result = new Map();
+  for (const [key, item] of collection.entries()) {
+    result.set(item, key);
+  }
+  return m(result);
+}
 
 /// Divide
 

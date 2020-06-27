@@ -1,11 +1,10 @@
 // @flow
 
-import type {$Array} from '../src/types.flow';
-
 import * as fs from 'fs';
 import * as path from 'path';
 import {promisify} from 'util';
-import {Ar, Cl, REx, Str, nullthrows} from '../src';
+import {Ar, Mp, REx, Str} from '../src';
+import type {$Array} from '../src/types.flow';
 
 type ParsedSource = $Array<{|
   moduleAlias: ?string,
@@ -50,14 +49,18 @@ async function loadAndParseModuleAsync(moduleName) {
   const moduleSource = await readFileX(sourcePath);
   const testPath = path.join(testDirectoryPath, moduleName + '.test.js');
   const testSource = (await readFile(testPath)) ?? '';
-  const testLines = Str.splitLines(testSource);
+  const testIndex = parseTestIndex(testSource);
   const moduleDoc = parseModuleDoc(moduleSource);
-  const moduleLines = Str.splitLines(moduleSource);
+  const moduleFunctionIndex = parseFunctionIndex(moduleSource);
   let $$ = moduleSource;
   $$ = Str.matchEvery($$, /\/\/\/ (\w+)(((\s|\S)(?!\/\/\/))*)/);
   const sections = Ar.map($$, ([_, sectionName, sectionSource]) => ({
     sectionName,
-    functions: parseSectionFunctions(moduleLines, testLines, sectionSource),
+    functions: parseSectionFunctions(
+      moduleFunctionIndex,
+      testIndex,
+      sectionSource,
+    ),
   }));
   const functions = Ar.mapFlat(sections, ({functions}) => functions);
   return {moduleDoc, moduleSource, sections, functions};
@@ -69,7 +72,28 @@ function parseModuleDoc(moduleSource) {
   return parseDoc(doc);
 }
 
-function parseSectionFunctions(moduleLines, testLines, sectionSource) {
+function parseFunctionIndex(moduleSource) {
+  return parseToIndex(moduleSource, /export (?:async )?function (\w+)/);
+}
+
+function parseTestIndex(testSource) {
+  return parseToIndex(testSource, /test\('(\w+)/);
+}
+
+function parseToIndex(source, pattern) {
+  return Mp.fromEntries(
+    Ar.mapMaybe(Str.splitLines(source), (line, index) => {
+      const match = Str.matchFirst(line, pattern);
+      if (match == null) {
+        return null;
+      }
+      const [_, functionName] = match;
+      return [functionName, index];
+    }),
+  );
+}
+
+function parseSectionFunctions(moduleFunctionIndex, testIndex, sectionSource) {
   let $$ = sectionSource;
   $$ = Str.matchEvery(
     $$,
@@ -83,18 +107,11 @@ function parseSectionFunctions(moduleLines, testLines, sectionSource) {
     doc: parseDoc(doc),
     isAsync: isAsync != null,
     functionName,
-    // Yeah this is slow, we're reaching limits of this hacky parsing
-    lineNumber: nullthrows(
-      findLineIncludes(moduleLines, `function ${functionName}`),
-    ),
-    testLineNumber: findLineIncludes(testLines, `test('${functionName}`),
+    lineNumber: Mp.getX(moduleFunctionIndex, functionName),
+    testLineNumber: testIndex.get(functionName),
     signature:
       (isAsync != null ? 'async function ' : '') + functionName + params,
   }));
-}
-
-function findLineIncludes(lines, search) {
-  return Cl.findKey(lines, line => Str.includes(line, search));
 }
 
 function parseDoc(doc) {
