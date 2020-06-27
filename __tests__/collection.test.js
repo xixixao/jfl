@@ -1,12 +1,7 @@
 // @flow
 
 import {$Mp, $St, Cl, Mp, Mth, St} from '..';
-import {setup} from '../dev/test-util.js';
-
-const {test, tru, eq, eqqq, not, nil, throws} = setup(
-  Cl.equals,
-  Cl.equalsNested,
-);
+import {test, tru, eq, is, not, nil, throws} from '../dev/test-setup.js';
 
 test('equals', () => {
   tru(Cl.equals([1, 2, 3], [1, 2, 3]));
@@ -51,12 +46,12 @@ test('isEmpty', () => {
 });
 
 test('count', () => {
-  eqqq(Cl.count([]), 0);
-  eqqq(Cl.count($St()), 0);
-  eqqq(Cl.count($Mp()), 0);
-  eqqq(Cl.count(['a', 'b']), 2);
-  eqqq(Cl.count($St('a', 'b')), 2);
-  eqqq(Cl.count($Mp({a: 'adam', b: 'boris'})), 2);
+  is(Cl.count([]), 0);
+  is(Cl.count($St()), 0);
+  is(Cl.count($Mp()), 0);
+  is(Cl.count(['a', 'b']), 2);
+  is(Cl.count($St('a', 'b')), 2);
+  is(Cl.count($Mp({a: 'adam', b: 'boris'})), 2);
 });
 
 test('contains', () => {
@@ -113,15 +108,15 @@ test('find', () => {
   nil(Cl.find([2, 4, 8], x => Mth.isOdd(x)));
   nil(Cl.find($St(2, 4, 8), x => Mth.isOdd(x)));
   nil(Cl.find($Mp({k: 2, m: 4, n: 8}), x => Mth.isOdd(x)));
-  eqqq(
+  is(
     Cl.find([2, 3, 8], x => Mth.isOdd(x)),
     3,
   );
-  eqqq(
+  is(
     Cl.find($St(2, 3, 8), x => Mth.isOdd(x)),
     3,
   );
-  eqqq(
+  is(
     Cl.find($Mp({k: 2, m: 3, n: 8}), x => Mth.isOdd(x)),
     3,
   );
@@ -134,15 +129,15 @@ test('findX', () => {
   throws(() => Cl.findX([2, 4, 8], x => Mth.isOdd(x)));
   throws(() => Cl.findX($St(2, 4, 8), x => Mth.isOdd(x)));
   throws(() => Cl.findX($Mp({k: 2, m: 4, n: 8}), x => Mth.isOdd(x)));
-  eqqq(
+  is(
     Cl.findX([2, 3, 8], x => Mth.isOdd(x)),
     3,
   );
-  eqqq(
+  is(
     Cl.findX($St(2, 3, 8), x => Mth.isOdd(x)),
     3,
   );
-  eqqq(
+  is(
     Cl.findX($Mp({k: 2, m: 3, n: 8}), x => Mth.isOdd(x)),
     3,
   );
@@ -155,15 +150,15 @@ test('findKey', () => {
   nil(Cl.findKey([2, 4, 8], x => Mth.isOdd(x)));
   nil(Cl.findKey($St(2, 4, 8), x => Mth.isOdd(x)));
   nil(Cl.findKey($Mp({k: 2, m: 4, n: 8}), x => Mth.isOdd(x)));
-  eqqq(
+  is(
     Cl.findKey([2, 3, 8], x => Mth.isOdd(x)),
     1,
   );
-  eqqq(
+  is(
     Cl.findKey($St(2, 3, 8), x => Mth.isOdd(x)),
     3,
   );
-  eqqq(
+  is(
     Cl.findKey($Mp({k: 2, m: 3, n: 8}), x => Mth.isOdd(x)),
     'm',
   );
@@ -176,15 +171,15 @@ test('findKeyX', () => {
   throws(() => Cl.findKeyX([2, 4, 8], x => Mth.isOdd(x)));
   throws(() => Cl.findKeyX($St(2, 4, 8), x => Mth.isOdd(x)));
   throws(() => Cl.findKeyX($Mp({k: 2, m: 4, n: 8}), x => Mth.isOdd(x)));
-  eqqq(
+  is(
     Cl.findKeyX([2, 3, 8], x => Mth.isOdd(x)),
     1,
   );
-  eqqq(
+  is(
     Cl.findKeyX($St(2, 3, 8), x => Mth.isOdd(x)),
     3,
   );
-  eqqq(
+  is(
     Cl.findKeyX($Mp({k: 2, m: 3, n: 8}), x => Mth.isOdd(x)),
     'm',
   );
@@ -194,18 +189,18 @@ test('first', () => {
   nil(Cl.first([]));
   nil(Cl.first($St()));
   nil(Cl.first($Mp()));
-  eqqq(Cl.first(['a', 'b', 'c']), 'a');
-  eqqq(Cl.first($St('a', 'b', 'c')), 'a');
-  eqqq(Cl.first($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'adam');
+  is(Cl.first(['a', 'b', 'c']), 'a');
+  is(Cl.first($St('a', 'b', 'c')), 'a');
+  is(Cl.first($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'adam');
 });
 
 test('firstX', () => {
   throws(() => Cl.firstX([]));
   throws(() => Cl.firstX($St()));
   throws(() => Cl.firstX($Mp()));
-  eqqq(Cl.firstX(['a', 'b', 'c']), 'a');
-  eqqq(Cl.firstX($St('a', 'b', 'c')), 'a');
-  eqqq(Cl.firstX($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'adam');
+  is(Cl.firstX(['a', 'b', 'c']), 'a');
+  is(Cl.firstX($St('a', 'b', 'c')), 'a');
+  is(Cl.firstX($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'adam');
 });
 
 test('onlyX', () => {
@@ -215,81 +210,81 @@ test('onlyX', () => {
   throws(() => Cl.onlyX(['a', 'b', 'c']));
   throws(() => Cl.onlyX($St('a', 'b', 'c')));
   throws(() => Cl.onlyX($Mp({k: 'adam', m: 'boris', n: 'cecil'})));
-  eqqq(Cl.onlyX(['b']), 'b');
-  eqqq(Cl.onlyX($St('b')), 'b');
-  eqqq(Cl.onlyX($Mp({k: 'boris'})), 'boris');
+  is(Cl.onlyX(['b']), 'b');
+  is(Cl.onlyX($St('b')), 'b');
+  is(Cl.onlyX($Mp({k: 'boris'})), 'boris');
 });
 
 test('last', () => {
   nil(Cl.last([]));
   nil(Cl.last($St()));
   nil(Cl.last($Mp()));
-  eqqq(Cl.last(['a', 'b', 'c']), 'c');
-  eqqq(Cl.last($St('a', 'b', 'c')), 'c');
-  eqqq(Cl.last($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'cecil');
+  is(Cl.last(['a', 'b', 'c']), 'c');
+  is(Cl.last($St('a', 'b', 'c')), 'c');
+  is(Cl.last($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'cecil');
 });
 
 test('lastX', () => {
   throws(() => Cl.lastX([]));
   throws(() => Cl.lastX($St()));
   throws(() => Cl.lastX($Mp()));
-  eqqq(Cl.lastX(['a', 'b', 'c']), 'c');
-  eqqq(Cl.lastX($St('a', 'b', 'c')), 'c');
-  eqqq(Cl.lastX($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'cecil');
+  is(Cl.lastX(['a', 'b', 'c']), 'c');
+  is(Cl.lastX($St('a', 'b', 'c')), 'c');
+  is(Cl.lastX($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'cecil');
 });
 
 test('at', () => {
   nil(Cl.at([], 1));
   nil(Cl.at($St(), 1));
   nil(Cl.at($Mp(), 1));
-  eqqq(Cl.at(['a', 'b', 'c'], 1), 'b');
-  eqqq(Cl.at($St('a', 'b', 'c'), 1), 'b');
-  eqqq(Cl.at($Mp({k: 'adam', m: 'boris', n: 'cecil'}), 1), 'boris');
+  is(Cl.at(['a', 'b', 'c'], 1), 'b');
+  is(Cl.at($St('a', 'b', 'c'), 1), 'b');
+  is(Cl.at($Mp({k: 'adam', m: 'boris', n: 'cecil'}), 1), 'boris');
 });
 
 test('atX', () => {
   throws(() => Cl.atX([], 1));
   throws(() => Cl.atX($St(), 1));
   throws(() => Cl.atX($Mp(), 1));
-  eqqq(Cl.atX(['a', 'b', 'c'], 1), 'b');
-  eqqq(Cl.atX($St('a', 'b', 'c'), 1), 'b');
-  eqqq(Cl.atX($Mp({k: 'adam', m: 'boris', n: 'cecil'}), 1), 'boris');
+  is(Cl.atX(['a', 'b', 'c'], 1), 'b');
+  is(Cl.atX($St('a', 'b', 'c'), 1), 'b');
+  is(Cl.atX($Mp({k: 'adam', m: 'boris', n: 'cecil'}), 1), 'boris');
 });
 
 test('firstKey', () => {
   nil(Cl.firstKey([]));
   nil(Cl.firstKey($St()));
   nil(Cl.firstKey($Mp()));
-  eqqq(Cl.firstKey(['a', 'b', 'c']), 0);
-  eqqq(Cl.firstKey($St('a', 'b', 'c')), 'a');
-  eqqq(Cl.firstKey($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'k');
+  is(Cl.firstKey(['a', 'b', 'c']), 0);
+  is(Cl.firstKey($St('a', 'b', 'c')), 'a');
+  is(Cl.firstKey($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'k');
 });
 
 test('firstKeyX', () => {
   throws(() => Cl.firstKeyX([]));
   throws(() => Cl.firstKeyX($St()));
   throws(() => Cl.firstKeyX($Mp()));
-  eqqq(Cl.firstKeyX(['a', 'b', 'c']), 0);
-  eqqq(Cl.firstKeyX($St('a', 'b', 'c')), 'a');
-  eqqq(Cl.firstKeyX($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'k');
+  is(Cl.firstKeyX(['a', 'b', 'c']), 0);
+  is(Cl.firstKeyX($St('a', 'b', 'c')), 'a');
+  is(Cl.firstKeyX($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'k');
 });
 
 test('lastKey', () => {
   nil(Cl.lastKey([]));
   nil(Cl.lastKey($St()));
   nil(Cl.lastKey($Mp()));
-  eqqq(Cl.lastKey(['a', 'b', 'c']), 2);
-  eqqq(Cl.lastKey($St('a', 'b', 'c')), 'c');
-  eqqq(Cl.lastKey($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'n');
+  is(Cl.lastKey(['a', 'b', 'c']), 2);
+  is(Cl.lastKey($St('a', 'b', 'c')), 'c');
+  is(Cl.lastKey($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'n');
 });
 
 test('lastKeyX', () => {
   throws(() => Cl.lastKeyX([]));
   throws(() => Cl.lastKeyX($St()));
   throws(() => Cl.lastKeyX($Mp()));
-  eqqq(Cl.lastKeyX(['a', 'b', 'c']), 2);
-  eqqq(Cl.lastKeyX($St('a', 'b', 'c')), 'c');
-  eqqq(Cl.lastKeyX($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'n');
+  is(Cl.lastKeyX(['a', 'b', 'c']), 2);
+  is(Cl.lastKeyX($St('a', 'b', 'c')), 'c');
+  is(Cl.lastKeyX($Mp({k: 'adam', m: 'boris', n: 'cecil'})), 'n');
 });
 
 test('forEach', () => {
@@ -298,30 +293,30 @@ test('forEach', () => {
   Cl.forEach(['a', 'b', 'c'], letter => {
     word += letter;
   });
-  eqqq(word, 'abc');
+  is(word, 'abc');
   word = '';
   Cl.forEach($St('a', 'b', 'c'), letter => {
     word += letter;
   });
-  eqqq(word, 'abc');
+  is(word, 'abc');
   word = '';
   Cl.forEach($Mp({k: 'adam', m: 'boris', n: 'cecil'}), name => {
     word += name;
   });
-  eqqq(word, 'adamboriscecil');
+  is(word, 'adamboriscecil');
 });
 
 test('reduce', () => {
   // Without initialValue
-  eqqq(
+  is(
     Cl.reduce(['a', 'b', 'c'], (word, letter) => word + letter),
     'abc',
   );
-  eqqq(
+  is(
     Cl.reduce($St('a', 'b', 'c'), (word, letter) => word + letter),
     'abc',
   );
-  eqqq(
+  is(
     Cl.reduce(
       $Mp({k: 'adam', m: 'boris', n: 'cecil'}),
       (phrase, word) => phrase + ' ' + word,

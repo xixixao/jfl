@@ -1,12 +1,7 @@
 // @flow
 
-import {$Ar, $Mp, $St, Ar, Cl, Mth} from '..';
-import {setup} from '../dev/test-util.js';
-
-const {test, tru, eq, eqq, eqqq, not, throws} = setup(
-  Ar.equals,
-  Cl.equalsNested,
-);
+import {$Ar, $Mp, $St, Ar, Mth} from '..';
+import {test, tru, eq, eqq, is, not, throws} from '../dev/test-setup.js';
 
 test('equals', () => {
   tru(Ar.equals([1, 2, 3], [1, 2, 3]));
@@ -22,7 +17,7 @@ test('equalsNested', () => {
 
 test('$Ar', () => {
   eq($Ar(1, 2, 3), [1, 2, 3]);
-  eqqq($Ar(), $Ar());
+  is($Ar(), $Ar());
 });
 
 test('isArray', () => {
@@ -59,7 +54,7 @@ test('map', () => {
     Ar.map([1, 2, 3], x => x * 2),
     [2, 4, 6],
   );
-  eqqq(
+  is(
     Ar.map($Ar(), x => x),
     $Ar(),
   );

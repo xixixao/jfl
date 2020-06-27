@@ -1,9 +1,7 @@
 // @flow
 
-import {Cl, Str} from '../src';
-import {setup} from '../dev/test-util.js';
-
-const {test, tru, eq, eqqq, throws} = setup(Cl.equals, Cl.equalsNested);
+import {eq, is, test, throws, tru} from '../dev/test-setup.js';
+import {Str} from '../src';
 
 test('ignoreCase', () => {
   tru(Str.ignoreCase('abc', 'AbC', Str.equals));
@@ -11,74 +9,74 @@ test('ignoreCase', () => {
 });
 
 test('repeat', () => {
-  eqqq(Str.repeat('a', NaN), '');
-  eqqq(Str.repeat('a', 7), 'aaaaaaa');
+  is(Str.repeat('a', NaN), '');
+  is(Str.repeat('a', 7), 'aaaaaaa');
 });
 
 test('toNumber', () => {
-  eqqq(Str.toNumber('123'), 123);
-  eqqq(Str.toNumber('123.5'), 123.5);
-  eqqq(Str.toNumber('123,5'), NaN);
-  eqqq(Str.toNumber('123,5', ','), 123.5);
-  eqqq(Str.toNumber('4,123'), NaN);
+  is(Str.toNumber('123'), 123);
+  is(Str.toNumber('123.5'), 123.5);
+  is(Str.toNumber('123,5'), NaN);
+  is(Str.toNumber('123,5', ','), 123.5);
+  is(Str.toNumber('4,123'), NaN);
   throws(() => Str.toNumber('4.123', '.', '.'));
-  eqqq(Str.toNumber('4,123', '.', ','), 4123);
-  eqqq(Str.toNumber('4.123,5', ',', '.'), 4123.5);
+  is(Str.toNumber('4,123', '.', ','), 4123);
+  is(Str.toNumber('4.123,5', ',', '.'), 4123.5);
 });
 
 test('trim', () => {
-  eqqq(Str.trim('adam '), 'adam');
-  eqqq(Str.trim('  adam'), 'adam');
-  eqqq(Str.trim('  adam '), 'adam');
-  eqqq(Str.trim('\r\n  adam\n\t '), 'adam');
+  is(Str.trim('adam '), 'adam');
+  is(Str.trim('  adam'), 'adam');
+  is(Str.trim('  adam '), 'adam');
+  is(Str.trim('\r\n  adam\n\t '), 'adam');
 
-  eqqq(Str.trim('bad adam eve', 'bad'), ' adam eve');
-  eqqq(Str.trim('adam eve bad', 'bad'), 'adam eve ');
-  eqqq(Str.trim('bad adam eve bad', 'bad'), ' adam eve ');
+  is(Str.trim('bad adam eve', 'bad'), ' adam eve');
+  is(Str.trim('adam eve bad', 'bad'), 'adam eve ');
+  is(Str.trim('bad adam eve bad', 'bad'), ' adam eve ');
 
-  eqqq(Str.trim('$$adam eve$', /\$/), '$adam eve');
-  eqqq(Str.trim('$$adam eve$', /\$*/), 'adam eve');
+  is(Str.trim('$$adam eve$', /\$/), '$adam eve');
+  is(Str.trim('$$adam eve$', /\$*/), 'adam eve');
 
-  eqqq(Str.trim('abaca', /a\wa/), 'ca');
+  is(Str.trim('abaca', /a\wa/), 'ca');
 });
 
 test('trimStart', () => {
-  eqqq(Str.trimStart('adam '), 'adam ');
-  eqqq(Str.trimStart('  adam'), 'adam');
-  eqqq(Str.trimStart('  adam '), 'adam ');
-  eqqq(Str.trimStart('\r\n  adam\n\t '), 'adam\n\t ');
+  is(Str.trimStart('adam '), 'adam ');
+  is(Str.trimStart('  adam'), 'adam');
+  is(Str.trimStart('  adam '), 'adam ');
+  is(Str.trimStart('\r\n  adam\n\t '), 'adam\n\t ');
 
-  eqqq(Str.trimStart('bad adam eve', 'bad'), ' adam eve');
-  eqqq(Str.trimStart('adam eve bad', 'bad'), 'adam eve bad');
-  eqqq(Str.trimStart('bad adam eve bad', 'bad'), ' adam eve bad');
+  is(Str.trimStart('bad adam eve', 'bad'), ' adam eve');
+  is(Str.trimStart('adam eve bad', 'bad'), 'adam eve bad');
+  is(Str.trimStart('bad adam eve bad', 'bad'), ' adam eve bad');
 
-  eqqq(Str.trimStart('$$adam eve$', /\$/), '$adam eve$');
-  eqqq(Str.trimStart('$$adam eve$', /\$*/), 'adam eve$');
+  is(Str.trimStart('$$adam eve$', /\$/), '$adam eve$');
+  is(Str.trimStart('$$adam eve$', /\$*/), 'adam eve$');
 });
 
 test('trimEnd', () => {
-  eqqq(Str.trimEnd('adam '), 'adam');
-  eqqq(Str.trimEnd('  adam'), '  adam');
-  eqqq(Str.trimEnd('  adam '), '  adam');
-  eqqq(Str.trimEnd('\r\n  adam\n\t '), '\r\n  adam');
+  is(Str.trimEnd('adam '), 'adam');
+  is(Str.trimEnd('  adam'), '  adam');
+  is(Str.trimEnd('  adam '), '  adam');
+  is(Str.trimEnd('\r\n  adam\n\t '), '\r\n  adam');
 
-  eqqq(Str.trimEnd('bad adam eve', 'bad'), 'bad adam eve');
-  eqqq(Str.trimEnd('adam eve bad', 'bad'), 'adam eve ');
-  eqqq(Str.trimEnd('bad adam eve bad', 'bad'), 'bad adam eve ');
+  is(Str.trimEnd('bad adam eve', 'bad'), 'bad adam eve');
+  is(Str.trimEnd('adam eve bad', 'bad'), 'adam eve ');
+  is(Str.trimEnd('bad adam eve bad', 'bad'), 'bad adam eve ');
 
-  eqqq(Str.trimEnd('$$adam eve$$', /\$/), '$$adam eve$');
-  eqqq(Str.trimEnd('$$adam eve$$', /\$*/), '$$adam eve');
+  is(Str.trimEnd('$$adam eve$$', /\$/), '$$adam eve$');
+  is(Str.trimEnd('$$adam eve$$', /\$*/), '$$adam eve');
 });
 
 test('replaceEvery', () => {
-  eqqq(Str.replaceEvery('', '', 'apple'), 'apple');
-  eqqq(Str.replaceEvery('', 'a', 'apple'), '');
-  eqqq(Str.replaceEvery('a', 'a', 'apple'), 'apple');
-  eqqq(Str.replaceEvery('aa', 'a', 'apple'), 'appleapple');
-  eqqq(Str.replaceEvery('a-a', 'a', 'apple'), 'apple-apple');
+  is(Str.replaceEvery('', '', 'apple'), 'apple');
+  is(Str.replaceEvery('', 'a', 'apple'), '');
+  is(Str.replaceEvery('a', 'a', 'apple'), 'apple');
+  is(Str.replaceEvery('aa', 'a', 'apple'), 'appleapple');
+  is(Str.replaceEvery('a-a', 'a', 'apple'), 'apple-apple');
 
-  eqqq(Str.replaceEvery('a-a', /a/, 'apple'), 'apple-apple');
-  eqqq(
+  is(Str.replaceEvery('a-a', /a/, 'apple'), 'apple-apple');
+  is(
     Str.replaceEvery('aa-a', /a+/, substring => '' + substring.length),
     '2-1',
   );

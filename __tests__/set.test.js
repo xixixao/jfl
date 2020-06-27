@@ -1,9 +1,7 @@
 // @flow
 
-import {$Mp, $St, Cl, Mth, St} from '..';
-import {setup} from '../dev/test-util.js';
-
-const {test, tru, eq, eqqq, not} = setup(St.equals, Cl.equalsNested);
+import {$Mp, $St, Mth, St} from '..';
+import {eq, is, not, test, tru} from '../dev/test-setup.js';
 
 test('equals', () => {
   tru(St.equals($St(1, 2, 3), $St(1, 2, 3)));
@@ -61,7 +59,7 @@ test('flaten', () => {
 
 test('map', () => {
   eq(St.map($St(1, 2, -2), Math.abs), $St(1, 2));
-  eqqq(
+  is(
     St.map($St(), x => x),
     $St(),
   );

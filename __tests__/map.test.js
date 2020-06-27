@@ -1,9 +1,7 @@
 // @flow
 
-import {$Mp, $St, Cl, Mp, Mth} from '..';
-import {setup} from '../dev/test-util.js';
-
-const {test, tru, eq, eqq, not} = setup(Mp.equals, Cl.equalsNested);
+import {$Mp, $St, Mp, Mth} from '..';
+import {eq, eqq, not, test, tru} from '../dev/test-setup.js';
 
 test('equals', () => {
   tru(Mp.equals($Mp({a: 1, b: 2, c: 3}), $Mp({a: 1, b: 2, c: 3})));

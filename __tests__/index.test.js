@@ -1,13 +1,11 @@
 // @flow
 
-import {Cl, invariant, nullthrows} from '..';
-import {setup} from '../dev/test-util.js';
-
-const {test, eqqq, throws} = setup(Cl.equals, Cl.equalsNested);
+import {invariant, nullthrows} from '..';
+import {is, test, throws} from '../dev/test-setup.js';
 
 test('nullthrows', () => {
   throws(() => nullthrows(null));
-  eqqq(nullthrows('a'), 'a');
+  is(nullthrows('a'), 'a');
 });
 
 test('invariant', () => {
