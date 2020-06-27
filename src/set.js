@@ -309,9 +309,9 @@ export function filter<V>(
  * @ex Ar.filterAsync([1, 2, 3], async x => Mth.isOdd(x))
  * @see St.filter, Ar.filterAsync
  */
-export async function filterAsync<V>(
-  collection: Collection<V>,
-  predicate: V => Promise<boolean>,
+export async function filterAsync<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicate: (V, K) => Promise<boolean>,
 ): Promise<$Set<V>> {
   const filter = await Ar.mapAsync(collection, predicate);
   const result = new Set();
@@ -346,10 +346,10 @@ export function filterNulls<V>(collection: Collection<?V>): $Set<V> {
 /**
  * Create a set of keys corresponding to values passing given `predicateFn`.
  *
- * @ex St.findKeys([1, 2, 3], n => Mth.isOdd(n)) // $St(1, 3)
- * @see St.filter, Ar.findKeys
+ * @ex St.filterKeys([1, 2, 3], n => Mth.isOdd(n)) // $St(1, 3)
+ * @see St.filter, Ar.filterKeys
  */
-export function findKeys<K, V>(
+export function filterKeys<K, V>(
   collection: KeyedCollection<K, V>,
   predicateFn: V => boolean,
 ): $Set<K> {

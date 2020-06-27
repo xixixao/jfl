@@ -273,6 +273,24 @@ export function fill<V>(count: number, fn: number => V): $Array<V> {
 }
 
 /**
+ * Create an array filled with `count` results of calling `fn`.
+ *
+ * `fn` take as the first argument the index where the current invocation's
+ * result will be placed.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.fill(4, i => i) // [0, 1, 2, 3]
+ * @see Ar.repeat, Ar.range
+ */
+export function fillAsync<V>(
+  count: number,
+  fn: number => Promise<V>,
+): Promise<$Array<V>> {
+  return Promise.all(fill(count, fn));
+}
+
+/**
  * Create an array using a `seed` value and a function which given the seed
  * returns an item to be contained in the array and a new seed value.
  *
@@ -404,13 +422,13 @@ export function equalsNested<V>(
  * @ex Ar.filter([1, 2, 3], n => Mth.isOdd(n)) // [1, 3]
  * @see Ar.map, Ar.filterNulls, Ar.findIndices
  */
-export function filter<V>(
-  collection: Collection<V>,
-  predicateFn: V => boolean,
+export function filter<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => boolean,
 ): $Array<V> {
   const result = [];
-  for (const item of collection.values()) {
-    if (predicateFn(item)) {
+  for (const [key, item] of collection.entries()) {
+    if (predicateFn(item, key)) {
       result.push(item);
     }
   }
@@ -428,9 +446,9 @@ export function filter<V>(
  * @ex Ar.filterAsync([1, 2, 3], async x => Mth.isOdd(x)) // [1, 3]
  * @see Ar.filter, Ar.mapAsync
  */
-export async function filterAsync<V>(
-  collection: Collection<V>,
-  predicateFn: V => Promise<boolean>,
+export async function filterAsync<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => Promise<boolean>,
 ): Promise<$Array<V>> {
   const filter = await mapAsync(collection, predicateFn);
   const result = [];
@@ -469,10 +487,10 @@ export function filterNulls<V>(collection: Collection<?V>): $Array<V> {
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.findKeys([1, 2, 3], n => Mth.isOdd(n)) // [1, 3]
+ * @ex Ar.filterKeys([1, 2, 3], n => Mth.isOdd(n)) // [1, 3]
  * @see Ar.filter
  */
-export function findKeys<K, V>(
+export function filterKeys<K, V>(
   collection: KeyedCollection<K, V>,
   predicateFn: V => boolean,
 ): $Array<K> {
@@ -548,13 +566,13 @@ export function drop<V>(collection: Collection<V>, n: number): $Array<V> {
  * @ex Ar.takeWhile([1, 3, 4, 7], Mth.isOdd) // [1]
  * @see Ar.take
  */
-export function takeWhile<V>(
-  collection: Collection<V>,
-  predicateFn: V => boolean,
+export function takeWhile<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => boolean,
 ): $Array<V> {
   const result = [];
-  for (const item of collection.values()) {
-    if (!predicateFn(item)) {
+  for (const [key, item] of collection.entries()) {
+    if (!predicateFn(item, key)) {
       break;
     }
     result.push(item);
@@ -571,14 +589,14 @@ export function takeWhile<V>(
  * @ex Ar.dropWhile([1, 3, 4, 7], Mth.isOdd) // [3, 4, 7]
  * @see Ar.drop
  */
-export function dropWhile<V>(
-  collection: Collection<V>,
-  predicateFn: V => boolean,
+export function dropWhile<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => boolean,
 ): $Array<V> {
   const result = [];
   let taking = false;
-  for (const item of collection.values()) {
-    taking = taking || !predicateFn(item);
+  for (const [key, item] of collection.entries()) {
+    taking = taking || !predicateFn(item, key);
     if (taking) {
       result.push(item);
     }
@@ -664,14 +682,14 @@ export function chunk<V>(
  * @alias split
  * @see Mp.group
  */
-export function partition<V>(
-  collection: Collection<V>,
-  predicateFn: V => boolean,
+export function partition<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => boolean,
 ): [$Array<V>, $Array<V>] {
   const positives = [];
   const negatives = [];
-  for (const item of collection.values()) {
-    if (predicateFn(item)) {
+  for (const [key, item] of collection.entries()) {
+    if (predicateFn(item, key)) {
       positives.push(item);
     } else {
       negatives.push(item);
@@ -783,23 +801,23 @@ export function splitAt<V>(
 
 /**
  * Create a tuple of arrays containing all the items of `collection` following
- * and preceding the first item for which `fn` returns false.
+ * and preceding the first item for which `predicateFn` returns false.
  *
  * @time O(n)
  * @space O(n)
  * @ex Ar.span([1, 3, 4, 7], Mth.isOdd)
  * @alias break
- * @see Ar.splitAt
+ * @see Ar.splitAt, Ar.takeWhile, Ar.dropWhile
  */
-export function span<V>(
-  collection: Collection<V>,
-  fn: V => boolean,
+export function span<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => boolean,
 ): [$Array<V>, $Array<V>] {
   const before = [];
   const after = [];
   let isBefore = true;
-  for (const item of collection.values()) {
-    isBefore = isBefore && fn(item);
+  for (const [key, item] of collection.entries()) {
+    isBefore = isBefore && predicateFn(item, key);
     if (isBefore) {
       before.push(item);
     } else {
@@ -811,9 +829,34 @@ export function span<V>(
 
 /// Combine
 
-// TODO:
-export function prepend<V>(collection: Collection<V>, item: V): Collection<V> {
-  return [item].concat(from(collection));
+/**
+ * Create a new array containing `item` followed values of `collection`.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.prepend([2, 3], 1) // [1, 2, 3]
+ * @alias unshift
+ * @see Ar.append
+ */
+export function prepend<V>(collection: Collection<V>, item: V): $Array<V> {
+  const result = Array.from(collection.values());
+  result.unshift(item);
+  return result;
+}
+
+/**
+ * Create a new array containing values of `collection` followed by `item`.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.append([1, 2], 3) // [1, 2, 3]
+ * @alias push
+ * @see Ar.prepend
+ */
+export function append<V>(collection: Collection<V>, item: V): $Array<V> {
+  const result = Array.from(collection.values());
+  result.push(item);
+  return result;
 }
 
 /**
@@ -941,7 +984,6 @@ export function product<Cs: $Array<Collection<mixed>>>(
 /// Transform
 
 /**
- * TODO: consider using KeyedCollection and always passing key to `fn`
  * Create a new array by calling given `fn` on each value of `collection`.
  *
  * @time O(n)
@@ -949,13 +991,13 @@ export function product<Cs: $Array<Collection<mixed>>>(
  * @ex Ar.map([1, 2], x => x * 2) // [2, 4]
  * @see Ar.mapAsync
  */
-export function map<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => VTo,
+export function map<KFrom, VFrom, VTo>(
+  collection: KeyedCollection<KFrom, VFrom>,
+  fn: (VFrom, KFrom) => VTo,
 ): $Array<VTo> {
   const result = [];
-  for (const item of collection.values()) {
-    result.push(fn(item));
+  for (const [key, item] of collection.entries()) {
+    result.push(fn(item, key));
   }
   return m(result);
 }
@@ -971,9 +1013,9 @@ export function map<VFrom, VTo>(
  * @ex await Ar.mapAsync([1, 2], async x => x * 2) // [2, 4]
  * @alias Promise.all, genMap
  */
-export function mapAsync<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => Promise<VTo>,
+export function mapAsync<KFrom, VFrom, VTo>(
+  collection: KeyedCollection<KFrom, VFrom>,
+  fn: (VFrom, KFrom) => Promise<VTo>,
 ): Promise<$Array<VTo>> {
   return Promise.all(map(collection, fn));
 }
@@ -990,13 +1032,13 @@ export function mapAsync<VFrom, VTo>(
  * @ex Ar.mapMaybe([1, 2, 3], x => Math.isOdd(x) ? x * x : null) // [1, 9]
  * @see Ar.mapFlat
  */
-export function mapMaybe<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => ?VTo,
+export function mapMaybe<KFrom, VFrom, VTo>(
+  collection: KeyedCollection<KFrom, VFrom>,
+  fn: (VFrom, KFrom) => ?VTo,
 ): $Array<VTo> {
   const result = [];
-  for (const item of collection.values()) {
-    const mapped = fn(item);
+  for (const [key, item] of collection.entries()) {
+    const mapped = fn(item, key);
     if (mapped != null) {
       result.push(mapped);
     }
@@ -1016,13 +1058,13 @@ export function mapMaybe<VFrom, VTo>(
  * @ex Ar.mapFlat([1, 2], x => [x - 1, x + 1]) // [0, 2, 1, 3]
  * @see Ar.mapAsync
  */
-export function mapFlat<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => Collection<VTo>,
+export function mapFlat<KFrom, VFrom, VTo>(
+  collection: KeyedCollection<KFrom, VFrom>,
+  fn: (VFrom, KFrom) => Collection<VTo>,
 ): $Array<VTo> {
   const result = [];
-  for (const item of collection.values()) {
-    const mapped = fn(item);
+  for (const [key, item] of collection.entries()) {
+    const mapped = fn(item, key);
     for (const mappedItem of mapped.values()) {
       result.push(mappedItem);
     }
@@ -1180,9 +1222,5 @@ function defaultCompareFn(a: any, b: any): number {
   return a > b ? 1 : a < b ? -1 : 0;
 }
 
-// TODO: includes
-// TODO: maybeMap
-// TODO: maybeMapAsync
 // TODO: fillAsync
-// TODO: append
 // TODO: takeLast dropLast and rename to takeFirst and dropFirst?

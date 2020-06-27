@@ -6,7 +6,7 @@ import * as path from 'path';
 import {rollup} from 'rollup';
 import {promisify} from 'util';
 import {Ar, Cl, Str} from '../src';
-import type {Collection} from '../src/types.flow';
+import type {KeyedCollection} from '../src/types.flow';
 import rollupFlowPlugin from './rollup-flow-plugin';
 import {loadAndParseModulesAsync} from './src-parser';
 const writeFile = promisify(fs.writeFile);
@@ -193,7 +193,10 @@ function getTestHref(moduleName, lineNumber) {
   );
 }
 
-function mapAndJoin<V>(collection: Collection<V>, fn: V => string): string {
+function mapAndJoin<K, V>(
+  collection: KeyedCollection<K, V>,
+  fn: V => string,
+): string {
   return Str.joinLines(Ar.map(collection, fn));
 }
 

@@ -92,9 +92,9 @@ test('filterNulls', () => {
   eq(Ar.filterNulls([1, 2, null]), [1, 2]);
 });
 
-test('findKeys', () => {
+test('filterKeys', () => {
   eq(
-    Ar.findKeys([1, 2, 3], n => Mth.isOdd(n)),
+    Ar.filterKeys([1, 2, 3], n => Mth.isOdd(n)),
     [0, 2],
   );
 });

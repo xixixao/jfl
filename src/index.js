@@ -22,7 +22,13 @@ export * as Str from './string';
 /// Type
 
 /**
- * TODO
+ * Returns `value` if it's not null or undefined, throws otherwise.
+ *
+ * Useful for coercing the nullable type of `value` to non-nullable when using
+ * Flow.
+ *
+ * @ex nullthrows(null) // throws
+ * @ex nullthrows('a') // 'a'
  */
 export function nullthrows<T>(
   value: ?T,
@@ -36,7 +42,15 @@ export function nullthrows<T>(
   throw error;
 }
 
-// TODO: invariant
+/**
+ * Throws an error with `message` if `condition` is false.
+ *
+ * Both Flow and TypeScript will consider the `condition` to be an assertion
+ * and will infer types correspondingly.
+ *
+ * @ex invariant(typeof 3 === 'string', 'expecting a string') // throws
+ * @ex invariant(typeof 'a' === 'string', 'expecting a string') // no-op
+ */
 export function invariant(condition: boolean, message: string): void {
   if (!condition) {
     throw new Error(message);

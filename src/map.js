@@ -112,10 +112,10 @@ export function fromKeys<K, V>(
  * TODO:
  * @see Mp.fromKeys
  * */
-export async function fromKeysAsync<K, V>(
-  collection: Collection<K>,
-  getValue: K => Promise<V>,
-): Promise<$Map<K, V>> {
+export async function fromKeysAsync<KFrom, KTo, VTo>(
+  collection: KeyedCollection<KFrom, KTo>,
+  getValue: (KTo, KFrom) => Promise<VTo>,
+): Promise<$Map<KTo, VTo>> {
   const values = await Ar.mapAsync(collection, getValue);
   const result = new Map();
   let i = 0;
