@@ -3,6 +3,7 @@
 import {test as testFn} from '@jest/globals';
 import {expect} from '@jest/globals';
 import {Cl} from '../src';
+import {Collection} from '../src/types.flow';
 
 expect.extend({
   tru(_, b) {
@@ -38,8 +39,8 @@ export const test: (
 ) => void = testFn;
 
 export const tru: (value: boolean) => void = exp.tru;
-export const eq: <V>(a: V, B: V) => void = exp.eq;
-export const eqq: <V>(a: V, B: V) => void = exp.eqq;
+export const eq: <V, C: Collection<V>>(a: C, B: C) => void = exp.eq;
+export const eqq: <V, C: Collection<V>>(a: C, B: C) => void = exp.eqq;
 export const is: <V>(a: V, B: V) => void = exp.is;
 export const nil: <V>(a: V) => void = exp.nil;
 export const not: {tru: (value: boolean) => void} = exp.not;

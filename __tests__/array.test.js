@@ -49,6 +49,12 @@ test('entries', () => {
   ]);
 });
 
+test('mutable', () => {
+  const x = Ar.mutable($Mp({a: 1, b: 2, c: 3}));
+  x.push(4);
+  eqq(x, [1, 2, 3, 4]);
+});
+
 test('map', () => {
   eq(
     Ar.map([1, 2, 3], x => x * 2),
@@ -94,6 +100,26 @@ test('filterKeys', () => {
   );
 });
 
+test('unique', () => {
+  eq(Ar.unique([]), []);
+  eq(Ar.unique([1, 1, 2]), [1, 2]);
+});
+
+test('uniqueBy', () => {
+  eq(
+    Ar.uniqueBy([2, 5, 6, 3], n => n % 3),
+    [5, 3],
+  );
+});
+
+test('prepend', () => {
+  eq(Ar.prepend([2, 3], 1), [1, 2, 3]);
+});
+
+test('append', () => {
+  eq(Ar.append([2, 3], 1), [2, 3, 1]);
+});
+
 test('concat', () => {
   eq(Ar.concat([1, 2], [3, 4]), [1, 2, 3, 4]);
 });
@@ -112,6 +138,13 @@ test('mapFlat', () => {
   eq(
     Ar.mapFlat([0, 3, 6], x => [x + 1, x + 2]),
     [1, 2, 4, 5, 7, 8],
+  );
+});
+
+test('mapMaybe', () => {
+  eq(
+    Ar.mapMaybe([1, 2, 3, 5], x => (Mth.isOdd(x) ? x * 3 : null)),
+    [3, 9, 15],
   );
 });
 
@@ -149,6 +182,10 @@ test('fill', () => {
     Ar.fill(4, i => i * 2),
     [0, 2, 4, 6],
   );
+});
+
+test('fillAsync', async () => {
+  eq(await Ar.fillAsync(4, async i => i * 2), [0, 2, 4, 6]);
 });
 
 test('takeFirst', () => {
