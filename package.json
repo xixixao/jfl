@@ -39,7 +39,7 @@
     "flow": "dev/run.sh flow",
     "//lint": "Runs lint against all files",
     "//format": "Formats all files with Prettier",
-    "format": "dev/run.sh prettier --write --parser flow src/* test/*",
+    "format": "dev/run.sh prettier --write --parser flow src/* dev/*.js __tests__/*",
     "lint": "dev/run.sh eslint .",
     "//serve": "serves the website for mobile development",
     "serve": "cd docs; python -m SimpleHTTPServer 8000",
