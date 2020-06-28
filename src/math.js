@@ -76,26 +76,6 @@ export function idivx(numerator: number, divisor: number): number {
   return Math.floor(numerator / divisor);
 }
 
-/**
- * Returns the `n` squared.
- *
- * @ex Mth.squared(3) // 9
- * @see Mth.cubed
- */
-export function squared(n: number): number {
-  return n * n;
-}
-
-/**
- * Returns the `n` cubed.
- *
- * @ex Mth.cubed(3) // 27
- * @see Mth.squared
- */
-export function cubed(n: number): number {
-  return n * n * n;
-}
-
 /// Collections
 
 /**
