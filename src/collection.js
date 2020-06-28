@@ -159,13 +159,10 @@ export function containsKey<K, V>(
   }
 }
 
+declare function any(collection: Collection<boolean>): boolean;
 declare function any<K, V>(
   collection: KeyedCollection<K, V>,
   predicateFn: (V, K) => boolean,
-): boolean;
-declare function any(
-  collection: Collection<boolean>,
-  predicateFn: void,
 ): boolean;
 
 /**
@@ -682,7 +679,6 @@ export function forEach<K, V>(
 declare function reduce<K, V, A>(
   collection: KeyedCollection<K, V>,
   fn: (V, V, K, KeyedCollection<K, V>) => V,
-  initialValue: void,
 ): V;
 
 declare function reduce<K, V, A>(

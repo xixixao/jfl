@@ -52,6 +52,7 @@
     "arrowParens": "avoid",
     "bracketSpacing": false,
     "jsxBracketSameLine": true,
+    "parser": "flow",
     "trailingComma": "all",
     "singleQuote": true
   }

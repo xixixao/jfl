@@ -23,7 +23,7 @@ type ParsedFunction = {
   functionName: string,
   lineNumber: number,
   testLineNumber: ?number,
-  signature: string,
+  signatures: $Array<string>,
 };
 type Doc = {text: string, examples: $Array<string>};
 
@@ -52,12 +52,14 @@ async function loadAndParseModuleAsync(moduleName) {
   const testIndex = parseTestIndex(testSource);
   const moduleDoc = parseModuleDoc(moduleSource);
   const moduleFunctionIndex = parseFunctionIndex(moduleSource);
+  const moduleDeclarationIndex = parseDeclarationIndex(moduleSource);
   let $$ = moduleSource;
   $$ = Str.matchEvery($$, /\/\/\/ (\w+)(((\s|\S)(?!\/\/\/))*)/);
   const sections = Ar.map($$, ([_, sectionName, sectionSource]) => ({
     sectionName,
     functions: parseSectionFunctions(
       moduleFunctionIndex,
+      moduleDeclarationIndex,
       testIndex,
       sectionSource,
     ),
@@ -74,6 +76,16 @@ function parseModuleDoc(moduleSource) {
 
 function parseFunctionIndex(moduleSource) {
   return parseToIndex(moduleSource, /export (?:async )?function (\w+)/);
+}
+
+function parseDeclarationIndex(moduleSource) {
+  let $$ = moduleSource;
+  $$ = Str.matchEvery($$, /declare ((?:async )?function (\w+)[^;]+)/);
+  return Mp.group(
+    $$,
+    ([_, __, functionName]) => functionName,
+    ([_, signature]) => signature,
+  );
 }
 
 function parseTestIndex(testSource) {
@@ -93,7 +105,12 @@ function parseToIndex(source, pattern) {
   );
 }
 
-function parseSectionFunctions(moduleFunctionIndex, testIndex, sectionSource) {
+function parseSectionFunctions(
+  moduleFunctionIndex,
+  moduleDeclarationIndex,
+  testIndex,
+  sectionSource,
+) {
   let $$ = sectionSource;
   $$ = Str.matchEvery(
     $$,
@@ -109,8 +126,11 @@ function parseSectionFunctions(moduleFunctionIndex, testIndex, sectionSource) {
     functionName,
     lineNumber: Mp.getX(moduleFunctionIndex, functionName),
     testLineNumber: testIndex.get(functionName),
-    signature:
-      (isAsync != null ? 'async function ' : '') + functionName + params,
+    signatures: moduleDeclarationIndex.get(functionName) ?? [
+      (isAsync != null ? 'async function ' : '') +
+        functionName +
+        Str.replaceFirst(params, ': %checks', ': bool'),
+    ],
   }));
 }
 

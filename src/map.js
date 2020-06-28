@@ -87,7 +87,7 @@ export async function fromAsync<K, V>(
 /**
  * Create a `Map` where each value comes from `collection` and its key is
  * the result of calling `getKey` on it.
- * 
+ *
  * @time O(n)
  * @space O(n)
  * @ex Mp.fromValues([2, 3], n => n ** 2) // $Mp({4: 2, 9: 3})
@@ -107,7 +107,7 @@ export function fromValues<KFrom, KTo, VTo>(
 /**
  * Create a `Map` where each key comes from `collection` and its value is
  * the result of calling `getValue` on it.
- * 
+ *
  * @time O(n)
  * @space O(n)
  * @ex Mp.fromKeys([2, 3], n => n ** 2) // $Mp({2: 4, 3: 9})
@@ -127,7 +127,7 @@ export function fromKeys<KFrom, KTo, VTo>(
 /**
  * Create a promise of a `Map` where each key comes from `collection` and
  * its value is the result of calling `getValue` on it.
- * 
+ *
  * @time O(n)
  * @space O(n)
  * @ex await Mp.fromKeysAsync([2, 3], async n => n ** 2) // $Mp({2: 4, 3: 9})
@@ -149,7 +149,7 @@ export async function fromKeysAsync<KFrom, KTo, VTo>(
 
 /**
  * Create a `Map` from a `collection` of entries, i.e. (key, value) pairs.
- * 
+ *
  * @time O(n)
  * @space O(n)
  * @ex Mp.fromEntries($St([2, 3])) // $Mp({2: 3})
@@ -385,9 +385,7 @@ export function merge<K, V>(
  */
 export function getX<K, V>(map: $Map<K, V>, key: K): V {
   if (!map.has(key)) {
-    throw new Error(
-      `Expected given map to have given key but it didn't.`,
-    );
+    throw new Error(`Expected given map to have given key but it didn't.`);
   }
   return (map.get(key): any);
 }
@@ -421,7 +419,6 @@ export function filter<K, V>(
 
 /// Transform
 
-
 /**
  * Create a new `Map` by calling given `fn` on each value and key of `collection`.
  *
@@ -444,7 +441,7 @@ export function map<KFrom, VFrom, VTo>(
  * of `collection`.
  *
  * Executes `fn` on all items in `collection` concurrently.
- * 
+ *
  * @time O(n)
  * @space O(n)
  * @ex await Ar.mapAsync([1, 2], async x => x * 2)
@@ -492,46 +489,82 @@ export function mapToEntries<KFrom, VFrom, KTo, VTo>(
   return m(result);
 }
 
+/**
+ * Create a new `Map` using keys provided by `keyFn` and values provided by
+ * `valueFn` applied to each key/value of `collection`.
+ *
+ * When `keyFn` returns the same key for multiple values only the last value
+ * will be present in the new `Map`.
+ * Values for which `keyFn` returns null or undefined are ommited.
+ *
+ * @ex Mp.pull([1, 2, 3], n => `${n}`, n => n ** 2) // $Mp({1: 1, 2: 4, 3: 9})
+ * @see Mp.group, Ar.partition
+ */
 export function pull<KFrom, VFrom, KTo, VTo>(
   collection: KeyedCollection<KFrom, VFrom>,
-  keyFn: (VFrom, KFrom) => KTo,
+  keyFn: (VFrom, KFrom) => ?KTo,
   valueFn: (VFrom, KFrom) => VTo,
 ): $Map<KTo, VTo> {
   const result = new Map();
   for (const [key, item] of collection.entries()) {
-    result.set(keyFn(item, key), valueFn(item, key));
+    const newKey = keyFn(item, key);
+    if (newKey != null) {
+      result.set(newKey, valueFn(item, key));
+    }
   }
   return m(result);
 }
 
+declare function group<K, V>(
+  collection: KeyedCollection<K, V>,
+): $Map<V, $Array<V>>;
 
-// TODO: group (ala group_keys_by_values), consider dropping group_by
-// given JS doesn't have the arraykey limitation
+declare function group<KFrom, VFrom, KTo>(
+  collection: KeyedCollection<KFrom, VFrom>,
+  keyFn: (VFrom, KFrom) => ?KTo,
+): $Map<KTo, $Array<VFrom>>;
+
+declare function group<KFrom, VFrom, KTo, VTo>(
+  collection: KeyedCollection<KFrom, VFrom>,
+  keyFn: (VFrom, KFrom) => ?KTo,
+  valueFn: (VFrom, KFrom) => VTo,
+): $Map<KTo, $Array<VTo>>;
 
 /**
- * Create a new `Map` by grouping values from `collection` for which `fn`
- * returns the same key.
+ * Create a new `Map` using keys provided by `keyFn` and values provided by
+ * `valueFn` applied to each key/value of `collection`. Values with identitical
+ * keys are grouped into `Array`s.
  *
- * The new `Map` has `Array`s of original values as its values.
- * Values for which `fn` returns null or undefined are ommited.
+ * Values for which `keyFn` returns null or undefined are ommited.
  *
- * @ex Mp.group([1, 2, 3], n => Mth.isOdd(n))
- * @see Ar.partition
+ * @ex Mp.group([1, 1, 3]) // Mp.of([1, [1, 1]], [3, [3]])
+ * @ex Mp.group([1, 2, 3], n => n % 2) // Mp.of([1, [1, 3]], [0, [2]])
+ * @see Mp.pull, Ar.partition
  */
-export function groupBy<V, KTo>(
-  collection: Collection<V>,
-  fn: V => ?KTo,
-): $Map<KTo, $Array<V>> {
+export function group(collection, keyFn = useValue, valueFn = useValue) {
   const result = new Map();
-  for (const item of collection.values()) {
-    const key = fn(item);
-    if (key != null) {
-      if (result.has(key)) {
-        (result.get(key): any).push(item);
+  for (const [origKey, item] of collection.entries()) {
+    const newKey = keyFn(item, origKey);
+    if (newKey != null) {
+      const value = valueFn(item, origKey);
+      if (result.has(newKey)) {
+        (result.get(newKey): any).push(value);
       } else {
-        result.set(key, [item]);
+        result.set(newKey, [value]);
       }
     }
+  }
+  return m(result);
+}
+
+function useValue(value, _key) {
+  return value;
+}
+
+export function flip<K, V>(collection: KeyedCollection<K, V>): $Map<V, K> {
+  const result = new Map();
+  for (const [key, item] of collection.entries()) {
+    result.set(item, key);
   }
   return m(result);
 }
@@ -539,16 +572,6 @@ export function groupBy<V, KTo>(
 // TODO: countValues
 // TODO: flatten
 // TODO: fillKeys
-
-export function flip<K, V>(
-  collection: KeyedCollection<K, V>,
-): $Map<V, K> {
-  const result = new Map();
-  for (const [key, item] of collection.entries()) {
-    result.set(item, key);
-  }
-  return m(result);
-}
 
 /// Divide
 

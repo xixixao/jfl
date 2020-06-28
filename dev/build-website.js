@@ -116,7 +116,7 @@ function formatModuleSections(moduleAlias, moduleName, sections) {
 function formatFunctions(moduleAlias, moduleName, functions) {
   return mapAndJoin(
     functions,
-    ({functionName, doc, signature, lineNumber, testLineNumber}) => `
+    ({functionName, doc, signatures, lineNumber, testLineNumber}) => `
       <div>
         <a
           class="headlineLink"
@@ -124,7 +124,7 @@ function formatFunctions(moduleAlias, moduleName, functions) {
           href="#${formatFunctionName(moduleAlias, functionName)}">
           <h4>${formatFunctionName(moduleAlias, functionName)}</h4>
         </a>
-        ${formatDoc(signature, doc)}
+        ${formatDoc(signatures, doc)}
         <p class="functionFooter">
           <a target="_blank" href="${getSourceHref(
             moduleName,
@@ -144,14 +144,14 @@ function formatFunctions(moduleAlias, moduleName, functions) {
   );
 }
 
-function formatDoc(signature, doc) {
+function formatDoc(signatures, doc) {
   const highlightedCode =
     doc != null && !Cl.isEmpty(doc.examples)
       ? highlight(Str.joinLines(doc.examples))
       : null;
   return `
     <p>${formatDocText(doc?.text)}</p>
-    ${formatSignature(signature)}
+    ${formatSignatures(signatures)}
     ${highlightedCode ?? ''}
   `;
 }
@@ -170,12 +170,11 @@ function formatDocText(text) {
   );
 }
 
-function formatSignature(signature) {
-  if (signature == null) {
+function formatSignatures(signatures) {
+  if (signatures == null) {
     return '';
   }
-  let $$ = Str.replaceFirst(signature, ': %checks', ': bool');
-  return highlight($$);
+  return Str.joinLines(Ar.map(signatures, highlight));
 }
 
 const highlighter = new Highlighter({scopePrefix: '-'});

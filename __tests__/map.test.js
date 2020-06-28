@@ -1,6 +1,6 @@
 // @flow
 
-import {$Mp, $St, Mp, Mth} from '..';
+import {$Mp, $St, Mp} from '..';
 import {eq, eqq, not, test, tru} from '../dev/test-setup.js';
 
 test('equals', () => {
@@ -127,6 +127,22 @@ test('mapToEntries', () => {
   );
 });
 
-test('groupBy', () => {
-  eqq(Mp.groupBy([1, 2, 3], Mth.isOdd), Mp.of([true, [1, 3]], [false, [2]]));
+test('group', () => {
+  eqq(Mp.group([1, 1, 3]), Mp.of([1, [1, 1]], [3, [3]]));
+  eqq(
+    Mp.group([1, 2, 3], n => n % 2),
+    Mp.of([1, [1, 3]], [0, [2]]),
+  );
+  eqq(
+    Mp.group([1, 2, 3], (_, i) => i % 2),
+    Mp.of([0, [1, 3]], [1, [2]]),
+  );
+  eqq(
+    Mp.group(
+      [1, 2, 3],
+      n => n % 2,
+      (_, i) => i,
+    ),
+    Mp.of([1, [0, 2]], [0, [1]]),
+  );
 });
