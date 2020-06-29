@@ -23,68 +23,81 @@ if (moduleFilter != null) {
       : Ar.filter(modules, ({moduleName}) =>
           Str.includes(moduleName, moduleFilter),
         );
-  checkDescriptions(filteredModules);
-  checkTests(filteredModules);
+  checkFunctions(filteredModules);
   checkTODOs(filteredModules);
 })();
 
-function checkDescriptions(modules) {
-  const moduleNamesToFunctionsWithMissingDescriptions = Mp.filter(
+function checkFunctions(modules) {
+  const moduleNamesToFunctionsWithProblems = Mp.filter(
     Mp.pull(
       modules,
       ({moduleName}) => moduleName,
-      ({functions}) =>
-        Ar.filter(
-          functions,
-          ({doc}) => doc == null || Str.includes(doc.text, 'TODO'),
-        ),
+      ({functions}) => Ar.mapMaybe(functions, fn => checkFunction(fn)),
     ),
     functionsWithProblems => !Cl.isEmpty(functionsWithProblems),
   );
 
-  if (Cl.isEmpty(moduleNamesToFunctionsWithMissingDescriptions)) {
-    console.log('✅ No files with functions missing descriptions!');
+  if (Cl.isEmpty(moduleNamesToFunctionsWithProblems)) {
+    console.log('✅ No files with incomplete function docs/tests!');
     return;
   }
-  console.log('❌ Functions are missing description in:');
-  Cl.forEach(
-    moduleNamesToFunctionsWithMissingDescriptions,
-    (functions, moduleName) => {
-      console.log('    ' + moduleName + ':');
-      Cl.forEach(functions, ({functionName}) => {
-        console.log('      ' + functionName);
-      });
-    },
-  );
+  console.log('❌ Functions have incomplete docs/tests in:');
+  Cl.forEach(moduleNamesToFunctionsWithProblems, (functions, moduleName) => {
+    console.log('    ' + moduleName + ':');
+    Cl.forEach(
+      functions,
+      ({
+        functionName,
+        incompleteDescription,
+        examplesMissingFunction,
+        examplesMissingResults,
+        missingTests,
+      }) => {
+        const docProblem = incompleteDescription
+          ? 'missing doc'
+          : examplesMissingFunction
+          ? 'bad example'
+          : examplesMissingResults
+          ? 'example missing result'
+          : null;
+        const testProblem = missingTests ? 'missing test' : null;
+
+        console.log(
+          `      ${functionName}` +
+            ` (${Str.join(Ar.filterNulls([docProblem, testProblem]), ', ')})`,
+        );
+      },
+    );
+  });
   console.log('');
 }
 
-function checkTests(modules) {
-  const moduleNamesToFunctionsWithMissingTests = Mp.filter(
-    Mp.pull(
-      modules,
-      ({moduleName}) => moduleName,
-      ({functions}) =>
-        Ar.filter(functions, ({testLineNumber}) => testLineNumber == null),
-    ),
-    functionsWithProblems => !Cl.isEmpty(functionsWithProblems),
-  );
-
-  if (Cl.isEmpty(moduleNamesToFunctionsWithMissingTests)) {
-    console.log('✅ No files with functions missing tests!');
-    return;
+function checkFunction({doc, testLineNumber, functionName}) {
+  const incompleteDescription = doc == null || Str.includes(doc.text, 'TODO');
+  const examplesMissingFunction =
+    doc != null &&
+    Cl.any(doc.examples, example => !Str.includes(example, functionName));
+  const examplesMissingResults =
+    doc != null &&
+    Cl.any(doc.examples, example => !Str.includes(example, /\/\/ ./));
+  const missingTests = testLineNumber == null;
+  if (
+    !(
+      incompleteDescription ||
+      examplesMissingFunction ||
+      examplesMissingResults ||
+      missingTests
+    )
+  ) {
+    return null;
   }
-  console.log('❌ Functions are missing tests in:');
-  Cl.forEach(
-    moduleNamesToFunctionsWithMissingTests,
-    (functions, moduleName) => {
-      console.log('    ' + moduleName + ':');
-      Cl.forEach(functions, ({functionName}) => {
-        console.log('      ' + functionName);
-      });
-    },
-  );
-  console.log('');
+  return {
+    functionName,
+    incompleteDescription,
+    examplesMissingFunction,
+    examplesMissingResults,
+    missingTests,
+  };
 }
 
 function checkTODOs(modules) {
