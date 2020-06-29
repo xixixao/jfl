@@ -44,29 +44,8 @@ function checkFunctions(modules) {
   console.log('❌ Functions have incomplete docs/tests in:');
   Cl.forEach(moduleNamesToFunctionsWithProblems, (functions, moduleName) => {
     console.log('    ' + moduleName + ':');
-    Cl.forEach(
-      functions,
-      ({
-        functionName,
-        incompleteDescription,
-        examplesMissingFunction,
-        examplesMissingResults,
-        missingTests,
-      }) => {
-        const docProblem = incompleteDescription
-          ? 'missing doc'
-          : examplesMissingFunction
-          ? 'bad example'
-          : examplesMissingResults
-          ? 'example missing result'
-          : null;
-        const testProblem = missingTests ? 'missing test' : null;
-
-        console.log(
-          `      ${functionName}` +
-            ` (${Str.join(Ar.filterNulls([docProblem, testProblem]), ', ')})`,
-        );
-      },
+    Cl.forEach(functions, functionWithProblems =>
+      printFunction(functionWithProblems),
     );
   });
   console.log('');
@@ -80,12 +59,16 @@ function checkFunction({doc, testLineNumber, functionName}) {
   const examplesMissingResults =
     doc != null &&
     Cl.any(doc.examples, example => !Str.includes(example, /\/\/ ./));
+  const missingTimeComplexity = doc != null && doc.time == null;
+  const missingSpaceComplexity = doc != null && doc.space == null;
   const missingTests = testLineNumber == null;
   if (
     !(
       incompleteDescription ||
       examplesMissingFunction ||
       examplesMissingResults ||
+      missingTimeComplexity ||
+      missingSpaceComplexity ||
       missingTests
     )
   ) {
@@ -96,8 +79,36 @@ function checkFunction({doc, testLineNumber, functionName}) {
     incompleteDescription,
     examplesMissingFunction,
     examplesMissingResults,
+    missingTimeComplexity,
+    missingSpaceComplexity,
     missingTests,
   };
+}
+
+function printFunction({
+  functionName,
+  incompleteDescription,
+  examplesMissingFunction,
+  examplesMissingResults,
+  missingTimeComplexity,
+  missingSpaceComplexity,
+  missingTests,
+}) {
+  const docProblem = incompleteDescription
+    ? 'missing doc'
+    : examplesMissingFunction
+    ? 'bad example'
+    : examplesMissingResults
+    ? 'example missing result'
+    : missingTimeComplexity || missingSpaceComplexity
+    ? 'missing complexity note'
+    : null;
+  const testProblem = missingTests ? 'missing test' : null;
+
+  console.log(
+    `      ${functionName}` +
+      ` (${Str.join(Ar.filterNulls([docProblem, testProblem]), ', ')})`,
+  );
 }
 
 function checkTODOs(modules) {

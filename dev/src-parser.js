@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {promisify} from 'util';
-import {Ar, Mp, REx, Str} from '../src';
+import {Ar, Mp, REx, Str, Cl} from '../src';
 import type {$Array} from '../src/types.flow';
 
 type ParsedSource = $Array<{|
@@ -25,7 +25,12 @@ type ParsedFunction = {
   testLineNumber: ?number,
   signatures: $Array<string>,
 };
-type Doc = {text: string, examples: $Array<string>};
+type Doc = {
+  text: string,
+  examples: $Array<string>,
+  time: ?string,
+  space: ?string,
+};
 
 const srcDirectoryPath = path.join(__dirname, '../src');
 const testDirectoryPath = path.join(__dirname, '../__tests__');
@@ -158,7 +163,15 @@ function parseDoc(doc) {
   let $$3 = Ar.filter($$, line => Str.startsWith(line, '@ex'));
   const examples = Ar.map($$3, example => Str.trimStart(example, '@ex '));
 
-  return {text, examples};
+  let $$4 = Ar.filter($$, line => Str.startsWith(line, '@time'));
+  $$4 = Ar.map($$3, example => Str.trimStart(example, '@time '));
+  const time = Cl.first($$4);
+
+  let $$5 = Ar.filter($$, line => Str.startsWith(line, '@space'));
+  $$5 = Ar.map($$3, example => Str.trimStart(example, '@space '));
+  const space = Cl.first($$5);
+
+  return {text, examples, time, space};
 }
 
 async function readFileX(path: string): Promise<string> {
