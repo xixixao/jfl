@@ -143,9 +143,9 @@ export function contains<V>(collection: Collection<V>, value: V): boolean {
  *
  * @time O(1)
  * @space O(1)
- * @ex Cl.contains([2, 4, 3], 1)
- * @ex Cl.contains($St(2, 4, 3), 4)
- * @ex Cl.contains($Mp({a: 1, b: 3}), 'a')
+ * @ex Cl.containsKey([2, 4, 3], 1) // true
+ * @ex Cl.containsKey($St(2, 4, 3), 4) // true
+ * @ex Cl.containsKey($Mp({a: 1, b: 3}), 'a') // true
  * @see Cl.findKey
  */
 export function containsKey<K, V>(
@@ -315,7 +315,7 @@ export function isSortedBy<V, S>(
  * @time O(n)
  * @space O(1)
  * @ex Cl.find([2, 4], n => Mth.isOdd(n)) // null
- * @ex Cl.find([2, 4, 3], n => Mth.isOdd(n)) // 2
+ * @ex Cl.find([2, 4, 3], n => Mth.isOdd(n)) // 3
  * @see Cl.findX, Cl.findKey, Cl.findKeyX
  */
 export function find<V>(
@@ -335,7 +335,7 @@ export function find<V>(
  *
  * @time O(n)
  * @space O(1)
- * @ex Cl.find([2, 4, 3], n => Mth.isOdd(n)) // 2
+ * @ex Cl.findX([2, 4, 3], n => Mth.isOdd(n)) // 3
  * @see Cl.find, Cl.findKey, Cl.findKeyX
  */
 export function findX<V>(
@@ -379,7 +379,7 @@ export function findKey<K, V>(
  *
  * @time O(n)
  * @space O(1)
- * @ex Cl.findKey([2, 4, 3], n => Mth.isOdd(n)) // 2
+ * @ex Cl.findKeyX([2, 4, 3], n => Mth.isOdd(n)) // 2
  * @see Cl.find
  */
 export function findKeyX<K, V>(
@@ -432,7 +432,9 @@ export function firstX<V>(collection: Collection<V>): V {
  *
  * @time O(1)
  * @space O(1)
- * @ex Cl.firstX([1]) // 1
+ * @ex Cl.onlyX([1]) // 1
+ * @ex Cl.onlyX([]) // throws
+ * @ex Cl.onlyX([1, 2]) // throws
  * @see Cl.firstX
  */
 export function onlyX<V>(collection: Collection<V>): V {
@@ -666,7 +668,7 @@ export function lastKeyX<K, V>(collection: KeyedCollection<K, V>): K {
  *
  * @time O(n)
  * @space O(1)
- * @ex Cl.forEach([1, 2, 3], (n, index, array) => {})
+ * @ex Cl.forEach([1, 2, 3], (n, index, array) => {}) // void
  * @alias each
  */
 export function forEach<K, V>(
