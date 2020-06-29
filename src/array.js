@@ -150,7 +150,7 @@ export function range(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.range(-0.5, 0.5, 0.5) // [-0.5, 0, 0.5]
+ * @ex Ar.rangeInclusive(-0.5, 0.5, 0.5) // [-0.5, 0, 0.5]
  * @see Ar.range
  */
 export function rangeInclusive(
@@ -180,8 +180,8 @@ export function rangeInclusive(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.range(5, 1) // [5, 4, 3, 2]
- * @ex Ar.range(2, 1, 0.2) // [2, 1.8, 1.6, 1.4, 1.2]
+ * @ex Ar.rangeDescending(5, 1) // [5, 4, 3, 2]
+ * @ex Ar.rangeDescending(2, 1, 0.2) // [2, 1.8, 1.6, 1.4, 1.2]
  * @see Ar.range
  */
 export function rangeDescending(
@@ -211,8 +211,8 @@ export function rangeDescending(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.range(2, 6, 2) // [2, 4, 6]
- * @ex Ar.range(6, 2, 2) // [6, 4, 2]
+ * @ex Ar.rangeDynamic(2, 6, 2) // [2, 4, 6]
+ * @ex Ar.rangeDynamic(6, 2, 2) // [6, 4, 2]
  * @see Ar.range
  */
 export function rangeDynamic(
@@ -696,7 +696,7 @@ export function dropLastWhile<V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.chunk([1, 2, 3, 4, 5], 2)
+ * @ex Ar.chunk([1, 2, 3, 4, 5], 2) // [[1, 2], [3, 4], [5]]
  * @see Ar.splitAt, Ar.partition
  */
 export function chunk<V>(
@@ -733,7 +733,7 @@ export function chunk<V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.partition([1, 2, 3, 4], Mth.isEven)
+ * @ex Ar.partition([1, 2, 3, 4], Mth.isEven) // [[2, 4], [1, 3]]
  * @alias split
  * @see Mp.group
  */
@@ -805,15 +805,15 @@ export function slice<V>(
 }
 
 /**
- * Create an `Array` containing a subset of values in `collection` with any given
- * `item`s added.
+ * Create an `Array` containing a subset of values in `collection` with any
+ * given `item`s added, with `deleteCount` original values removed.
  *
- * Note that unlikely `Array`.prototype.splice this function returns the new
+ * Note that unlikely `Array.prototype.splice` this function returns the new
  * array, not the deleted items.
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.slice([1, 2, 3, 4], 1, 3)
+ * @ex Ar.splice([1, 2, 3, 4], 1, 2, 5, 6) // [1, 5, 6, 4]
  * @see Ar.splice
  */
 export function splice<V>(
@@ -833,7 +833,7 @@ export function splice<V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.split([1, 2, 3], 2) // [[1, 2], [3]]
+ * @ex Ar.splitAt([1, 2, 3], 2) // [[1, 2], [3]]
  * @see Ar.dropFirst, Ar.takeFirst, Ar.span
  */
 export function splitAt<V>(
@@ -995,7 +995,7 @@ export function zip<Cs: $Array<Collection<mixed>>>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.zipWith((a, b, c) => a + b * c, [1, 2, 3], [5, 6, 7], [2, 4, 6])
+ * @ex Ar.zipWith((a, b) => a * b, [1, 2, 3], [5, 6, 7]) // [5, 12, 21]
  * @see Ar.zip
  */
 export function zipWith<I, Cs: $Array<Collection<I>>, O>(
@@ -1160,7 +1160,7 @@ export function scan<I, O>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.reverse([1, 2, 3])
+ * @ex Ar.reverse([1, 2, 3]) // [3, 2, 1]
  * @alias flip
  */
 export function reverse<V>(collection: Collection<V>): $Array<V> {

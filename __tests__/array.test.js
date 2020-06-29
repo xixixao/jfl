@@ -299,6 +299,7 @@ test('slice', () => {
 
 test('splice', () => {
   eq(Ar.splice([1, 2, 4, 5], 2, 0, 3), [1, 2, 3, 4, 5]);
+  eq(Ar.splice([1, 2, 3, 4], 1, 2, 5, 6), [1, 5, 6, 4]);
 });
 
 test('takeFirstWhile', () => {
