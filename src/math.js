@@ -2,7 +2,7 @@
 
 'use strict';
 
-import type {Collection} from './types.flow';
+import type {Collection, KeyedCollection} from './types.flow';
 
 /// Checks
 
@@ -94,12 +94,35 @@ export function min(collection: Collection<number>): ?number {
 }
 
 /**
- * TODO:
+ * Returns the item in `collection` for which `valueFn` returns the smallest
+ * number, null if `collection` is empty.
+ *
+ * @ex Mth.minBy([1, 2], n => -n) // 2
+ * @ex Mth.minBy([]) // null
+ * @see Mth.min, Mth.maxBy
  */
-export function minBy() {}
+export function minBy<K, V>(
+  collection: KeyedCollection<K, V>,
+  valueFn: (V, K) => number,
+): ?V {
+  let minItem = null;
+  let minValue = null;
+  for (const [key, item] of collection.entries()) {
+    const value = valueFn(item, key);
+    if (minValue === null || value >= minValue) {
+      minValue = value;
+      minItem = item;
+    }
+  }
+  return minItem;
+}
 
 /**
- * TODO:
+ * Returns the largest of all values in `collection`, null if it's empty.
+ *
+ * @ex Mth.max($Mp({a: 5, b: 2, c: 8})) // 8
+ * @ex Mth.max([]) // null
+ * @see Mth.maxBy, Mth.min
  */
 export function max(collection: Collection<number>): ?number {
   let max = null;
@@ -110,9 +133,28 @@ export function max(collection: Collection<number>): ?number {
 }
 
 /**
- * TODO:
+ * Returns the item in `collection` for which `valueFn` returns the largest
+ * number, null if `collection` is empty.
+ *
+ * @ex Mth.maxBy([1, 2], n => -n) // 1
+ * @ex Mth.maxBy([]) // null
+ * @see Mth.max, Mth.minBy
  */
-export function maxBy() {}
+export function maxBy<K, V>(
+  collection: KeyedCollection<K, V>,
+  valueFn: (V, K) => number,
+): ?V {
+  let maxItem = null;
+  let maxValue = null;
+  for (const [key, item] of collection.entries()) {
+    const value = valueFn(item, key);
+    if (maxValue === null || value >= maxValue) {
+      maxValue = value;
+      maxItem = item;
+    }
+  }
+  return maxItem;
+}
 
 /**
  * TODO:
