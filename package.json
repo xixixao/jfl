@@ -52,8 +52,15 @@
     "arrowParens": "avoid",
     "bracketSpacing": false,
     "jsxBracketSameLine": true,
-    "parser": "flow",
     "trailingComma": "all",
-    "singleQuote": true
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.js",
+        "options": {
+          "parser": "flow"
+        }
+      }
+    ]
   }
 }
