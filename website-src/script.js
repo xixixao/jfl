@@ -1,14 +1,18 @@
 // @flow
 
-import {Cl, Str, invariant, nullthrows} from '../src/index';
+import {Ar, Cl, Mp, Str, invariant, nullthrows} from '../src/index';
 
 const sidebar = nullthrows(document.querySelector('.sidebar'));
 const searchBar = document.querySelector('.sidebarSearch input');
 const searchBarCancel = nullthrows(
   document.querySelector('.sidebarSearchCancel'),
 );
+const moduleExpanders = document.querySelectorAll('.sidebar .moduleExpander');
 const moduleLinks = document.querySelectorAll('.sidebar a.module');
-const functionLinks = document.querySelectorAll('.sidebar a.function');
+const moduleExpandersToFunctions = Mp.fromKeys(
+  moduleExpanders,
+  moduleExpander => moduleExpander.querySelectorAll('.function'),
+);
 
 Cl.forEach(moduleLinks, link => {
   link.addEventListener(
@@ -42,12 +46,22 @@ function cancelSearch() {
 
 function onSearchUpdate() {
   const searched = searchBar.value;
-  sidebar.classList.toggle('searched', !Str.isEmpty(searched));
-  let hasMatch = false;
-  Cl.forEach(functionLinks, link => {
-    const matches = Str.ignoreCase(link.textContent, searched, Str.includes);
-    link.classList.toggle('matchesSearch', matches);
-    hasMatch = hasMatch || matches;
-  });
-  searchBar.classList.toggle('noMatch', !hasMatch);
+  const isSearched = !Str.isEmpty(searched);
+  sidebar.classList.toggle('searched', isSearched);
+  const hasMatch = Cl.any(
+    Ar.map(moduleExpandersToFunctions, (functionLinks, moduleExpander) => {
+      const hasModuleMatch = Cl.any(
+        Ar.map(functionLinks, link => {
+          const matches =
+            isSearched &&
+            Str.ignoreCase(link.textContent, searched, Str.includes);
+          link.classList.toggle('matchesSearch', matches);
+          return matches;
+        }),
+      );
+      moduleExpander.classList.toggle('hasSearchMatch', hasModuleMatch);
+      return hasModuleMatch;
+    }),
+  );
+  searchBar.classList.toggle('noMatch', isSearched && !hasMatch);
 }

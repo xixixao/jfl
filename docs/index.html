@@ -201,7 +201,7 @@
         transform: rotate(0);
         width: 1.25rem;
       }
-      .sidebar.searched .module::before,
+      .sidebar .hasSearchMatch .module::before,
       .sidebar .open .module::before {
         transform: rotate(90deg);
       }
@@ -5893,20 +5893,51 @@
       (function () {
   'use strict';
 
-  const EMPTY = new Set();
-  function m(set) {
-    return set.size === 0 ? (EMPTY) : set;
+  const EMPTY = new Map();
+  function m(map) {
+    return map.size === 0 ? (EMPTY) : map;
+  }
+  function fromKeys(
+    collection,
+    getValue,
+  ) {
+    const result = new Map();
+    for (const [key, item] of collection.entries()) {
+      result.set(item, getValue(item, key));
+    }
+    return m(result);
+  }
+
+  const EMPTY$1 = new Set();
+  function m$1(set) {
+    return set.size === 0 ? (EMPTY$1) : set;
   }
   function from(collection) {
     if (isSet(collection)) {
       return collection;
     }
-    return m(new Set(collection.values()));
+    return m$1(new Set(collection.values()));
   }
   function isSet(argument) {
     return argument instanceof Set;
   }
 
+  function any(collection, predicateFn) {
+    if (predicateFn == null) {
+      for (const item of collection.values()) {
+        if (item) {
+          return true;
+        }
+      }
+      return false;
+    }
+    for (const [key, item] of collection.entries()) {
+      if (predicateFn(item, key, collection)) {
+        return true;
+      }
+    }
+    return false;
+  }
   function forEach(
     collection,
     fn,
@@ -5914,18 +5945,28 @@
     return collection.forEach(fn);
   }
 
-  const EMPTY$1 = [];
-  function m$1(array) {
-    return array.length === 0 ? EMPTY$1 : array;
+  const EMPTY$2 = [];
+  function m$2(array) {
+    return array.length === 0 ? EMPTY$2 : array;
   }
   function from$1(collection) {
     if (isArray(collection)) {
       return (collection);
     }
-    return m$1(Array.from(collection.values()));
+    return m$2(Array.from(collection.values()));
   }
   function isArray(argument) {
     return Array.isArray(argument);
+  }
+  function map(
+    collection,
+    fn,
+  ) {
+    const result = [];
+    for (const [key, item] of collection.entries()) {
+      result.push(fn(item, key));
+    }
+    return m$2(result);
   }
 
   function isEmpty(string) {
@@ -6021,8 +6062,12 @@
   const searchBarCancel = nullthrows(
     document.querySelector('.sidebarSearchCancel'),
   );
+  const moduleExpanders = document.querySelectorAll('.sidebar .moduleExpander');
   const moduleLinks = document.querySelectorAll('.sidebar a.module');
-  const functionLinks = document.querySelectorAll('.sidebar a.function');
+  const moduleExpandersToFunctions = fromKeys(
+    moduleExpanders,
+    moduleExpander => moduleExpander.querySelectorAll('.function'),
+  );
   forEach(moduleLinks, link => {
     link.addEventListener(
       'click',
@@ -6052,14 +6097,24 @@
   }
   function onSearchUpdate() {
     const searched = searchBar.value;
-    sidebar.classList.toggle('searched', !isEmpty(searched));
-    let hasMatch = false;
-    forEach(functionLinks, link => {
-      const matches = ignoreCase(link.textContent, searched, includes);
-      link.classList.toggle('matchesSearch', matches);
-      hasMatch = hasMatch || matches;
-    });
-    searchBar.classList.toggle('noMatch', !hasMatch);
+    const isSearched = !isEmpty(searched);
+    sidebar.classList.toggle('searched', isSearched);
+    const hasMatch = any(
+      map(moduleExpandersToFunctions, (functionLinks, moduleExpander) => {
+        const hasModuleMatch = any(
+          map(functionLinks, link => {
+            const matches =
+              isSearched &&
+              ignoreCase(link.textContent, searched, includes);
+            link.classList.toggle('matchesSearch', matches);
+            return matches;
+          }),
+        );
+        moduleExpander.classList.toggle('hasSearchMatch', hasModuleMatch);
+        return hasModuleMatch;
+      }),
+    );
+    searchBar.classList.toggle('noMatch', isSearched && !hasMatch);
   }
 
 }());
