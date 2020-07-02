@@ -5,6 +5,20 @@ import * as REx from './regexp';
 import {isRegExp} from './regexp';
 import type {$Array, Collection} from './types.flow';
 
+/// Check
+
+/**
+ * Returns whether given value is a `string`.
+ *
+ * @time O(1)
+ * @space O(1)
+ * @ex Str.isString("hello") // true
+ * @see REx.isRegExp, Ar.isArray
+ */
+export function isString(value: mixed): %checks {
+  return typeof value === 'string';
+}
+
 /// Construct
 
 /**

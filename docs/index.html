@@ -1493,6 +1493,11 @@
         REx.isRegExp
       </a>
     
+
+      <a class="moduleContent function" href="#REx.equals">
+        REx.equals
+      </a>
+    
       
 
         <div class="section">Combine</div>
@@ -1653,6 +1658,14 @@
     <a class="moduleContent" href="#str">Overview</a>
   
         
+        <div class="section">Check</div>
+        
+      <a class="moduleContent function" href="#Str.isString">
+        Str.isString
+      </a>
+    
+      
+
         <div class="section">Construct</div>
         
       <a class="moduleContent function" href="#Str.fromNumber">
@@ -1913,9 +1926,13 @@
           <p>
             <a href="https://github.com/xixixao/jfl">Github</a>
           </p>
-          <h2>Note on types</h1>
+          <h2>Note on types</h2>
           <p>
-            This library is centered around basic collection types available in JavaScript: Arrays, Sets and Maps. These are all `KeyedCollection`s (Arrays have indices and Sets have the same keys as values). But for simplicity many functions accept values which match the simpler `Collection` interface, which only declares that there are values.
+            This library is centered around basic collection types available in
+            JavaScript: Arrays, Sets and Maps. These are all `KeyedCollection`s
+            (Arrays have indices and Sets have the same keys as values). But for
+            simplicity many functions accept values which match the simpler
+            `Collection` interface, which only declares that there are values.
           </p>
           
       <a name="jfl"></a>
@@ -4433,9 +4450,9 @@
       <a name="rex"></a>
       <h2>REx (regexp)</h2>
       
-    <p>Work in progress</p>
+    <p>This module provides functions for constructing <span class="inlineCode">RegExp</span>s. <br /><br /> Every <span class="inlineCode">RegExp</span> consists of a string <span class="inlineCode">source</span> and a string <span class="inlineCode">flags</span>, which determine its behavior. <br /><br /> For using <span class="inlineCode">RegExp</span>s for matching <span class="inlineCode">string</span>s use the <span class="inlineCode">Str</span> module. For basic construction use JavaScript built-ins.</p>
     
-    
+    <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-meta -import -js"><span class="-keyword -control -js"><span>import</span></span><span>&nbsp;</span><span class="-punctuation -definition -modules -begin -js"><span>{</span></span><span class="-variable -other -module -js"><span>REx</span></span><span class="-punctuation -definition -modules -end -js"><span>}</span></span><span>&nbsp;</span><span class="-keyword -control -js"><span>from</span></span><span>&nbsp;</span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>jfl</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span></span></span></div><div class="line"><span class="-source -js"><span class="-storage -type -const -js"><span>const</span></span><span>&nbsp;</span><span class="-constant -other -js"><span>pattern</span></span><span>&nbsp;</span><span class="-keyword -operator -assignment -js"><span>=</span></span><span class="-string -regexp -js"><span>&nbsp;</span><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>hello&nbsp;</span><span class="-constant -character -character-class -regexp"><span>\w</span></span><span class="-keyword -operator -quantifier -regexp"><span>+</span></span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>i</span></span></span></div><div class="line"><span class="-source -js"><span class="-storage -type -const -js"><span>const</span></span><span>&nbsp;</span><span class="-constant -other -js"><span>pattern</span></span><span>&nbsp;</span><span class="-keyword -operator -assignment -js"><span>=</span></span><span>&nbsp;</span><span class="-meta -class -instance -constructor -js"><span class="-keyword -operator -new -js"><span>new</span></span><span>&nbsp;</span><span class="-entity -name -type -instance -js"><span>RegExp</span></span></span><span class="-meta -brace -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>hello&nbsp;</span><span class="-constant -character -escape -js"><span>\\</span></span><span>w+</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>i</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -brace -round -js"><span>)</span></span></span></div></pre>
   
       
       <h3>Check</h3>
@@ -4448,13 +4465,32 @@
           <h4>REx.isRegExp</h4>
         </a>
         
-    <p>TODO</p>
+    <p>Returns whether given value is a <span class="inlineCode">RegExp</span>.</p>
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-meta -function-call -js"><span class="-entity -name -function -js"><span>isRegExp</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span>value</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;mixed</span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;bool</span></span></div></pre>
-    
+    <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>REx</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>isRegExp</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -regexp -js"><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>a</span><span class="-punctuation -definition -string -end -js"><span>/</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;true</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L14">Source</a>
-                    
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L34">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/regexp.test.js#L6">Tests</a>          
+        </p>
+      </div>
+    
+
+      <div>
+        <a
+          class="headlineLink"
+          name="REx.equals"
+          href="#REx.equals">
+          <h4>REx.equals</h4>
+        </a>
+        
+    <p>Returns whether given <span class="inlineCode">RegExp</span>s are equal. <br /><br /> For patterns to be equal their source and flags must be strictly equal.</p>
+    <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-meta -function-call -js"><span class="-entity -name -function -js"><span>equals</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span>pattern</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-keyword -operator -spread -js"><span>...</span></span><span>patterns</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;$Array</span><span class="-keyword -operator -comparison -js"><span>&lt;</span></span><span class="-support -class -js"><span>RegExp</span></span><span class="-keyword -operator -comparison -js"><span>&gt;</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;boolean</span></span></div></pre>
+    <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>REx</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>equals</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -regexp -js"><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>a</span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>i</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span class="-string -regexp -js"><span>&nbsp;</span><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>a</span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>i</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;true</span></span></span></div></pre>
+  
+        <p class="functionFooter">
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L48">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/regexp.test.js#L11">Tests</a>          
         </p>
       </div>
     
@@ -4470,13 +4506,13 @@
           <h4>REx.concat</h4>
         </a>
         
-    <p>Work in progress</p>
+    <p>Create a new <span class="inlineCode">RegExp</span> by combining the sources of given <span class="inlineCode">patterns</span>. <br /><br /> The new <span class="inlineCode">RegExp</span> inherits the flags from the last given pattern.</p>
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-meta -function-call -js"><span class="-entity -name -function -js"><span>concat</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-keyword -operator -spread -js"><span>...</span></span><span>patterns</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;$Array</span><span class="-keyword -operator -comparison -js"><span>&lt;</span></span><span class="-support -class -js"><span>RegExp</span></span><span class="-keyword -operator -comparison -js"><span>&gt;</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span></span></div></pre>
-    
+    <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>REx</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-support -function -js"><span>concat</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -regexp -js"><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>a</span><span class="-punctuation -definition -string -end -js"><span>/</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span class="-string -regexp -js"><span>&nbsp;</span><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>b</span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>m</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;/ab/m</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L21">Source</a>
-                    
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L75">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/regexp.test.js#L18">Tests</a>          
         </p>
       </div>
     
@@ -4489,12 +4525,12 @@
           <h4>REx.append</h4>
         </a>
         
-    <p>TODO</p>
+    <p>Create a new <span class="inlineCode">RegExp</span> by adding <span class="inlineCode">appended</span> to the end of the source of the given <span class="inlineCode">pattern</span>.</p>
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-meta -function-call -js"><span class="-entity -name -function -js"><span>append</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span>pattern</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;appended</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="-keyword -operator -bitwise -js"><span>|</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span></span></div></pre>
-    
+    <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>REx</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-support -function -dom -js"><span>append</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -regexp -js"><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>a</span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>i</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>b</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;/ab/i</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>REx</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-support -function -dom -js"><span>append</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -regexp -js"><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>a</span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>i</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span class="-string -regexp -js"><span>&nbsp;</span><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>b</span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>m</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;/ab/i</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L29">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L90">Source</a>
                     
         </p>
       </div>
@@ -4508,12 +4544,12 @@
           <h4>REx.prepend</h4>
         </a>
         
-    <p>TODO</p>
+    <p>Create a new <span class="inlineCode">RegExp</span> by adding <span class="inlineCode">prepended</span> at the start of the source of the given <span class="inlineCode">pattern</span>.</p>
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-meta -function-call -js"><span class="-entity -name -function -js"><span>prepend</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span>pattern</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;prepended</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;string&nbsp;</span><span class="-keyword -operator -bitwise -js"><span>|</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span></span></div></pre>
-    
+    <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>REx</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-support -function -dom -js"><span>prepend</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -regexp -js"><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>a</span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>i</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>b</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;/ba/i</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>REx</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-support -function -dom -js"><span>prepend</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -regexp -js"><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>a</span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>i</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span class="-string -regexp -js"><span>&nbsp;</span><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>b</span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>m</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;/ba/i</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L37">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L105">Source</a>
                     
         </p>
       </div>
@@ -4527,12 +4563,12 @@
           <h4>REx.addFlags</h4>
         </a>
         
-    <p>TODO</p>
+    <p>Returns a <span class="inlineCode">RegExp</span> which includes flags from <span class="inlineCode">pattern</span> and given <span class="inlineCode">flags</span>. <br /><br /> This function throws if the given <span class="inlineCode">flags</span> include invalid characters.</p>
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-meta -function-call -js"><span class="-entity -name -function -js"><span>addFlags</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span>pattern</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;flags</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;string</span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span></span></div></pre>
-    
+    <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>REx</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>addFlags</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -regexp -js"><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>a</span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>g</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>i</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;/a/gi</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L45">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L121">Source</a>
                     
         </p>
       </div>
@@ -4546,12 +4582,12 @@
           <h4>REx.removeFlags</h4>
         </a>
         
-    <p>TODO</p>
+    <p>Returns a <span class="inlineCode">RegExp</span> which includes flags from <span class="inlineCode">pattern</span> not present in given <span class="inlineCode">flags</span>.</p>
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-meta -function-call -js"><span class="-entity -name -function -js"><span>removeFlags</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span>pattern</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;flags</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;string</span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;</span><span class="-support -class -js"><span>RegExp</span></span></span></div></pre>
-    
+    <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>REx</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>removeFlags</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -regexp -js"><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>a</span><span class="-punctuation -definition -string -end -js"><span>/</span></span><span>g</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>gi</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;/a</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L59">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/regexp.js#L141">Source</a>
                     
         </p>
       </div>
@@ -4956,6 +4992,28 @@
     
   
       
+      <h3>Check</h3>
+      
+      <div>
+        <a
+          class="headlineLink"
+          name="Str.isString"
+          href="#Str.isString">
+          <h4>Str.isString</h4>
+        </a>
+        
+    <p>Returns whether given value is a <span class="inlineCode">string</span>.</p>
+    <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-meta -function-call -js"><span class="-entity -name -function -js"><span>isString</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span>value</span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;mixed</span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span class="-keyword -operator -assignment -js"><span>:</span></span><span>&nbsp;bool</span></span></div></pre>
+    <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>isString</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>hello</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;true</span></span></span></div></pre>
+  
+        <p class="functionFooter">
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L18">Source</a>
+                    
+        </p>
+      </div>
+    
+    
+
       <h3>Construct</h3>
       
       <div>
@@ -4971,7 +5029,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>fromNumber</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-constant -numeric -decimal -js"><span>1234</span><span class="-meta -delimiter -decimal -period -js"><span>.</span></span><span>56</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;&#39;1234&#39;</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>fromNumber</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-constant -numeric -decimal -js"><span>1234</span><span class="-meta -delimiter -decimal -period -js"><span>.</span></span><span>56</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-constant -numeric -decimal -js"><span>1</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;&#39;1234.6&#39;</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>fromNumber</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-constant -numeric -decimal -js"><span>1234</span><span class="-meta -delimiter -decimal -period -js"><span>.</span></span><span>56</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-constant -numeric -decimal -js"><span>4</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;&#39;1234.5600&#39;</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>fromNumber</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-constant -numeric -decimal -js"><span>1234</span><span class="-meta -delimiter -decimal -period -js"><span>.</span></span><span>56</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-constant -numeric -decimal -js"><span>2</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>,</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>.</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;&#39;1.234,56&#39;</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L27">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L41">Source</a>
                     
         </p>
       </div>
@@ -4990,7 +5048,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L71">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L85">Source</a>
                     
         </p>
       </div>
@@ -5009,7 +5067,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>repeat</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>abr</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-constant -numeric -decimal -js"><span>3</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;&#39;abrabrabr&#39;</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L87">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L101">Source</a>
           <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/string.test.js#L11">Tests</a>          
         </p>
       </div>
@@ -5028,7 +5086,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>fill</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-constant -numeric -decimal -js"><span>4</span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-meta -function -arrow -js"><span class="-meta -parameters -js"><span class="-variable -parameter -function -js"><span>i</span></span></span><span>&nbsp;</span><span class="-storage -type -function -arrow -js"><span>=&gt;</span></span></span><span>&nbsp;</span><span class="-string -quoted -template -js"><span class="-punctuation -definition -string -begin -js"><span>`</span></span><span class="-source -js -embedded -source"><span class="-punctuation -section -embedded -js"><span>${</span></span><span>i</span><span class="-punctuation -section -embedded -js"><span>}</span></span></span><span class="-punctuation -definition -string -end -js"><span>`</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;&#39;1234&#39;</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L138">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L152">Source</a>
                     
         </p>
       </div>
@@ -5047,7 +5105,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>toNumber</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>1234.56</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;1234.56</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>fromNumber</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>1.234,56</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>,</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>.</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;1234.56</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L156">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L170">Source</a>
           <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/string.test.js#L16">Tests</a>          
         </p>
       </div>
@@ -5069,7 +5127,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>isEmpty</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;true</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>isEmpty</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>a</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;false</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L192">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L206">Source</a>
                     
         </p>
       </div>
@@ -5088,7 +5146,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -delimiter -property -period -js"><span>.</span></span><span class="-support -variable -property -js"><span>length</span></span><span class="-meta -brace -round -js"><span>(</span></span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-meta -brace -round -js"><span>)</span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;0</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -delimiter -property -period -js"><span>.</span></span><span class="-support -variable -property -js"><span>length</span></span><span class="-meta -brace -round -js"><span>(</span></span><span class="-string -quoted -single -js"><span class="-punctuation -definition -string -begin -js"><span>&#39;</span></span><span>aa</span><span class="-punctuation -definition -string -end -js"><span>&#39;</span></span></span><span class="-meta -brace -round -js"><span>)</span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;2</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L205">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L219">Source</a>
                     
         </p>
       </div>
@@ -5107,7 +5165,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L210">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L224">Source</a>
                     
         </p>
       </div>
@@ -5126,7 +5184,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L218">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L232">Source</a>
                     
         </p>
       </div>
@@ -5145,7 +5203,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>includes</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>abcd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>c</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;true</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>includes</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>ab&nbsp;cd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span class="-string -regexp -js"><span>&nbsp;</span><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span class="-constant -character -character-class -regexp"><span>\s</span></span><span class="-punctuation -definition -string -end -js"><span>/</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;true</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L238">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L252">Source</a>
                     
         </p>
       </div>
@@ -5164,7 +5222,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>equals</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>abcd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>abcd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;true</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>equals</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>abcd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span class="-string -regexp -js"><span>&nbsp;</span><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>abcd</span><span class="-punctuation -definition -string -end -js"><span>/</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;true</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>includes</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>abcde</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span class="-string -regexp -js"><span>&nbsp;</span><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span>abcd</span><span class="-punctuation -definition -string -end -js"><span>/</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;false</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L257">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L271">Source</a>
                     
         </p>
       </div>
@@ -5183,7 +5241,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-support -function -js"><span>indexOf</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>abcd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>c</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;2</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-support -function -js"><span>indexOf</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>ab&nbsp;cd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>/</span><span class="-constant -character -escape -js"><span>\s</span></span><span>/</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;2</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L278">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L292">Source</a>
                     
         </p>
       </div>
@@ -5202,7 +5260,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L299">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L313">Source</a>
                     
         </p>
       </div>
@@ -5221,7 +5279,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -delimiter -property -period -js"><span>.</span></span><span class="-support -variable -property -dom -js"><span>ignoreCase</span></span><span class="-meta -brace -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>abcd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>AbCD</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -delimiter -property -period -js"><span>.</span></span><span class="-variable -other -property -js"><span>equals</span></span><span class="-meta -brace -round -js"><span>)</span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;true</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -delimiter -property -period -js"><span>.</span></span><span class="-support -variable -property -dom -js"><span>ignoreCase</span></span><span class="-meta -brace -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>abcd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>AbCD</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -delimiter -property -period -js"><span>.</span></span><span class="-variable -other -property -js"><span>equals</span></span><span class="-meta -brace -round -js"><span>)</span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;true</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L311">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L325">Source</a>
           <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/string.test.js#L6">Tests</a>          
         </p>
       </div>
@@ -5240,7 +5298,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>countMatches</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>abcd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>c</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;1</span></span></span></div><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>countMatches</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>ab&nbsp;cd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span class="-string -regexp -js"><span>&nbsp;</span><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span class="-constant -character -character-class -regexp"><span>\s</span></span><span class="-punctuation -definition -string -end -js"><span>/</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;1</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L332">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L346">Source</a>
                     
         </p>
       </div>
@@ -5259,7 +5317,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L341">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L355">Source</a>
                     
         </p>
       </div>
@@ -5281,7 +5339,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>matchEvery</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>a&nbsp;b1cd</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span class="-string -regexp -js"><span>&nbsp;</span><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span class="-constant -character -character-class -regexp"><span>\w</span></span><span class="-keyword -operator -quantifier -regexp"><span>+</span></span><span class="-punctuation -definition -string -end -js"><span>/</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;[[&#39;a&#39;],&nbsp;[&#39;b&#39;],&nbsp;[&#39;cd&#39;]]</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L355">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L369">Source</a>
                     
         </p>
       </div>
@@ -5300,7 +5358,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-entity -name -function -js"><span>matchFirst</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>apple</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span class="-string -regexp -js"><span>&nbsp;</span><span class="-punctuation -definition -string -begin -js"><span>/</span></span><span class="-constant -character -character-class -regexp"><span>\w</span></span><span class="-keyword -operator -quantifier -regexp"><span>+</span></span><span class="-meta -group -regexp"><span class="-punctuation -definition -group -regexp"><span>(</span></span><span>pp</span><span class="-punctuation -definition -group -regexp"><span>)</span></span></span><span class="-keyword -operator -quantifier -regexp"><span>?</span></span><span class="-punctuation -definition -string -end -js"><span>/</span></span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;[&#39;app&#39;,&nbsp;&#39;pp&#39;]&nbsp;{index:&nbsp;0}</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L384">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L398">Source</a>
                     
         </p>
       </div>
@@ -5319,7 +5377,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L396">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L410">Source</a>
                     
         </p>
       </div>
@@ -5338,7 +5396,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L405">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L419">Source</a>
                     
         </p>
       </div>
@@ -5357,7 +5415,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L410">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L424">Source</a>
                     
         </p>
       </div>
@@ -5376,7 +5434,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L415">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L429">Source</a>
                     
         </p>
       </div>
@@ -5395,7 +5453,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L430">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L444">Source</a>
                     
         </p>
       </div>
@@ -5414,7 +5472,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L454">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L468">Source</a>
           <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/string.test.js#L27">Tests</a>          
         </p>
       </div>
@@ -5433,7 +5491,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L469">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L483">Source</a>
           <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/string.test.js#L43">Tests</a>          
         </p>
       </div>
@@ -5452,7 +5510,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L487">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L501">Source</a>
           <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/string.test.js#L57">Tests</a>          
         </p>
       </div>
@@ -5474,7 +5532,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L502">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L516">Source</a>
                     
         </p>
       </div>
@@ -5493,7 +5551,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L507">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L521">Source</a>
                     
         </p>
       </div>
@@ -5512,7 +5570,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L512">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L526">Source</a>
                     
         </p>
       </div>
@@ -5531,7 +5589,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L517">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L531">Source</a>
                     
         </p>
       </div>
@@ -5553,7 +5611,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L525">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L539">Source</a>
                     
         </p>
       </div>
@@ -5572,7 +5630,7 @@
     <pre class="editor editor-colors"><div class="line"><span class="-source -js"><span class="-variable -other -object -js"><span>Str</span></span><span class="-meta -method-call -js"><span class="-meta -delimiter -method -period -js"><span>.</span></span><span class="-support -function -js"><span>split</span></span><span class="-meta -arguments -js"><span class="-punctuation -definition -arguments -begin -bracket -round -js"><span>(</span></span><span class="-string -quoted -double -js"><span class="-punctuation -definition -string -begin -js"><span>&quot;</span></span><span>hello</span><span class="-punctuation -definition -string -end -js"><span>&quot;</span></span></span><span class="-meta -delimiter -object -comma -js"><span>,</span></span><span>&nbsp;</span><span class="-constant -numeric -decimal -js"><span>2</span></span><span class="-punctuation -definition -arguments -end -bracket -round -js"><span>)</span></span></span></span><span>&nbsp;</span><span class="-comment -line -double-slash -js"><span class="-punctuation -definition -comment -js"><span>//</span></span><span>&nbsp;[&quot;he&quot;,&nbsp;&quot;llo&quot;]</span></span></span></div></pre>
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L545">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L559">Source</a>
                     
         </p>
       </div>
@@ -5591,7 +5649,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L550">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L564">Source</a>
                     
         </p>
       </div>
@@ -5610,7 +5668,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L553">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L567">Source</a>
                     
         </p>
       </div>
@@ -5629,7 +5687,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L577">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L591">Source</a>
                     
         </p>
       </div>
@@ -5648,7 +5706,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L582">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L596">Source</a>
           <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/string.test.js#L85">Tests</a>          
         </p>
       </div>
@@ -5667,7 +5725,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L589">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L603">Source</a>
           <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/string.test.js#L93">Tests</a>          
         </p>
       </div>
@@ -5686,7 +5744,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L601">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L615">Source</a>
                     
         </p>
       </div>
@@ -5708,7 +5766,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L608">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L622">Source</a>
                     
         </p>
       </div>
@@ -5727,7 +5785,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L652">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L666">Source</a>
           <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/__tests__/string.test.js#L71">Tests</a>          
         </p>
       </div>
@@ -5746,7 +5804,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L695">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L709">Source</a>
                     
         </p>
       </div>
@@ -5765,7 +5823,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L709">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L723">Source</a>
                     
         </p>
       </div>
@@ -5784,7 +5842,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L716">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L730">Source</a>
                     
         </p>
       </div>
@@ -5803,7 +5861,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L721">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L735">Source</a>
                     
         </p>
       </div>
@@ -5822,7 +5880,7 @@
     
   
         <p class="functionFooter">
-          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L732">Source</a>
+          <a target="_blank" href="https://github.com/xixixao/jfl/blob/master/src/string.js#L746">Source</a>
                     
         </p>
       </div>
@@ -5833,7 +5891,7 @@
       </div>
     </div>
     <script>
-      (function (_) {
+      (function () {
   'use strict';
 
   const EMPTY = new Set();
@@ -6005,7 +6063,7 @@
     searchBar.classList.toggle('noMatch', !hasMatch);
   }
 
-}())
+}());
 
     </script>
   </body>
