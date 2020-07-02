@@ -173,7 +173,7 @@
         display: block;
         padding: 4px 8px;
         border-radius: 4px;
-        margin-left: var(--chevron-width);
+        padding-left: var(--chevron-width);
       }
       .sidebar a:hover {
         background-color: var(--hover-background-color);
@@ -183,7 +183,6 @@
         margin-left: 0;
         margin-top: 8px;
         position: relative;
-        padding-left: var(--chevron-width);
       }
       .sidebar .module::before {
         -webkit-mask-image: var(--chevron-url);
@@ -213,15 +212,15 @@
         color: var(--secondary-text-color);
         font-size: 0.75rem;
         font-weight: bold;
+        margin-left: 4px;
         margin-top: 4px;
-        margin-left: calc(var(--chevron-width) + 0.5rem);
-        padding: 4px 8px;
+        padding: 4px 8px 4px var(--chevron-width);
         display: none;
       }
       .sidebar .moduleContent {
-        margin-left: calc(var(--chevron-width) + 0.5rem);
         font-size: 0.85rem;
         display: none;
+        margin-left: 4px;
       }
       .sidebar .open .section {
         display: block;
