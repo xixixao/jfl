@@ -28,11 +28,25 @@ if (moduleFilter != null) {
 })();
 
 function checkFunctions(modules) {
+  const moduleNamesToFunctionsWithMaybeProblems = Mp.pull(
+    modules,
+    ({moduleName}) => moduleName,
+    ({functions}) => Ar.map(functions, fn => checkFunction(fn)),
+  );
+  const allFunctions = Ar.flatten(moduleNamesToFunctionsWithMaybeProblems);
+  const countAllFunctions = Cl.count(allFunctions);
+  const functionsWithoutProblems = Ar.filter(
+    allFunctions,
+    maybeProblem => maybeProblem == null,
+  );
+  const countFunctionsWithoutProblems = Cl.count(functionsWithoutProblems);
+  const percentageCorrect = Str.fromNumber(
+    Math.round((100 * countFunctionsWithoutProblems) / countAllFunctions),
+  );
   const moduleNamesToFunctionsWithProblems = Mp.filter(
-    Mp.pull(
-      modules,
-      ({moduleName}) => moduleName,
-      ({functions}) => Ar.mapMaybe(functions, fn => checkFunction(fn)),
+    Mp.map(
+      moduleNamesToFunctionsWithMaybeProblems,
+      functionsWithMaybeProblems => Ar.filterNulls(functionsWithMaybeProblems),
     ),
     functionsWithProblems => !Cl.isEmpty(functionsWithProblems),
   );
@@ -48,6 +62,9 @@ function checkFunctions(modules) {
       printFunction(functionWithProblems),
     );
   });
+  console.log(
+    `${percentageCorrect}% (${countFunctionsWithoutProblems}/${countAllFunctions}) done.`,
+  );
   console.log('');
 }
 

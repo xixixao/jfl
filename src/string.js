@@ -326,7 +326,7 @@ export function ignoreCase(
   string: string,
   search: string | RegExp,
   predicateFn: (string: string, search: string | RegExp) => boolean,
-) {
+): boolean {
   if (isRegExp(search)) {
     return predicateFn(string.toLowerCase(), REx.addFlags(search, 'i'));
   } else {
