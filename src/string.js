@@ -171,7 +171,7 @@ export function toNumber(
   string: string,
   decimalPoint?: string = '.',
   thousandsSeparator?: string = '',
-) {
+): number {
   if (decimalPoint === '.' && thousandsSeparator === '') {
     return Number(string);
   }

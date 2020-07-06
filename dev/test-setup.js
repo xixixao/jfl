@@ -29,6 +29,15 @@ expect.extend({
   nil(_, a) {
     return format(this, a == null, `expected $0r to be null`, a);
   },
+  throws(_, a) {
+    let thrown = false;
+    try {
+      a();
+    } catch (_e) {
+      thrown = true;
+    }
+    return format(this, thrown, `expected function to throw`, a);
+  },
 });
 
 const exp = expect();
@@ -44,9 +53,7 @@ export const eqq: <V, C: Collection<V>>(a: C, B: C) => void = exp.eqq;
 export const is: <V>(a: V, B: V) => void = exp.is;
 export const nil: <V>(a: V) => void = exp.nil;
 export const not: {tru: (value: boolean) => void} = exp.not;
-export function throws(fn: () => mixed): void {
-  expect(fn).toThrow();
-}
+export const throws: (fn: () => mixed) => void = exp.throws;
 
 function format({utils}, pass, message, ...args) {
   return {
