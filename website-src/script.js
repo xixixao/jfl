@@ -81,21 +81,23 @@ window.addEventListener('load', () => {
 window.addEventListener('popstate', loadState);
 
 function maybeGoToCurrentHashTarget() {
-  const targetID = hashToID(location.hash);
-  if (targetID != null) {
-    scrollIntoView(targetID);
+  const targetName = hashToName(location.hash);
+  if (targetName != null) {
+    scrollIntoView(targetName);
   }
 }
 
-function hashToID(hash) {
+function hashToName(hash) {
   const id = Str.dropFirst(hash, 1);
   return Str.isEmpty(id) ? null : id;
 }
 
-function scrollIntoView(targetID) {
+function scrollIntoView(targetName) {
   // Only scroll to element if we don't have a stored scroll position.
   if (history.state == null) {
-    const hashTarget = document.getElementById(targetID);
+    const hashTarget =
+      document.getElementById(targetName) ||
+      document.getElementsByName(targetName)[0];
     if (hashTarget != null) {
       hashTarget.scrollIntoView();
     }
