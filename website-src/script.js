@@ -2,11 +2,14 @@
 
 import {Ar, Cl, Mp, Str, invariant, nullthrows} from '../src/index';
 
-const sidebar = nullthrows(document.querySelector('.sidebar'));
+function documentQuerySelectorX(selector) {
+  return nullthrows(document.querySelector(selector));
+}
+
+const sidebar = documentQuerySelectorX('.sidebar');
+const main = documentQuerySelectorX('.main');
 const searchBar = document.querySelector('.sidebarSearch input');
-const searchBarCancel = nullthrows(
-  document.querySelector('.sidebarSearchCancel'),
-);
+const searchBarCancel = documentQuerySelectorX('.sidebarSearchCancel');
 const moduleExpanders = document.querySelectorAll('.sidebar .moduleExpander');
 const moduleLinks = document.querySelectorAll('.sidebar a.module');
 const moduleExpandersToFunctions = Mp.fromKeys(
@@ -64,4 +67,52 @@ function onSearchUpdate() {
     }),
   );
   searchBar.classList.toggle('noMatch', isSearched && !hasMatch);
+}
+
+// Chrome/Firefox/Edge don't remember scroll position properly so fix it
+
+window.addEventListener('hashchange', maybeGoToCurrentHashTarget);
+maybeGoToCurrentHashTarget();
+
+window.addEventListener('load', () => {
+  setTimeout(loadState, 1);
+});
+
+window.addEventListener('popstate', loadState);
+
+function maybeGoToCurrentHashTarget() {
+  const targetID = hashToID(location.hash);
+  if (targetID != null) {
+    scrollIntoView(targetID);
+  }
+}
+
+function hashToID(hash) {
+  const id = Str.dropFirst(hash, 1);
+  return Str.isEmpty(id) ? null : id;
+}
+
+function scrollIntoView(targetID) {
+  // Only scroll to element if we don't have a stored scroll position.
+  if (history.state == null) {
+    const hashTarget = document.getElementById(targetID);
+    if (hashTarget != null) {
+      hashTarget.scrollIntoView();
+    }
+  }
+}
+
+function updateState() {
+  history.replaceState({contentScrollPosition: main.scrollTop}, document.title);
+}
+
+function loadState(event) {
+  if (event != null) {
+    // Edge doesn't replace change history.state on popstate.
+    history.replaceState(event.state, document.title);
+  }
+  if (history.state != null) {
+    main.scrollTop = history.state.contentScrollPosition;
+  }
+  setTimeout(updateState, 1);
 }
