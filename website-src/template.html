@@ -764,10 +764,28 @@
           <h2>Note on types</h2>
           <p>
             This library is centered around basic collection types available in
-            JavaScript: Arrays, Sets and Maps. These are all `KeyedCollection`s
-            (Arrays have indices and Sets have the same keys as values). But for
-            simplicity many functions accept values which match the simpler
-            `Collection` interface, which only declares that there are values.
+            JavaScript: <span class="inlineCode">Array</span>s,
+            <span class="inlineCode">Map</span>s and
+            <span class="inlineCode">Set</span>s. These are all
+            <span class="inlineCode">KeyedCollection</span>s (<span
+              class="inlineCode"
+              >Array</span
+            >s have indices and <span class="inlineCode">Set</span>s have the
+            same keys as values). But for simplicity many functions accept
+            values which match the simpler
+            <span class="inlineCode">Collection</span> interface, which only
+            declares that there are values.
+          </p>
+          <p>
+            Additionally the library definition uses the type aliases
+            <span class="inlineCode">$Array</span>,
+            <span class="inlineCode">$Map</span> and
+            <span class="inlineCode">$Set</span> for the read-only versions of
+            <span class="inlineCode">Array</span>,
+            <span class="inlineCode">Map</span> and
+            <span class="inlineCode">Set</span> (these are declared as
+            <span class="inlineCode">$ReadOnly</span>... in Flow and
+            <span class="inlineCode">ReadOnly</span>... in TypeScript).
           </p>
           <!--CONTENT-->
         </div>

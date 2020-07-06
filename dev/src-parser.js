@@ -80,12 +80,12 @@ function parseModuleDoc(moduleSource) {
 }
 
 function parseFunctionIndex(moduleSource) {
-  return parseToIndex(moduleSource, /export (?:async )?function (\w+)/);
+  return parseToIndex(moduleSource, /export (?:async )?function ([$\w]+)/);
 }
 
 function parseDeclarationIndex(moduleSource) {
   let $$ = moduleSource;
-  $$ = Str.matchEvery($$, /declare ((?:async )?function (\w+)[^;]+)/);
+  $$ = Str.matchEvery($$, /declare ((?:async )?function ([$\w]+)[^;]+)/);
   return Mp.group(
     $$,
     ([_, __, functionName]) => functionName,
@@ -94,7 +94,7 @@ function parseDeclarationIndex(moduleSource) {
 }
 
 function parseTestIndex(testSource) {
-  return parseToIndex(testSource, /test\('(\w+)/);
+  return parseToIndex(testSource, /test\('([$\w]+)/);
 }
 
 function parseToIndex(source, pattern) {
@@ -121,7 +121,7 @@ function parseSectionFunctions(
     $$,
     REx.concat(
       /(\/\*\*(?:(?:\s|\S)(?!export))*)?\s/,
-      /export (async )?function (\w+)/,
+      /export (async )?function ([$\w]+)/,
       /((?:(?:\s|\S)(?!(\{\n {2}\S)|\{\}\n\n))*)/,
     ),
   );

@@ -87,6 +87,8 @@ function formatFunctionLinks(moduleAlias, functions) {
 function formatFunctionName(shortModuleName, functionName) {
   return shortModuleName == null
     ? functionName
+    : Str.startsWith(functionName, '$')
+    ? functionName
     : `${shortModuleName}.${functionName}`;
 }
 

@@ -27,7 +27,7 @@ function m<V>(set: $Set<V>): $Set<V> {
  *
  * Can contain any JS value. Maintains uniqueness.
  *
- * @ex St(1, 2, 3)
+ * @ex $St(1, 2, 3) // Set {1, 2, 3}
  * @alias create, constructor, new
  * @see St.from
  */
@@ -41,8 +41,8 @@ export function $St<V>(...args: $Array<V>): $Set<V> {
  * Note that this is not a way to clone a Set, if passed a `Set`, the same
  * set will be returned.
  *
- * @ex St.from([1, 2, 3])
- * @ex St.from(Mp({a: 1, b: 2, c: 3}))
+ * @ex St.from([1, 2, 3]) // $St(1, 2, 3)
+ * @ex St.from($Mp({a: 1, b: 2, c: 3})) // $St(1, 2, 3)
  * @alias values, fromValues
  * @see St
  */
@@ -87,7 +87,7 @@ export function mutable<V>(collection: Collection<V>): Set<V> {
 /**
  * Returns whether given argument is a `Set`.
  *
- * @ex St.isSet(St(1, 2, 3))
+ * @ex St.isSet($St(1, 2, 3))
  * @see Ar.isArray, Mp.isMap
  */
 export function isSet(argument: mixed): %checks {
@@ -196,7 +196,7 @@ export function equalsNested<V>(
 /**
  * Create a `Set` which is a union of all values in given `collections`.
  *
- * @ex St.union(St(1, 2, 3), St(1, 4, 5))
+ * @ex St.union($St(1, 2, 3), $St(1, 4, 5))
  * @alias join, flatten
  * @see St.intersect, St.flatten
  */
@@ -209,7 +209,7 @@ export function add<V>(collection: Collection<V>, value: V): $Set<V> {
 /**
  * Create a `Set` which is a union of all values in given `collections`.
  *
- * @ex St.union(St(1, 2, 3), St(1, 4, 5))
+ * @ex St.union($St(1, 2, 3), $St(1, 4, 5))
  * @alias join, flatten
  * @see St.intersect, St.flatten
  */
@@ -220,7 +220,7 @@ export function union<V>(...collections: $Array<Collection<V>>): $Set<V> {
 /**
  * Create a `Set` which is an intersection of all values in given `collections`.
  *
- * @ex St.intersect(St(1, 2, 3), St(2, 3, 6), St(0, 1, 2))
+ * @ex St.intersect($St(1, 2, 3), $St(2, 3, 6), $St(0, 1, 2))
  * @see St.union, St.diff
  */
 export function intersect<V>(...collections: $Array<Collection<V>>): $Set<V> {
@@ -249,7 +249,7 @@ export function intersect<V>(...collections: $Array<Collection<V>>): $Set<V> {
  * Create a `Set` which has the values from `collection` that do not appear in
  * any of the given `collections`.
  *
- * @ex St.diff(St(1, 2, 3), St(2, 4), St(1, 2, 4))
+ * @ex St.diff($St(1, 2, 3), $St(2, 4), $St(1, 2, 4))
  * @see St.union, St.intersect
  */
 export function diff<V>(
@@ -272,7 +272,7 @@ export function diff<V>(
 /**
  * Create a `Set` which is a union of all values in given `collections`.
  *
- * @ex St.flatten([St(1, 2, 3), St(1, 4, 5)])
+ * @ex St.flatten([$St(1, 2, 3), $St(1, 4, 5)])
  * @alias join, union
  * @see St.union, St.intersect
  */
@@ -291,7 +291,7 @@ export function flatten<V>(collections: $Array<Collection<V>>): $Set<V> {
 /**
  * Create a new set by filtering out values for which `fn` returns false.
  *
- * @ex St.filter(St(1, 2, 3), Mth.isOdd)
+ * @ex St.filter($St(1, 2, 3), Mth.isOdd)
  * @see St.map, St.filterNullish
  */
 export function filter<V>(

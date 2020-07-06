@@ -4,7 +4,7 @@
  * This module provides functions which operate on collections (`Array`s,
  * `Map`s, `Set`s) and return read-only (immutable) `Array`s.
  *
- * @ex import {Ar} from 'jfl'
+ * @ex import {Ar, $Ar} from 'jfl'
  */
 
 'use strict';
