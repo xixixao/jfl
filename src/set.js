@@ -54,10 +54,27 @@ export function from<V>(collection: Collection<V>): $Set<V> {
 }
 
 /**
+ * Convert any `collection` with keys to a `Set` of keys.
+ *
+ * Notably the keys of a `Set` are just its values. The keys of an `Array` are
+ * its indices.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex St.keys([5, 6]) // $St(0, 1)
+ * @ex St.keys($Mp({a: 2, b: 3})) // $St('a', 'b')
+ * @ex St.keys($St(3, 4) // $St(3, 4)
+ * @see St.from, Ar.keys
+ */
+export function keys<K>(collection: KeyedCollection<K, any>): $Set<K> {
+  return m(new Set(collection.keys()));
+}
+
+/**
  * Convert any `collection` of awaitable promises of values to a single
  * promise of a `Set` of values.
  *
- * @ex St.fromAsync([(async () => 1)(), (async () => 2)()])
+ * @ex St.fromAsync([(async () => 1)(), (async () => 2)()]) // $St(1, 2)
  * @alias all
  * @see St.from, Ar.fromAsync
  */
@@ -79,15 +96,12 @@ export function mutable<V>(collection: Collection<V>): Set<V> {
   return new Set(collection.values());
 }
 
-/**
- * TODO: keys
-
 /// Checks
 
 /**
  * Returns whether given argument is a `Set`.
  *
- * @ex St.isSet($St(1, 2, 3))
+ * @ex St.isSet($St(1, 2, 3)) // true
  * @see Ar.isArray, Mp.isMap
  */
 export function isSet(argument: mixed): %checks {
@@ -101,7 +115,7 @@ export function isSet(argument: mixed): %checks {
  *
  * @time O(n)
  * @space O(1)
- * @ex St.equals([1, 2], [1, 2])
+ * @ex St.equals([1, 2], [1, 2]) // true
  * @see Ar.equals, Mp.equals, Cl.equals
  */
 export function equals<V>(set: $Set<V>, ...sets: $Array<$Set<V>>): boolean {
@@ -132,7 +146,7 @@ export function equals<V>(set: $Set<V>, ...sets: $Array<$Set<V>>): boolean {
  *
  * @time O(n)
  * @space O(1)
- * @ex St.unorderdEquals([1, 2], [1, 2])
+ * @ex St.equalsOrderIgnored([1, 2], [2, 1]) // true
  * @see Sr.equals
  */
 export function equalsOrderIgnored<V>(
@@ -164,7 +178,7 @@ export function equalsOrderIgnored<V>(
  *
  * @time O(n)
  * @space O(1)
- * @ex Ar.equalsNested([[1], [2], 3], [[1], [2], 3])
+ * @ex Ar.equalsNested([[1], [2], 3], [[1], [2], 3]) // true
  * @see St.equalsNested, Mp.equalsNested, Cl.equalsNested
  */
 export function equalsNested<V>(
@@ -194,11 +208,11 @@ export function equalsNested<V>(
 /// Combine
 
 /**
- * Create a `Set` which is a union of all values in given `collections`.
+ * Create a `Set` with `value` added.
  *
- * @ex St.union($St(1, 2, 3), $St(1, 4, 5))
- * @alias join, flatten
- * @see St.intersect, St.flatten
+ * @ex St.add($St(1, 2, 3), 4) // $St(1, 2, 3, 4)
+ * @alias push
+ * @see St.union, St.flatten
  */
 export function add<V>(collection: Collection<V>, value: V): $Set<V> {
   const result = new Set(collection.values());
@@ -209,7 +223,7 @@ export function add<V>(collection: Collection<V>, value: V): $Set<V> {
 /**
  * Create a `Set` which is a union of all values in given `collections`.
  *
- * @ex St.union($St(1, 2, 3), $St(1, 4, 5))
+ * @ex St.union($St(1, 2, 3), $St(1, 4, 5)) // $St(1, 2, 3, 4, 5)
  * @alias join, flatten
  * @see St.intersect, St.flatten
  */
@@ -220,7 +234,7 @@ export function union<V>(...collections: $Array<Collection<V>>): $Set<V> {
 /**
  * Create a `Set` which is an intersection of all values in given `collections`.
  *
- * @ex St.intersect($St(1, 2, 3), $St(2, 3, 6), $St(0, 1, 2))
+ * @ex St.intersect($St(1, 2, 3), $St(2, 3, 6), $St(0, 1, 2)) // $St(2)
  * @see St.union, St.diff
  */
 export function intersect<V>(...collections: $Array<Collection<V>>): $Set<V> {
@@ -249,7 +263,7 @@ export function intersect<V>(...collections: $Array<Collection<V>>): $Set<V> {
  * Create a `Set` which has the values from `collection` that do not appear in
  * any of the given `collections`.
  *
- * @ex St.diff($St(1, 2, 3), $St(2, 4), $St(1, 2, 4))
+ * @ex St.diff($St(1, 2, 3), $St(2, 4), $St(1, 2, 4)) // $St(3)
  * @see St.union, St.intersect
  */
 export function diff<V>(
@@ -259,7 +273,7 @@ export function diff<V>(
   if (collections.length === 0) {
     return from(collection);
   }
-  const filter = union(...collections);
+  const filter = flatten(collections);
   const result = new Set();
   for (const item of collection.values()) {
     if (!filter.has(item)) {
@@ -272,7 +286,7 @@ export function diff<V>(
 /**
  * Create a `Set` which is a union of all values in given `collections`.
  *
- * @ex St.flatten([$St(1, 2, 3), $St(1, 4, 5)])
+ * @ex St.flatten([$St(1, 2, 3), $St(1, 4, 5)]) // $St(1, 2, 3, 4, 5)
  * @alias join, union
  * @see St.union, St.intersect
  */
@@ -289,18 +303,18 @@ export function flatten<V>(collections: $Array<Collection<V>>): $Set<V> {
 /// Select
 
 /**
- * Create a new set by filtering out values for which `fn` returns false.
+ * Create a new `Set` by filtering out values for which `fn` returns false.
  *
- * @ex St.filter($St(1, 2, 3), Mth.isOdd)
- * @see St.map, St.filterNullish
+ * @ex St.filter($St(1, 2, 3), x => Mth.isOdd(x)) // $St(1, 3)
+ * @see St.map, St.filterNulls
  */
-export function filter<V>(
-  collection: Collection<V>,
-  fn: V => boolean,
+export function filter<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => boolean,
 ): $Set<V> {
   const result = new Set();
-  for (const item of collection.values()) {
-    if (fn(item)) {
+  for (const [key, item] of collection.entries()) {
+    if (predicateFn(item, key)) {
       result.add(item);
     }
   }
@@ -308,19 +322,19 @@ export function filter<V>(
 }
 
 /**
- * Create a promise of an array by filtering out values in `collection`
+ * Create a promise of a `Set` by filtering out values in `collection`
  * for which async `fn` returns false.
  *
- * Executes `predicate` on all items in `collection` concurrently.
+ * Executes `predicateFn` on all items in `collection` concurrently.
  *
- * @ex Ar.filterAsync([1, 2, 3], async x => Mth.isOdd(x))
- * @see St.filter, Ar.filterAsync
+ * @ex St.filterAsync([1, 2, 3], async x => Mth.isOdd(x)) // $St(1, 3)
+ * @see St.filter, Ar.filterAsync, Mp.filterAsync
  */
 export async function filterAsync<K, V>(
   collection: KeyedCollection<K, V>,
-  predicate: (V, K) => Promise<boolean>,
+  predicateFn: (V, K) => Promise<boolean>,
 ): Promise<$Set<V>> {
-  const filter = await Ar.mapAsync(collection, predicate);
+  const filter = await Ar.mapAsync(collection, predicateFn);
   const result = new Set();
   let i = 0;
   for (const item of collection.values()) {
@@ -337,7 +351,7 @@ export async function filterAsync<K, V>(
  *
  * Here because its type is more specific then the generic `filter` function.
  *
- * @ex St.filterNulls([1, null, 3])
+ * @ex St.filterNulls([1, null, 3]) // $St(1, 3)
  * @see St.filter
  */
 export function filterNulls<V>(collection: Collection<?V>): $Set<V> {
@@ -380,7 +394,7 @@ export function filterKeys<K, V>(
 /**
  * Create a new set by calling given `fn` on each value of `collection`.
  *
- * @ex St.map([1, 2], x => x * 2)
+ * @ex St.map([1, 2], x => x * 2) // $St(2, 4)
  * @see St.mapAsync
  */
 export function map<VFrom, VTo>(
@@ -400,7 +414,7 @@ export function map<VFrom, VTo>(
  *
  * Executes `fn` on all items in `collection` concurrently.
  *
- * @ex await St.mapAsync([1, 2], async x => x * 2)
+ * @ex await St.mapAsync([1, 2], async x => x * 2) // $St(2, 4)
  * @alias Promise.all, genMap
  * @see St.map, Ar.mapAsync
  */
@@ -420,7 +434,7 @@ export async function mapAsync<VFrom, VTo>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.mapFlat([1, 2], x => [x - 1, x + 1]) // [0, 2, 1, 3]
+ * @ex St.mapFlat([1, 2], x => [x - 1, x]) // $St(0, 1, 2)
  * @see Ar.mapAsync
  */
 export function mapFlat<VFrom, VTo>(

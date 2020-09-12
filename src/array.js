@@ -87,7 +87,7 @@ export function fromAsync<V>(
  * @ex Ar.keys([5, 6]) // [0, 1]
  * @ex Ar.keys($Mp({a: 2, b: 3})) // ['a', 'b']
  * @ex Ar.keys($St(3, 4) // [3, 4]
- * @see Ar.from
+ * @see Ar.from, St.keys
  */
 export function keys<K>(collection: KeyedCollection<K, any>): $Array<K> {
   return m(Array.from(collection.keys()));

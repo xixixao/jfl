@@ -367,3 +367,6 @@ export function baseConvert(
 export function toBase(number: number, base: number): string {
   return number.toString(base);
 }
+
+// TODO: add clamp
+// TODO: isNumber

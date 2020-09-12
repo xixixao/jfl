@@ -41,6 +41,22 @@ test('fromAsync', async () => {
   eq(await St.fromAsync($St((async () => 1)(), (async () => 2)())), $St(1, 2));
 });
 
+test('mutable', () => {
+  const x = St.mutable($St(1, 2, 3));
+  x.add(4);
+  eq(x, $St(1, 2, 3, 4));
+});
+
+test('keys', () => {
+  eq(St.keys([2, 1, 2, 3]), $St(0, 1, 2, 3));
+  eq(St.keys($Mp({a: 1, b: 2, c: 3})), $St('a', 'b', 'c'));
+  eq(St.keys($St('a', 'b', 'c')), $St('a', 'b', 'c'));
+});
+
+test('add', () => {
+  eq(St.add($St(1, 2, 3), 4), $St(1, 2, 3, 4));
+});
+
 test('union', () => {
   eq(St.union($St(1, 2, 3), $St(2, 4), $St(1, 4)), $St(1, 2, 3, 4));
 });
@@ -53,7 +69,7 @@ test('diff', () => {
   eq(St.diff($St(1, 2, 3), $St(2, 4), $St(1, 4)), $St(3));
 });
 
-test('flaten', () => {
+test('flatten', () => {
   eq(St.flatten([$St(1, 2, 3), $St(2, 4), $St(1, 4)]), $St(1, 2, 3, 4));
 });
 
@@ -67,12 +83,22 @@ test('map', () => {
   eq(St.map($Mp({a: 1, b: 2, c: -2}), Math.abs), $St(1, 2));
 });
 
+test('mapFlat', () => {
+  eq(
+    St.mapFlat([1, 2], x => [x - 1, x]),
+    $St(0, 1, 2),
+  );
+});
+
 test('mapAsync', async () => {
   eq(await St.mapAsync($St(1, 2, -2), async x => Math.abs(x)), $St(1, 2));
 });
 
 test('filter', () => {
-  eq(St.filter($St(1, 2, 3), Mth.isOdd), $St(1, 3));
+  eq(
+    St.filter($St(1, 2, 3), x => Mth.isOdd(x)),
+    $St(1, 3),
+  );
 });
 
 test('filterAsync', async () => {
@@ -81,4 +107,11 @@ test('filterAsync', async () => {
 
 test('filterNulls', () => {
   eq(St.filterNulls($St(1, 2, null)), $St(1, 2));
+});
+
+test('filterKeys', () => {
+  eq(
+    St.filterKeys($Mp({a: 1, b: 2, c: 3}), x => Mth.isOdd(x)),
+    $St('a', 'c'),
+  );
 });

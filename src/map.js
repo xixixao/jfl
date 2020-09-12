@@ -13,6 +13,7 @@ import type {Collection, KeyedCollection, $Array, $Map} from './types.flow';
 
 import * as Ar from './array';
 import * as Cl from './collection';
+import * as St from './set';
 
 const EMPTY = new Map(); // Returned whenever we can return an empty set
 
@@ -27,7 +28,7 @@ function m<K, V>(map: $Map<K, V>): $Map<K, V> {
  *
  * If your keys aren't strings, prefer `Mp.of`.
  *
- * @ex Mp({a: 1, b: 2, c: 3})
+ * @ex $Mp({a: 1, b: 2, c: 3}) // Map {a => 1, b => 2, c => 3}
  * @alias create, constructor, new
  * @see Mp.of
  */
@@ -41,7 +42,7 @@ export function $Mp<K: string, V>(object?: {[key: K]: V}): $Map<K, V> {
 /**
  * Create a `Map` from given `pairs` of keys and values.
  *
- * @ex Mp.of([0, 2], [4, 2])
+ * @ex Mp.of([0, 2], [4, 2]) // Map {0 => 2, 4 => 2}
  * @see Mp, Mp.from, Mp.fromEntries
  */
 export function of<K, V>(...pairs: $Array<[K, V]>): $Map<K, V> {
@@ -54,8 +55,8 @@ export function of<K, V>(...pairs: $Array<[K, V]>): $Map<K, V> {
  * Note that this is not a way to clone a Map, if passed a `Map`, the same
  * map will be returned.
  *
- * @ex Mp.from([1, 2, 3])
- * @ex Mp.from(Set(1, 2, 3))
+ * @ex Mp.from([1, 2, 3]) // Mp.of([0, 1], [1, 2], [2, 3])
+ * @ex Mp.from(Set('a', 'b', 'c')) // $Mp({a: 'a', b: 'b', c: 'c'})
  * @see Mp.of, Mp.fromEntries
  */
 export function from<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
@@ -68,7 +69,7 @@ export function from<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
 /**
  * Convert any keyed `collection` of promises to a `Map`.
  *
- * @ex Mp.fromAsync([(async () => 1)(), (async () => 2)()])
+ * @ex Mp.fromAsync($Mp({a: (async () => 1)()}) // $Mp({a: 1})
  * @see Mp.from, Ar.fromAsync
  */
 export async function fromAsync<K, V>(
@@ -90,7 +91,7 @@ export async function fromAsync<K, V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Mp.fromValues([2, 3], n => n ** 2) // $Mp({4: 2, 9: 3})
+ * @ex Mp.fromValues([2, 3], n => n ** 2) // Mp.of([4, 2], [9, 3])
  * @see Mp.fromKeys
  */
 export function fromValues<KFrom, KTo, VTo>(
@@ -110,7 +111,7 @@ export function fromValues<KFrom, KTo, VTo>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Mp.fromKeys([2, 3], n => n ** 2) // $Mp({2: 4, 3: 9})
+ * @ex Mp.fromKeys([2, 3], n => n ** 2) // Mp.of([2, 4], [3, 9])
  * @see Mp.fromValues
  */
 export function fromKeys<KFrom, KTo, VTo>(
@@ -130,7 +131,7 @@ export function fromKeys<KFrom, KTo, VTo>(
  *
  * @time O(n)
  * @space O(n)
- * @ex await Mp.fromKeysAsync([2, 3], async n => n ** 2) // $Mp({2: 4, 3: 9})
+ * @ex await Mp.fromKeysAsync([2], async n => n ** 2) // Mp.of([2, 4])
  * @see Mp.fromKeys
  */
 export async function fromKeysAsync<KFrom, KTo, VTo>(
@@ -152,7 +153,7 @@ export async function fromKeysAsync<KFrom, KTo, VTo>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Mp.fromEntries($St([2, 3])) // $Mp({2: 3})
+ * @ex Mp.fromEntries($St([2, 3])) // Mp.of([2, 3])
  * @see Mp.fromKeys, Mp.mapToEntries
  */
 export function fromEntries<K, V>(collection: Collection<[K, V]>): $Map<K, V> {
@@ -165,7 +166,7 @@ export function fromEntries<K, V>(collection: Collection<[K, V]>): $Map<K, V> {
  * If there are more `keys` than `values` or vice versa, ignores the
  * excess items.
  *
- * @ex Mp.unzip([1, 2], [3, 4]) // $Mp({1: 3, 2: 4})
+ * @ex Mp.unzip(['a', 'b'], [3, 4]) // $Mp({a: 3, b: 4})
  * @alias listsToMap, fromZip, associate
  * @see Mp.fromEntries, Mp.pull
  */
@@ -190,7 +191,7 @@ export function unzip<K, V>(
 /**
  * Create an `Object` from a string-keyed `Map`.
  *
- * @ex Mp.toObject(Mp({a: 1, b: 2})) // {a: 1, b: 2}
+ * @ex Mp.toObject($Mp({a: 1, b: 2})) // {a: 1, b: 2}
  * @see $Mp
  */
 export function toObject<K: string, V>(
@@ -220,7 +221,7 @@ export function mutable<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
 /**
  * Returns whether given value is a `Map`.
  *
- * @ex Mp.isMap([1, 2, 3])
+ * @ex Mp.isMap([1, 2, 3]) // false
  * @see St.isSet, Ar.isArray
  */
 export function isMap(argument: mixed): %checks {
@@ -234,7 +235,7 @@ export function isMap(argument: mixed): %checks {
  *
  * @time O(n)
  * @space O(1)
- * @ex Mp.equals(Mp({a: 1, b: 2}), Mp({a: 1, b: 2}))
+ * @ex Mp.equals($Mp({a: 1, b: 2}), $Mp({a: 1, b: 2})) // true
  * @see Mp.equalsOrderIgnored, St.equals, Ar.equals, Cl.equals
  */
 export function equals<K, V>(
@@ -268,7 +269,7 @@ export function equals<K, V>(
  *
  * @time O(n)
  * @space O(1)
- * @ex Mp.equalsOrderIgnored(Mp({a: 1, b: 2}), Mp({b: 2, a: 1}))
+ * @ex Mp.equalsOrderIgnored($Mp({a: 1, b: 2}), $Mp({b: 2, a: 1})) // true
  * @see Mp.equals
  */
 export function equalsOrderIgnored<K, V>(
@@ -300,7 +301,7 @@ export function equalsOrderIgnored<K, V>(
  *
  * @time O(n)
  * @space O(1)
- * @ex Mp.equalsNested(Mp.of([[0], [1]]]), Mp.of([[0], [1]]]))
+ * @ex Mp.equalsNested(Mp.of([[0], [1]]]), Mp.of([[0], [1]]])) // true
  * @see Mp.equals, Cl.equalsNested
  */
 export function equalsNested<K, V>(
@@ -339,7 +340,7 @@ export function equalsNested<K, V>(
  *
  * @time O(1)
  * @space O(1)
- * @ex Mp.set(Mp({a: 1}), 'b', 2)
+ * @ex Mp.set($Mp({a: 1}), 'b', 2) // $Mp({a: 1, b: 2})
  * @see Mp.merge
  */
 export function set<K, V>(
@@ -356,8 +357,8 @@ export function set<K, V>(
  * Create a new `Map` by merging all given `collections`. Later values will
  * override earlier values.
  *
- * @ex Mp.merge(Mp({a: 1, b: 2}), Mp({a: 2, c: 3}))
- * @see Mp.merge
+ * @ex Mp.merge($Mp({a: 1, b: 2}), $Mp({a: 2, c: 3})) // $Mp({a: 2, b: 2, c: 3})
+ * @see Mp.set, Mp.diffByKey
  */
 export function merge<K, V>(
   ...collections: $Array<KeyedCollection<K, V>>
@@ -390,29 +391,204 @@ export function getX<K, V>(map: $Map<K, V>, key: K): V {
   return (map.get(key): any);
 }
 
-// TODO: diffByKey
-// TODO: dropFirst
-// TODO: takeFirst
-// TODO: filter
-// TODO: filterAsync
-// TODO: filterKeys
-// TODO: filterNulls
-// TODO: selectKeys
-// TODO: unique
-// TODO: uniqueBy
+/**
+ * Create a new `Map` which has all the keys and corresponding values from
+ * `collection` except for the keys that appear in any of the given
+ * `collections`.
+ *
+ * @ex Mp.diffByKey($Mp({a: 1, b: 2}), $Mp({b: 3}), $Mp({c: 4})) // $Mp({a: 1})
+ * @see Mp.merge
+ */
+export function diffByKey<K, V>(
+  collection: KeyedCollection<K, V>,
+  ...collections: $Array<KeyedCollection<K, V>>
+): $Map<K, V> {
+  if (collections.length === 0) {
+    return from(collection);
+  }
+  const filter = St.flatten(collections.map(collection => St.keys(collection)));
+  const result = new Map();
+  for (const [key, item] of collection.entries()) {
+    if (!filter.has(key)) {
+      result.set(key, item);
+    }
+  }
+  return m(result);
+}
 
 /**
- * TODO
+ * Create a new `Map` by filtering out keys and values for which `predicateFn`
+ * returns false.
+ *
+ * @ex Mp.filter($Mp({a: 1, b: 2}), x => Mth.isOdd(x)) // $Mp({a: 1})
+ * @ex Mp.filter(Mp.of([0, 1], [3, 4]), (_, x) => Mth.isOdd(x)) // Mp.of([3, 4])
+ * @see Mp.map, Mp.filterNulls
  */
 export function filter<K, V>(
   collection: KeyedCollection<K, V>,
-  predicate: V => boolean,
+  predicateFn: (V, K) => boolean,
 ): $Map<K, V> {
   const result = new Map();
   for (const [key, item] of collection.entries()) {
-    if (predicate(item)) {
+    if (predicateFn(item, key)) {
       result.set(key, item);
     }
+  }
+  return m(result);
+}
+
+/**
+ * Create a promise of a `Map` by filtering out values in `collection`
+ * for which async `predicateFn` returns false.
+ *
+ * Executes `predicateFn` on all key value pairs in `collection` concurrently.
+ *
+ * @ex Mp.filterAsync([1, 2, 3], async x => Mth.isOdd(x)) // $Mp({0: 1, 2: 3})
+ * @see Mp.filter, Ar.filterAsync, St.filterAsync
+ */
+export async function filterAsync<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => Promise<boolean>,
+): Promise<$Map<K, V>> {
+  const filter = await Ar.mapAsync(collection, predicateFn);
+  const keys = Ar.keys(collection);
+  const result = new Map();
+  let i = 0;
+  for (const item of collection.values()) {
+    if (filter[i]) {
+      result.set(keys[i], item);
+    }
+    i++;
+  }
+  return m(result);
+}
+
+/**
+ * Create a new `Map` by filtering out `null` and `undefined` values.
+ *
+ * Here because its type is more specific then the generic `filter` function.
+ *
+ * @ex Mp.filterNulls([1, null, 3]) // $Mp({0: 1, 2: 3})
+ * @see Mp.filter, Ar.filterNulls, St.filterNulls
+ */
+export function filterNulls<K, V>(
+  collection: KeyedCollection<K, ?V>,
+): $Map<K, V> {
+  const result = new Map();
+  for (const [key, item] of collection.entries()) {
+    if (item != null) {
+      result.set(key, item);
+    }
+  }
+  return m(result);
+}
+
+/**
+ * Create a new `Map` which has all the keys and corresponding values from
+ * `map` for the keys that appear in `keys`.
+ *
+ * The order of the keys in the resulting map is the order in which they appear
+ * first in `keys`.
+ *
+ * @ex Mp.selectKeys($Mp({a: 1, b: 2, c: 3}), ['c', 'b']) // $Mp({c: 3, b: 2})
+ * @see Mp.filterKeys
+ */
+export function selectKeys<K, V>(
+  collection: KeyedCollection<K, V>,
+  keys: Collection<K>,
+): $Map<K, V> {
+  const map = from(collection);
+  const keySet = St.from(keys);
+  const result = new Map();
+  for (const key of keySet) {
+    if (map.has(key)) {
+      result.set(key, (map.get(key): any));
+    }
+  }
+  return m(result);
+}
+
+/**
+ * Create a `Map` of values from `collection` with each value included only
+ * once.
+ *
+ * Later keys for the same value overwrite previous ones.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.unique($Mp{a: 1, b: 2, c: 1}) // $Mp({c: 1, b: 2})
+ * @see Mp.uniqueBy, St.from
+ */
+export function unique<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
+  return flip(flip(collection));
+}
+
+/**
+ * Create a `Map` of values from `collection` with each value included only
+ * once, where value equivalence is determined by calling `identityFn` on
+ * each value. Later values and keys overwrite previous ones.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.uniqueBy($Mp({a: 1, b: 2, c: 3}), Mth.isOdd) // $Mp({c: 3, b: 2})
+ * @see Mp.unique
+ */
+export function uniqueBy<K, V>(
+  collection: KeyedCollection<K, V>,
+  identityFn: (V, K) => mixed,
+): $Map<K, V> {
+  const map = from(collection);
+  const flipped = pull(collection, identityFn, (_, origKey) => origKey);
+  return pull(
+    flipped,
+    origKey => origKey,
+    origKey => (map.get(origKey): any),
+  );
+}
+
+/**
+ * Create a `Map` containing the first `n` key value pairs of `collection`.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.takeFirst($Mp({a: 1, b: 2, c: 3}), 2) // $Mp({a: 1, b: 2})
+ * @see Mp.dropFirst
+ */
+export function takeFirst<K, V>(
+  collection: KeyedCollection<K, V>,
+  n: number,
+): $Map<K, V> {
+  const result = new Map();
+  let i = 0;
+  for (const [key, item] of collection.entries()) {
+    if (i < n) {
+      result.set(key, item);
+    }
+    i++;
+  }
+  return m(result);
+}
+
+/**
+ * Create a `Map` containing all but the first `n` key value pairs of
+ * `collection`.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.takeFirst($Mp({a: 1, b: 2, c: 3}), 2) // $Mp({c: 3})
+ * @see Mp.takeFirst
+ */
+export function dropFirst<K, V>(
+  collection: KeyedCollection<K, V>,
+  n: number,
+): $Map<K, V> {
+  const result = new Map();
+  let i = 0;
+  for (const [key, item] of collection.entries()) {
+    if (i >= n) {
+      result.set(key, item);
+    }
+    i++;
   }
   return m(result);
 }
@@ -422,7 +598,7 @@ export function filter<K, V>(
 /**
  * Create a new `Map` by calling given `fn` on each value and key of `collection`.
  *
- * @ex Mp.map([1, 2], (x, i) => x * 2)
+ * @ex Mp.map($Mp({a: 1, b: 2}}), (x) => x * 2) // $Mp({a: 2, b: 4})
  * @see Mp.fromValues
  */
 export function map<KFrom, VFrom, VTo>(
@@ -444,7 +620,7 @@ export function map<KFrom, VFrom, VTo>(
  *
  * @time O(n)
  * @space O(n)
- * @ex await Ar.mapAsync([1, 2], async x => x * 2)
+ * @ex await Mp.mapAsync($Mp({a: 1}}), async x => x * 2) // $Mp({a: 2})
  * @alias Promise.all, genMap
  */
 export async function mapAsync<KFrom, VFrom, VTo>(
@@ -465,17 +641,16 @@ export async function mapAsync<KFrom, VFrom, VTo>(
   return m(result);
 }
 
-// TODO: mapKeys
-// TODO: mapAsync
-
 /**
  * Create a new `Map` by calling given `fn` on each key and value of
  * `collection`.
  *
  * `fn` must return new entries to populate the map.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Mp.mapToEntries(['a', 'b'], (x, i) => [x, i])
- * @see St.mapAsync
+ * @see Mp.map
  */
 export function mapToEntries<KFrom, VFrom, KTo, VTo>(
   collection: KeyedCollection<KFrom, VFrom>,
@@ -497,6 +672,8 @@ export function mapToEntries<KFrom, VFrom, KTo, VTo>(
  * will be present in the new `Map`.
  * Values for which `keyFn` returns null or undefined are ommited.
  *
+ * @time O(n)
+ * @space O(n)
  * @ex Mp.pull([1, 2, 3], n => `${n}`, n => n ** 2) // $Mp({1: 1, 2: 4, 3: 9})
  * @see Mp.group, Ar.partition
  */
@@ -537,6 +714,8 @@ declare function group<KFrom, VFrom, KTo, VTo>(
  *
  * Values for which `keyFn` returns null or undefined are ommited.
  *
+ * @time O(n) (amortized)
+ * @space O(n)
  * @ex Mp.group([1, 1, 3]) // Mp.of([1, [1, 1]], [3, [3]])
  * @ex Mp.group([1, 2, 3], n => n % 2) // Mp.of([1, [1, 3]], [0, [2]])
  * @see Mp.pull, Ar.partition
@@ -561,6 +740,16 @@ function useValue(value, _key) {
   return value;
 }
 
+/**
+ * Create a new `Map` with keys and values being the values and keys of
+ * `collection` respectively.
+ *
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.flip($Mp({a: 'A', b: 'B'}) // $Mp({A: 'a', B: 'b'})
+ * @see Mp.pull, Mp.group
+ */
 export function flip<K, V>(collection: KeyedCollection<K, V>): $Map<V, K> {
   const result = new Map();
   for (const [key, item] of collection.entries()) {
@@ -569,7 +758,26 @@ export function flip<K, V>(collection: KeyedCollection<K, V>): $Map<V, K> {
   return m(result);
 }
 
-// TODO: countValues
+/**
+ * Create a new `Map` with keys being the values of `collection` and values
+ * being the number of times each value occured in `collection`.
+ *
+ * `undefined` and `null` are valid values of `collection`.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.countValues($Mp({a: 'x', b: 'x', c: 'y'})) // $Mp({x: 2, y: 1})
+ * @see Mp.group
+ */
+export function countValues<V>(collection: Collection<V>): $Map<V, number> {
+  const result = new Map();
+  for (const item of collection.values()) {
+    const count = result.has(item) ? result.get(item) : 0;
+    result.set(item, count + 1);
+  }
+  return m(result);
+}
+
 // TODO: flatten
 // TODO: fillKeys
 

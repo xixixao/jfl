@@ -1,6 +1,6 @@
 // @flow
 
-import {$Mp, $St, Mp} from '..';
+import {$Mp, $St, Mp, Mth} from '..';
 import {eq, eqq, not, test, tru} from '../dev/test-setup.js';
 
 test('equals', () => {
@@ -17,18 +17,7 @@ test('equalsOrderIgnored', () => {
 
 test('equalsNested', () => {
   tru(Mp.equalsNested($Mp({a: [1, 2], b: 3}), $Mp({a: [1, 2], b: 3})));
-  tru(
-    Mp.equalsNested(
-      Mp.of([
-        [1, 2],
-        [3, 4],
-      ]),
-      Mp.of([
-        [1, 2],
-        [3, 4],
-      ]),
-    ),
-  );
+  tru(Mp.equalsNested(Mp.of([1, 2], [3, 4]), Mp.of([1, 2], [3, 4])));
   not.tru(Mp.equalsNested($Mp({a: 1, b: 2, c: 3}), $Mp({b: 2, c: 3})));
   not.tru(Mp.equalsNested($Mp({a: [1, 2]}), $Mp({a: [1, 2], b: 3})));
 });
@@ -53,11 +42,8 @@ test('isMap', () => {
 
 test('of', () => {
   eqq(
-    Mp.of([
-      [0, 1],
-      [1, 1],
-    ]),
-    Mp.of([
+    Mp.of([0, 1], [1, 1]),
+    new Map([
       [0, 1],
       [1, 1],
     ]),
@@ -145,4 +131,31 @@ test('group', () => {
     ),
     Mp.of([1, [0, 2]], [0, [1]]),
   );
+});
+
+test('diffByKey', () => {
+  eq(Mp.diffByKey($Mp({a: 1, b: 2}), $Mp({b: 3}), $Mp({c: 4})), $Mp({a: 1}));
+});
+
+test('selectKeys', () => {
+  eq(Mp.selectKeys($Mp({a: 1, b: 2, c: 3}), ['c', 'b']), $Mp({c: 3, b: 2}));
+  eq(
+    Mp.selectKeys($Mp({a: 1, b: 2, c: 3}), ['c', 'b', 'd', 'c']),
+    $Mp({c: 3, b: 2}),
+  );
+});
+
+test('unique', () => {
+  eq(Mp.unique($Mp({a: 1, b: 2, c: 1})), $Mp({c: 1, b: 2}));
+});
+
+test('uniqueBy', () => {
+  eq(
+    Mp.uniqueBy($Mp({a: 1, b: 2, c: 3}), x => Mth.isOdd(x)),
+    $Mp({c: 3, b: 2}),
+  );
+});
+
+test('countBy', () => {
+  eq(Mp.countValues($Mp({a: 'x', b: 'x', c: 'y'})), $Mp({x: 2, y: 1}));
 });

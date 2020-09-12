@@ -70,6 +70,41 @@ export function fromNumber(
 }
 
 /**
+ * Return the number represented by given `string`.
+ *
+ * @time O(n)
+ * @space O(1) (O(n) if thousandsSeparator is used)
+ * @ex Str.toNumber('1234.56') // 1234.56
+ * @ex Str.fromNumber('1.234,56', ',', '.') // 1234.56
+ * @alias Number
+ * @see Str.fromNumber, Mth.fromBase
+ */
+export function toNumber(
+  string: string,
+  decimalPoint?: string = '.',
+  thousandsSeparator?: string = '',
+): number {
+  if (decimalPoint === '.' && thousandsSeparator === '') {
+    return Number(string);
+  }
+  if (thousandsSeparator === '') {
+    return Number(string.replace(decimalPoint, '.'));
+  }
+  if (decimalPoint === thousandsSeparator) {
+    throw new Error(
+      `Expected different parameters \`decimalPoint\` and ` +
+        `\`thousandsSeparator\`, but got \`${decimalPoint}\` for both.`,
+    );
+  }
+  const [integer, decimal] = split(string, decimalPoint);
+  const nonSeparatedInteger = integer.replace(thousandsSeparator, '');
+  if (decimal == null) {
+    return Number(nonSeparatedInteger);
+  }
+  return Number(nonSeparatedInteger + '.' + decimal);
+}
+
+/**
  * Create the string representation of `number` based on the execution
  * environment.
  *
@@ -155,41 +190,6 @@ export function fill(times: number, fn: number => string): string {
     result += fn(i);
   }
   return result;
-}
-
-/**
- * Return the number represented by given `string`.
- *
- * @time O(n)
- * @space O(1) (O(n) if thousandsSeparator is used)
- * @ex Str.toNumber('1234.56') // 1234.56
- * @ex Str.fromNumber('1.234,56', ',', '.') // 1234.56
- * @alias Number
- * @see Str.fromNumber, Mth.fromBase
- */
-export function toNumber(
-  string: string,
-  decimalPoint?: string = '.',
-  thousandsSeparator?: string = '',
-): number {
-  if (decimalPoint === '.' && thousandsSeparator === '') {
-    return Number(string);
-  }
-  if (thousandsSeparator === '') {
-    return Number(string.replace(decimalPoint, '.'));
-  }
-  if (decimalPoint === thousandsSeparator) {
-    throw new Error(
-      `Expected different parameters \`decimalPoint\` and ` +
-        `\`thousandsSeparator\`, but got \`${decimalPoint}\` for both.`,
-    );
-  }
-  const [integer, decimal] = split(string, decimalPoint);
-  const nonSeparatedInteger = integer.replace(thousandsSeparator, '');
-  if (decimal == null) {
-    return Number(nonSeparatedInteger);
-  }
-  return Number(nonSeparatedInteger + '.' + decimal);
 }
 
 /// Checks
