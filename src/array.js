@@ -689,7 +689,8 @@ export function dropLastWhile<V>(
 /// Divide
 
 /**
- * Create an `Array` of arrays which are chunks of given `collection` of `size`.
+ * Create an array of `Array`s which are chunks of given `collection` of given
+ * `size`.
  *
  * If the `collection` doesn't divide evenly, the final chunk will be smaller
  * than the rest.
@@ -728,12 +729,11 @@ export function chunk<V>(
  * Create a tuple of `Array`s containing items of `collection` which match and
  * don't match `predicateFn` respectively.
  *
- * More effecient combination of `Ar.filter` and `Ar.filter` combined
- * with `Fn.not`.
+ * More effecient than using multiple `Ar.filter` calls.
  *
  * @time O(n)
  * @space O(n)
- * @ex Ar.partition([1, 2, 3, 4], Mth.isEven) // [[2, 4], [1, 3]]
+ * @ex Ar.partition([1, 2, 3, 4], x => Mth.isEven(x)) // [[2, 4], [1, 3]]
  * @alias split
  * @see Mp.group
  */

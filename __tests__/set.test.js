@@ -1,7 +1,7 @@
 // @flow
 
 import {$Mp, $St, Mth, St} from '..';
-import {eq, is, not, test, tru} from '../dev/test-setup.js';
+import {eq, eqq, is, not, test, tru} from '../dev/test-setup.js';
 
 test('equals', () => {
   tru(St.equals($St(1, 2, 3), $St(1, 2, 3)));
@@ -113,5 +113,16 @@ test('filterKeys', () => {
   eq(
     St.filterKeys($Mp({a: 1, b: 2, c: 3}), x => Mth.isOdd(x)),
     $St('a', 'c'),
+  );
+});
+
+test('chunk', () => {
+  eqq(St.chunk([4, 2, 3, 4, 5, 6], 2), [$St(4, 2), $St(3, 5), $St(6)]);
+});
+
+test('partition', () => {
+  eqq(
+    St.partition([1, 2, 3, 2], n => Mth.isOdd(n)),
+    [$St(1, 3), $St(2)],
   );
 });

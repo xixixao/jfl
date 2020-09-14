@@ -367,27 +367,21 @@ export function filterNulls<V>(collection: Collection<?V>): $Set<V> {
 /**
  * Create a `Set` of keys corresponding to values passing given `predicateFn`.
  *
- * @ex St.filterKeys([1, 2, 3], n => Mth.isOdd(n)) // $St(1, 3)
+ * @ex St.filterKeys($Mp({a: 1, b: 2}), n => Mth.isOdd(n)) // $St('a')
  * @see St.filter, Ar.filterKeys
  */
 export function filterKeys<K, V>(
   collection: KeyedCollection<K, V>,
-  predicateFn: V => boolean,
+  predicateFn: (V, K) => boolean,
 ): $Set<K> {
   const result = new Set();
   for (const [key, item] of collection.entries()) {
-    if (predicateFn(item)) {
+    if (predicateFn(item, key)) {
       result.add(key);
     }
   }
   return m(result);
 }
-
-/**
- * TODO: filterWithKeys (possibly combine with filter, using swapped order)
- * TODO:
- * dropFirst
- * takeFirst
 
 /// Transform
 
@@ -397,13 +391,13 @@ export function filterKeys<K, V>(
  * @ex St.map([1, 2], x => x * 2) // $St(2, 4)
  * @see St.mapAsync
  */
-export function map<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => VTo,
+export function map<K, VFrom, VTo>(
+  collection: KeyedCollection<K, VFrom>,
+  fn: (VFrom, K) => VTo,
 ): $Set<VTo> {
   const result = new Set();
-  for (const item of collection.values()) {
-    result.add(fn(item));
+  for (const [key, item] of collection.entries()) {
+    result.add(fn(item, key));
   }
   return m(result);
 }
@@ -418,11 +412,11 @@ export function map<VFrom, VTo>(
  * @alias Promise.all, genMap
  * @see St.map, Ar.mapAsync
  */
-export async function mapAsync<VFrom, VTo>(
-  collection: Collection<VFrom>,
-  fn: VFrom => Promise<VTo>,
+export async function mapAsync<K, VFrom, VTo>(
+  collection: KeyedCollection<K, VFrom>,
+  fn: (VFrom, K) => Promise<VTo>,
 ): Promise<$Set<VTo>> {
-  return m(new Set(await Promise.all(Array.from(map(collection, fn)))));
+  return m(new Set(await Ar.mapAsync(collection, fn)));
 }
 
 /**
@@ -451,13 +445,71 @@ export function mapFlat<VFrom, VTo>(
   return m(result);
 }
 
-// TODO:
-// mapWithKey
-
 /// Divide
 
-// TODO:
-// chunk
-// partition
+/**
+ * Create an array of `Set`s which are chunks of given `collection` of given
+ * `size`.
+ *
+ * If the `collection` doesn't divide evenly, the final chunk will be smaller
+ * than the rest.
+ * The collection will be first converted to a Set.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex St.chunk([4, 2, 3, 4, 5, 6], 2) // [$St(4, 2), $St(3, 5), $St(6)]
+ * @see Ar.chunk
+ */
+export function chunk<V>(
+  collection: Collection<V>,
+  size: number,
+): $Array<$Set<V>> {
+  if (size < 1) {
+    throw new Error(`Expected \`size\` to be greater than 0, got \`${size}\`.`);
+  }
+  const set = from(collection);
+  const result = [];
+  let chunk = new Set();
+  let i = 0;
+  for (const item of set.values()) {
+    if (i >= size) {
+      i = 0;
+      result.push(chunk);
+      chunk = new Set();
+    }
+    chunk.add(item);
+    i++;
+  }
+  if (chunk.size > 0) {
+    result.push(chunk);
+  }
+  return result;
+}
 
-// TODO: has / includes
+/**
+ * Create a tuple of `Set`s containing items of `collection` which match and
+ * don't match `predicateFn` respectively.
+ *
+ * More effecient than using multiple `St.filter` calls.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex St.partition([1, 2, 3, 2], x => Mth.isEven(x)) // [$Set(2), $Set(1, 3)]
+ * @alias split
+ * @see Mp.group
+ */
+export function partition<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => boolean,
+): [$Set<V>, $Set<V>] {
+  const positives = new Set();
+  const negatives = new Set();
+  for (const [key, item] of collection.entries()) {
+    if (predicateFn(item, key)) {
+      positives.add(item);
+    } else {
+      negatives.add(item);
+    }
+  }
+  return [m(positives), m(negatives)];
+}

@@ -40,6 +40,24 @@ export function isEven(n: number): boolean {
   return n % 2 === 0;
 }
 
+/**
+ * Returns whether given value is a `number`.
+ *
+ * Use these methods to check that a number
+ *  `Number.isFinite(x)` is not a NaN or Infinity
+ *  `Number.isInteger(x)` is an integer (including a possibly rounded large one)
+ *  `Number.isSafeInteger(x)` is an integer (in representable range)
+ *  `Number.isNaN(x)` is a NaN (such as the result of `Math.sqrt(-1)`)
+ *
+ * @time O(1)
+ * @space O(1)
+ * @ex Mth.isNumber("a") // false
+ * @see Ar.isArray, St.isSet, Mp.isMap
+ */
+export function isNumber(n: mixed): %checks {
+  return typeof n === 'number';
+}
+
 /// Operators
 
 /**
@@ -96,6 +114,20 @@ export function idivx(numerator: number, divisor: number): number {
     throw new Error('Expected divisor to not be 0, but it was');
   }
   return Math.floor(numerator / divisor);
+}
+
+/**
+ * Returns `value` if at least `min`, otherwise `min`, and at most `max`,
+ * otherwise `max`.
+ *
+ * @time O(n)
+ * @space O(1)
+ * @ex Mth.clamp(42, 0, 100) // 42
+ * @ex Mth.clamp(-42, 0, 100) // 0
+ * @ex Mth.clamp(142, 0, 100) // 100
+ */
+export function clamp(value: number, min: number, max: number): number {
+  return value <= min ? min : value >= max ? max : value;
 }
 
 /// Collections
@@ -367,6 +399,3 @@ export function baseConvert(
 export function toBase(number: number, base: number): string {
   return number.toString(base);
 }
-
-// TODO: add clamp
-// TODO: isNumber

@@ -575,7 +575,7 @@ export function takeFirst<K, V>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Mp.takeFirst($Mp({a: 1, b: 2, c: 3}), 2) // $Mp({c: 3})
+ * @ex Mp.dropFirst($Mp({a: 1, b: 2, c: 3}), 2) // $Mp({c: 3})
  * @see Mp.takeFirst
  */
 export function dropFirst<K, V>(

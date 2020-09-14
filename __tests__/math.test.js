@@ -17,6 +17,14 @@ test('isEven', () => {
   tru(Mth.isEven(-10));
 });
 
+test('isNumber', () => {
+  tru(Mth.isNumber(-3));
+  tru(Mth.isNumber(1));
+  tru(Mth.isNumber(3 / 0));
+  tru(Mth.isNumber(Math.sqrt(-1)));
+  not.tru(Mth.isNumber('a'));
+});
+
 test('pmod', () => {
   is(Mth.pmod(-13, 5), 2);
 });
@@ -33,6 +41,12 @@ test('divx', () => {
 test('idivx', () => {
   is(Mth.idivx(10, 3), 3);
   throws(() => Mth.idivx(9, 0));
+});
+
+test('clamp', () => {
+  is(Mth.clamp(42, 0, 100), 42);
+  is(Mth.clamp(-42, 0, 100), 0);
+  is(Mth.clamp(142, 0, 100), 100);
 });
 
 test('min', () => {
