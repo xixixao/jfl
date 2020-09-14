@@ -109,6 +109,18 @@ import * as Stats from 'simple-statistics';
 const mean = Stats.geometricMean(Ar.from(numbers));
 ```
 
+[immer](https://immerjs.github.io/immer/)
+
+Immer is great for updating nested objects and collections without mutating them (in an imperative fashion, which can be simpler).
+
+```js
+import produce from 'immer';
+
+const updated = produce({x: {y: [3]}}, state => {
+  state.x.y[0] = 4;
+});
+```
+
 ## Alternatives
 
 If this library isn't your cup of tea you might want to check the alternatives below, sorted roughly by popularity starting with the most popular.
@@ -125,3 +137,7 @@ If this library isn't your cup of tea you might want to check the alternatives b
 | [Sanctuary](https://sanctuary.js.org/)  | ✅ | ❌ |  ❌ | ❌ |
 | [Folktale](https://folktale.origamitower.com/)  | ✅ | ❌ | ❌ | ❌ |
 | [Mout](http://moutjs.com/)              | ✅ | ❌ | ❌ | ❌ |
+
+[immutable](https://immutable-js.github.io/immutable-js/)
+
+Immutable provides alternative implementations for collections and objects (records) which use structural sharing. They should in general use less memory, but are slower to read and write to. Being different from the built-in JavaScript data structures they might be trickier to work with.
