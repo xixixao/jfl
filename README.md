@@ -126,7 +126,7 @@ const updated = produce({x: {y: [3]}}, state => {
 If this library isn't your cup of tea you might want to check the alternatives below, sorted roughly by popularity starting with the most popular.
 
 <!-- prettier-ignore -->
-| Name |  Has static interface? | Supports Maps & Sets? | Immutable? | Well-typed |
+| Name |  Has static interface | Supports Maps & Sets | Non-mutating | Well-typed |
 | ------- | -------------- | --------- | --------- | --------- |
 | [Lodash](https://lodash.com/)           | ✅ | ❌ |  ❌ | ❌ |
 | [Underscore](https://underscorejs.org/) | ✅ | ❌ |  ❌ | ❌ |
@@ -137,6 +137,8 @@ If this library isn't your cup of tea you might want to check the alternatives b
 | [Sanctuary](https://sanctuary.js.org/)  | ✅ | ❌ |  ❌ | ❌ |
 | [Folktale](https://folktale.origamitower.com/)  | ✅ | ❌ | ❌ | ❌ |
 | [Mout](http://moutjs.com/)              | ✅ | ❌ | ❌ | ❌ |
+
+---
 
 [immutable](https://immutable-js.github.io/immutable-js/)
 

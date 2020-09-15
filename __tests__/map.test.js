@@ -87,6 +87,12 @@ test('fromEntries', () => {
   eq(Mp.fromEntries($St([1, 2], [3, 4])), Mp.of([1, 2], [3, 4]));
 });
 
+test('mutable', () => {
+  const x = Mp.mutable($Mp({a: 1, b: 2, c: 3}));
+  x.set('c', 4);
+  eq(x, $Mp({a: 1, b: 2, c: 4}));
+});
+
 test('unzip', () => {
   eq(Mp.unzip([1, 2], [3, 4]), Mp.of([1, 3], [2, 4]));
 });

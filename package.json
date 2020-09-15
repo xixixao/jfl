@@ -47,8 +47,8 @@
     "test": "dev/run.sh jest",
     "//watchdocs": "rebuilds the website on any changes",
     "watchdocs": "dev/run.sh nodemon -e js,html --watch website-src --watch dev --watch src --exec dev/run.sh jest-runtime dev/build-website.js",
-    "//watchtests": "run tests on any changes",
-    "watchtests": "dev/run.sh jest --watch",
+    "//watchtest": "run tests on any changes",
+    "watchtest": "dev/run.sh jest --watch",
     "//watchcheck": "check status of sources on any changes",
     "watchcheck": "dev/run.sh nodemon -e js --watch dev --watch src --watch __tests__ --exec dev/run.sh jest-runtime dev/check-sources.js"
   },

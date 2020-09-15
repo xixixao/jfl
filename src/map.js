@@ -212,7 +212,7 @@ export function toObject<K: string, V>(
  * @ex Mp.mutable($Mp({a: 1, b: 2})) // Map {a => 1, b => 2}
  * @see Mp.of, Mp.fromEntries
  */
-export function mutable<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
+export function mutable<K, V>(collection: KeyedCollection<K, V>): Map<K, V> {
   return new Map(collection.entries());
 }
 

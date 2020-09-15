@@ -961,7 +961,7 @@ type TupleOfValues<Cs> = $TupleMap<Cs, <V>(Collection<V>) => V>;
  * @space O(n)
  * @ex Ar.zip([1, 2], ['a', 'b'], [5, 6]) // [[1, 'a', 5], [2, 'b', 6]]
  * @alias zipAll
- * @see Ar.zipWith
+ * @see Ar.zipWith, Ar.unzip
  */
 export function zip<Cs: $Array<Collection<mixed>>>(
   ...collections: Cs
@@ -978,6 +978,9 @@ export function zip<Cs: $Array<Collection<mixed>>>(
   for (const collection of collections) {
     let i = 0;
     for (const item of collection.values()) {
+      if (i >= zippedLength) {
+        break;
+      }
       (result[i]: any).push(item);
       i++;
     }
@@ -1003,6 +1006,33 @@ export function zipWith<I, Cs: $Array<Collection<I>>, O>(
   ...collections: Cs
 ): $Array<O> {
   return map(zip(...collections), tuple => fn(...tuple));
+}
+
+/**
+ * Join a `collection` of tuples into a tuple of `Array`s.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Ar.unzip([[1, 'a', 5], [2, 'b', 6]]) // [[1, 2], ['a', 'b'], [5, 6]]
+ * @see Ar.zip, Ar.zipWith
+ */
+export function unzip<T: $Array<mixed>>(
+  collection: Collection<T>,
+): $TupleMap<T, <V>(V) => $Array<V>> {
+  const first = Cl.first(collection);
+  if (first == null) {
+    throw new Error('Expected at least one tuple, got none instead.');
+  }
+  let zippedLength = Cl.count(first);
+  const result = fill(zippedLength, _ => []);
+  for (const tuple of collection.values()) {
+    let i = 0;
+    for (const item of tuple.values()) {
+      (result[i]: any).push(item);
+      i++;
+    }
+  }
+  return (m(result): any);
 }
 
 /**

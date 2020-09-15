@@ -24,6 +24,7 @@ if (moduleFilter != null) {
           Str.includes(moduleName, moduleFilter),
         );
   checkFunctions(filteredModules);
+  checkTestsStructure(filteredModules);
   checkTODOs(filteredModules);
 })();
 
@@ -126,6 +127,61 @@ function printFunction({
     `      ${functionName}` +
       ` (${Str.join(Ar.filterNulls([docProblem, testProblem]), ', ')})`,
   );
+}
+
+function checkTestsStructure(modules) {
+  const modulesWithTestsInWrongOrder = Ar.mapMaybe(
+    modules,
+    ({moduleName, functions, tests}) => {
+      const functionNames = Ar.map(functions, ({functionName}) => functionName);
+      const functionNamesWithoutEquals = Ar.filter(
+        functionNames,
+        name => !Str.startsWith(name, 'equal'),
+      );
+      const testNamesWithoutEquals = Ar.filter(
+        tests,
+        name => !Str.startsWith(name, 'equal'),
+      );
+      if (Cl.equals(functionNamesWithoutEquals, testNamesWithoutEquals)) {
+        return null;
+      }
+      const testsInWrongOrder = Ar.unzip(
+        Ar.dropFirstWhile(
+          Ar.zip(functionNamesWithoutEquals, testNamesWithoutEquals),
+          ([functionName, testName]) => functionName === testName,
+        ),
+      );
+      return {moduleName, testsInWrongOrder};
+    },
+  );
+  if (Cl.isEmpty(modulesWithTestsInWrongOrder)) {
+    console.log('✅ All test files are correctly ordered!');
+    return;
+  }
+  console.log('❌ Test files with wrong ordering:');
+  Cl.forEach(
+    modulesWithTestsInWrongOrder,
+    ({moduleName, testsInWrongOrder}) => {
+      const [functionsInModuleOrder, functionsInTestOrder] = testsInWrongOrder;
+      console.log(
+        '    ' +
+          moduleName +
+          ':\n' +
+          '      declared: ' +
+          Str.join(Ar.takeFirst(functionsInModuleOrder, 5), ', ') +
+          '\n' +
+          '      test: ' +
+          Str.join(Ar.takeFirst(functionsInTestOrder, 5), ', '),
+      );
+    },
+  );
+
+  // get an ordered list of functions from module
+  // get an ordered list of functions from test
+  // check that they are equal
+  // if not print them from the mismatched
+  // zip them
+  // remove equal ones
 }
 
 function checkTODOs(modules) {

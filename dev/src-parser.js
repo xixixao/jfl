@@ -16,6 +16,7 @@ type ParsedSource = $Array<{|
     functions: $Array<ParsedFunction>,
   }>,
   functions: $Array<ParsedFunction>,
+  tests: $Array<string>,
 |}>;
 type ParsedFunction = {
   isAsync: boolean,
@@ -70,7 +71,8 @@ async function loadAndParseModuleAsync(moduleName) {
     ),
   }));
   const functions = Ar.mapFlat(sections, ({functions}) => functions);
-  return {moduleDoc, moduleSource, sections, functions};
+  const tests = Ar.keys(testIndex);
+  return {moduleDoc, moduleSource, sections, functions, tests};
 }
 
 function parseModuleDoc(moduleSource) {
