@@ -470,7 +470,7 @@ export async function filterAsync<K, V>(
  *
  * Here because its type is more specific then the generic `filter` function.
  *
- * @ex Mp.filterNulls([1, null, 3]) // $Mp({0: 1, 2: 3})
+ * @ex Mp.filterNulls([1, null, 3]) // Mp.of([0, 1], [2, 3])
  * @see Mp.filter, Ar.filterNulls, St.filterNulls
  */
 export function filterNulls<K, V>(
@@ -651,7 +651,7 @@ export async function mapAsync<KFrom, VFrom, VTo>(
  * Equivalent to using `map` followed by `filterNulls`, for simplicity and
  * improved performance.
  *
- * @ex Mp.mapMaybe($Mp({a: 2}}), (x) => Mth.isOdd(x) ? x : null) // $Mp()
+ * @ex Mp.mapMaybe($Mp({a: 2}), (x) => Mth.isOdd(x) ? x : null) // $Mp()
  * @see Mp.mapFlat
  */
 export function mapMaybe<KFrom, VFrom, VTo>(
@@ -677,7 +677,7 @@ export function mapMaybe<KFrom, VFrom, VTo>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Mp.mapFlat(['a'], x => $Mp({[x]: 1, [x]: 2}) // $Mp({a: 1, a: 2})
+ * @ex Mp.mapFlat([1, 3], n => Mp.of([n + 1, 'a'])) // Mp.of([2, 'a'], [4, 'a'])
  * @see Mp.mapMaybe, Mp.mapToEntries
  */
 export function mapFlat<KFrom, KTo, VFrom, VTo>(
@@ -702,7 +702,7 @@ export function mapFlat<KFrom, KTo, VFrom, VTo>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Mp.mapToEntries(['a', 'b'], (x, i) => [x, i])
+ * @ex Mp.mapToEntries(['a', 'b'], (x, i) => [x, i]) // $Mp({a: 0, b: 1})
  * @see Mp.map, Map.pull
  */
 export function mapToEntries<KFrom, VFrom, KTo, VTo>(
@@ -727,7 +727,7 @@ export function mapToEntries<KFrom, VFrom, KTo, VTo>(
  *
  * @time O(n)
  * @space O(n)
- * @ex Mp.pull([1, 2, 3], n => `${n}`, n => n ** 2) // $Mp({1: 1, 2: 4, 3: 9})
+ * @ex Mp.pull([2, 3], n => n - 2, n => n ** 2) // Mp.of([0, 4], [1, 9])
  * @see Mp.group, Ar.partition
  */
 export function pull<KFrom, VFrom, KTo, VTo>(
@@ -800,7 +800,7 @@ function useValue(value, _key) {
  *
  * @time O(n)
  * @space O(n)
- * @ex Mp.flip($Mp({a: 'A', b: 'B'}) // $Mp({A: 'a', B: 'b'})
+ * @ex Mp.flip($Mp({a: 'A', b: 'B'})) // $Mp({A: 'a', B: 'b'})
  * @see Mp.pull, Mp.group
  */
 export function flip<K, V>(collection: KeyedCollection<K, V>): $Map<V, K> {
@@ -997,7 +997,7 @@ export function sort<K, V>(
  *
  * @time Worst case O(n^2)
  * @space O(n)
- * @ex Mp.sortBy([3, 2, 4, 1], n => n % 3) // [3, 4, 1, 2]
+ * @ex Mp.sortBy($Mp({a: 3, b: 4, c: 2}), n => n % 3) // $Mp({b: 1, c: 2, a: 3})
  * @see Mp.sort
  */
 export function sortBy<K, V, S>(

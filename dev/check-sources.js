@@ -145,13 +145,26 @@ function checkTestsStructure(modules) {
       if (Cl.equals(functionNamesWithoutEquals, testNamesWithoutEquals)) {
         return null;
       }
-      const testsInWrongOrder = Ar.unzip(
-        Ar.dropFirstWhile(
-          Ar.zip(functionNamesWithoutEquals, testNamesWithoutEquals),
-          ([functionName, testName]) => functionName === testName,
+
+      const numCorrect = Cl.count(
+        Ar.takeFirstWhile(
+          Ar.zipWith(
+            (functionName, testName) => functionName === testName,
+            functionNamesWithoutEquals,
+            testNamesWithoutEquals,
+          ),
+          same => same,
         ),
       );
-      return {moduleName, testsInWrongOrder};
+      const functionsInModuleOrder = Ar.dropFirst(
+        functionNamesWithoutEquals,
+        numCorrect,
+      );
+      const functionsInTestOrder = Ar.dropFirst(
+        testNamesWithoutEquals,
+        numCorrect,
+      );
+      return {moduleName, functionsInModuleOrder, functionsInTestOrder};
     },
   );
   if (Cl.isEmpty(modulesWithTestsInWrongOrder)) {
@@ -161,8 +174,7 @@ function checkTestsStructure(modules) {
   console.log('❌ Test files with wrong ordering:');
   Cl.forEach(
     modulesWithTestsInWrongOrder,
-    ({moduleName, testsInWrongOrder}) => {
-      const [functionsInModuleOrder, functionsInTestOrder] = testsInWrongOrder;
+    ({moduleName, functionsInModuleOrder, functionsInTestOrder}) => {
       console.log(
         '    ' +
           moduleName +

@@ -988,7 +988,7 @@ export function zip<Cs: $Array<Collection<mixed>>>(
 }
 
 /**
- * Join multiple `collections` into an `Array` of values resulting form calling
+ * Join multiple `collections` into an `Array` of values resulting from calling
  * `fn` on items from each collection.
  *
  * Note that this function has unusual order of arguments because JavaScript
