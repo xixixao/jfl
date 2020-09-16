@@ -93,8 +93,8 @@ test('mutable', () => {
   eq(x, $Mp({a: 1, b: 2, c: 4}));
 });
 
-test('unzip', () => {
-  eq(Mp.unzip([1, 2], [3, 4]), Mp.of([1, 3], [2, 4]));
+test('zip', () => {
+  eq(Mp.zip([1, 2], [3, 4]), Mp.of([1, 3], [2, 4]));
 });
 
 test('toObject', () => {

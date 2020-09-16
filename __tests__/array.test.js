@@ -1,6 +1,6 @@
 // @flow
 
-import {$Ar, $Mp, $St, Ar, Mth} from '..';
+import {$Ar, $Mp, $St, Ar, Mth, Mp} from '..';
 import {test, tru, eq, eqq, is, not, throws} from '../dev/test-setup.js';
 
 test('equals', () => {
@@ -341,12 +341,23 @@ test('sort', () => {
     Ar.sort(['c', 'a', 'b'], (a, b) => a.length - b.length),
     ['c', 'a', 'b'],
   );
+  eq(
+    Ar.sort(
+      Mp.of([2, 'a'], [0, 'b'], [1, 'c']),
+      (_a, _b, aKey, bKey) => aKey - bKey,
+    ),
+    ['b', 'c', 'a'],
+  );
 });
 
 test('sortBy', () => {
   eq(
     Ar.sortBy([1, 5, 3, 2], n => n % 3),
     [3, 1, 5, 2],
+  );
+  eq(
+    Ar.sortBy(Mp.of([2, 'a'], [4, 'b'], [0, 'c']), (_c, n) => n % 3),
+    ['c', 'b', 'a'],
   );
 });
 

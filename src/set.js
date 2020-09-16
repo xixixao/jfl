@@ -212,7 +212,7 @@ export function equalsNested<V>(
  *
  * @ex St.add($St(1, 2, 3), 4) // $St(1, 2, 3, 4)
  * @alias push
- * @see St.union, St.flatten
+ * @see St.union, St.flatten, St.remove
  */
 export function add<V>(collection: Collection<V>, value: V): $Set<V> {
   const result = new Set(collection.values());
@@ -446,6 +446,20 @@ export function mapFlat<VFrom, VTo>(
 }
 
 /// Divide
+
+/**
+ * Create a `Set` with `value` removed.
+ *
+ * @ex St.remove($St(1, 2, 3), 1) // $St(2, 3)
+ * @ex St.remove($St(1, 2, 3), 4) // $St(1, 2, 3)
+ * @alias delete
+ * @see St.add
+ */
+export function remove<V>(collection: Collection<V>, value: V): $Set<V> {
+  const result = new Set(collection.values());
+  result.delete(value);
+  return result;
+}
 
 /**
  * Create an array of `Set`s which are chunks of given `collection` of given

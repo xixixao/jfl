@@ -26,15 +26,14 @@ function m<V>(array: $Array<V>): $Array<V> {
 /**
  * Create an `Array`.
  *
- * Prefer array literal `[1, 2, 3]` unless you need a function. This function
- * always returns a reference to the same empty array when called with no
- * arguments.
+ * Prefer array literal `[1, 2, 3]`. This function always returns a
+ * reference to the same empty array when called with no arguments.
  *
  * @time O(n)
  * @space O(n)
  * @ex $Ar(1, 2, 3) // [1, 2, 3]
  * @alias create, constructor, new
- * @see Ar.from
+ * @see Ar.from, $St, $Mp
  */
 export function $Ar<V>(...args: $Array<V>): $Array<V> {
   return m(args);
@@ -961,7 +960,7 @@ type TupleOfValues<Cs> = $TupleMap<Cs, <V>(Collection<V>) => V>;
  * @space O(n)
  * @ex Ar.zip([1, 2], ['a', 'b'], [5, 6]) // [[1, 'a', 5], [2, 'b', 6]]
  * @alias zipAll
- * @see Ar.zipWith, Ar.unzip
+ * @see Ar.zipWith, Ar.unzip, Mp.zip
  */
 export function zip<Cs: $Array<Collection<mixed>>>(
   ...collections: Cs
@@ -1014,7 +1013,7 @@ export function zipWith<I, Cs: $Array<Collection<I>>, O>(
  * @time O(n)
  * @space O(n)
  * @ex Ar.unzip([[1, 'a', 5], [2, 'b', 6]]) // [[1, 2], ['a', 'b'], [5, 6]]
- * @see Ar.zip, Ar.zipWith
+ * @see Ar.zip, Ar.zipWith, Mp.fromEntries
  */
 export function unzip<T: $Array<mixed>>(
   collection: Collection<T>,
@@ -1142,7 +1141,7 @@ export function mapMaybe<KFrom, VFrom, VTo>(
  * @time O(n)
  * @space O(n)
  * @ex Ar.mapFlat([1, 2], x => [x - 1, x + 1]) // [0, 2, 1, 3]
- * @see Ar.mapAsync
+ * @see Ar.mapMaybe
  */
 export function mapFlat<KFrom, VFrom, VTo>(
   collection: KeyedCollection<KFrom, VFrom>,
@@ -1191,7 +1190,6 @@ export function scan<I, O>(
  * @time O(n)
  * @space O(n)
  * @ex Ar.reverse([1, 2, 3]) // [3, 2, 1]
- * @alias flip
  */
 export function reverse<V>(collection: Collection<V>): $Array<V> {
   return m(Array.from(collection.values()).reverse());
@@ -1218,18 +1216,26 @@ export function reverse<V>(collection: Collection<V>): $Array<V> {
  * @ex Ar.sort(['c', 'b', 'd', 'a']) // ['a', 'b', 'c', 'd']
  * @see Ar.sortBy, Ar.sortUnstable
  */
-export function sort<V>(
-  collection: Collection<V>,
-  compareFn?: (a: V, b: V) => number = defaultCompareFn,
+export function sort<K, V>(
+  collection: KeyedCollection<K, V>,
+  compareFn?: (
+    aItem: V,
+    bItem: V,
+    aKey: K,
+    bKey: K,
+  ) => number = defaultCompareFn,
 ): $Array<V> {
-  const result: Array<[V, number]> = [];
+  const result: Array<[V, K, number]> = [];
   let i = 0;
-  for (const item of collection.values()) {
-    result.push([item, i]);
+  for (const [key, item] of collection.entries()) {
+    result.push([item, key, i]);
     i++;
   }
   result
-    .sort(([a, ai], [b, bi]) => compareFn(a, b) || ai - bi)
+    .sort(
+      ([aItem, aKey, ai], [bItem, bKey, bi]) =>
+        compareFn(aItem, bItem, aKey, bKey) || ai - bi,
+    )
     .forEach(([item], i) => {
       (result: any)[i] = item;
     });
@@ -1258,15 +1264,15 @@ export function sort<V>(
  * @ex Ar.sortBy([3, 2, 4, 1], n => n % 3) // [3, 4, 1, 2]
  * @see Ar.sort
  */
-export function sortBy<V, S>(
-  collection: Collection<V>,
-  scalarFn: V => S,
+export function sortBy<K, V, S>(
+  collection: KeyedCollection<K, V>,
+  scalarFn: (V, K) => S,
   compareFn?: (a: S, b: S) => number = defaultCompareFn,
 ): $Array<V> {
   const result: Array<[V, S, number]> = [];
   let i = 0;
-  for (const item of collection.values()) {
-    result.push([item, scalarFn(item), i]);
+  for (const [key, item] of collection.entries()) {
+    result.push([item, scalarFn(item, key), i]);
     i++;
   }
   result
@@ -1282,7 +1288,7 @@ export function sortBy<V, S>(
  * Create an `Array` of values in `collection` sorted.
  *
  * This sort doesn't preserve the order of elements when `compareFn` returns 0
- * which makes it more memory efficient.
+ * and is more memory efficient than `Ar.sort`.
  *
  * The result of calling `compareFn` on values `a` and `b` determines their
  * order:

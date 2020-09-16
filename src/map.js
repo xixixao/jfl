@@ -11,6 +11,7 @@
 
 import type {Collection, KeyedCollection, $Array, $Map} from './types.flow';
 
+import {defaultCompareFn} from './_internal';
 import * as Ar from './array';
 import * as Cl from './collection';
 import * as St from './set';
@@ -92,6 +93,7 @@ export async function fromAsync<K, V>(
  * @time O(n)
  * @space O(n)
  * @ex Mp.fromValues([2, 3], n => n ** 2) // Mp.of([4, 2], [9, 3])
+ * @alias mapKeys
  * @see Mp.fromKeys
  */
 export function fromValues<KFrom, KTo, VTo>(
@@ -166,11 +168,11 @@ export function fromEntries<K, V>(collection: Collection<[K, V]>): $Map<K, V> {
  * If there are more `keys` than `values` or vice versa, ignores the
  * excess items.
  *
- * @ex Mp.unzip(['a', 'b'], [3, 4]) // $Mp({a: 3, b: 4})
+ * @ex Mp.zip(['a', 'b'], [3, 4]) // $Mp({a: 3, b: 4})
  * @alias listsToMap, fromZip, associate
  * @see Mp.fromEntries, Mp.pull
  */
-export function unzip<K, V>(
+export function zip<K, V>(
   keys: Collection<K>,
   values: Collection<V>,
 ): $Map<K, V> {
@@ -596,7 +598,8 @@ export function dropFirst<K, V>(
 /// Transform
 
 /**
- * Create a new `Map` by calling given `fn` on each value and key of `collection`.
+ * Create a new `Map` by calling given `fn` on each value and key of
+ * `collection`.
  *
  * @ex Mp.map($Mp({a: 1, b: 2}}), (x) => x * 2) // $Mp({a: 2, b: 4})
  * @see Mp.fromValues
@@ -642,7 +645,57 @@ export async function mapAsync<KFrom, VFrom, VTo>(
 }
 
 /**
- * Create a new `Map` by calling given `fn` on each key and value of
+ * Create a new `Map` by calling given `fn` on each value and key of
+ * `collection` and and including the result if it is not null or undefined.
+ *
+ * Equivalent to using `map` followed by `filterNulls`, for simplicity and
+ * improved performance.
+ *
+ * @ex Mp.mapMaybe($Mp({a: 2}}), (x) => Mth.isOdd(x) ? x : null) // $Mp()
+ * @see Mp.mapFlat
+ */
+export function mapMaybe<KFrom, VFrom, VTo>(
+  collection: KeyedCollection<KFrom, VFrom>,
+  fn: (VFrom, KFrom) => ?VTo,
+): $Map<KFrom, VTo> {
+  const result = new Map();
+  for (const [key, item] of collection.entries()) {
+    const mapped = fn(item, key);
+    if (mapped != null) {
+      result.set(key, mapped);
+    }
+  }
+  return m(result);
+}
+
+/**
+ * Create a new `Map` by calling given `fn` on each value and key of
+ * `collection` and flattening the results.
+ *
+ * Equivalent to using `map` followed by `flatten`, for simplicity and improved
+ * performance.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.mapFlat(['a'], x => $Mp({[x]: 1, [x]: 2}) // $Mp({a: 1, a: 2})
+ * @see Mp.mapMaybe, Mp.mapToEntries
+ */
+export function mapFlat<KFrom, KTo, VFrom, VTo>(
+  collection: KeyedCollection<KFrom, VFrom>,
+  fn: (VFrom, KFrom) => KeyedCollection<KTo, VTo>,
+): $Map<KTo, VTo> {
+  const result = new Map();
+  for (const [key, item] of collection.entries()) {
+    const mapped = fn(item, key);
+    for (const [mappedKey, mappedItem] of mapped.entries()) {
+      result.set(mappedKey, mappedItem);
+    }
+  }
+  return m(result);
+}
+
+/**
+ * Create a new `Map` by calling given `fn` on each value and key of
  * `collection`.
  *
  * `fn` must return new entries to populate the map.
@@ -650,7 +703,7 @@ export async function mapAsync<KFrom, VFrom, VTo>(
  * @time O(n)
  * @space O(n)
  * @ex Mp.mapToEntries(['a', 'b'], (x, i) => [x, i])
- * @see Mp.map
+ * @see Mp.map, Map.pull
  */
 export function mapToEntries<KFrom, VFrom, KTo, VTo>(
   collection: KeyedCollection<KFrom, VFrom>,
@@ -778,18 +831,195 @@ export function countValues<V>(collection: Collection<V>): $Map<V, number> {
   return m(result);
 }
 
-// TODO: flatten
-// TODO: fillKeys
+/**
+ * Create a new `Map` by concatenating all keyed collections in given
+ * `collection`.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.flatten([$Mp({a: 1}), $Mp({b: 2, c: 3})]) // $Mp({a: 1, b: 2, c: 3})
+ * @alias join, union
+ * @see Mp.mapFlat, Ar.flatten
+ */
+export function flatten<K, V>(
+  collection: Collection<KeyedCollection<K, V>>,
+): $Map<K, V> {
+  const result = new Map();
+  for (const nested of collection.values()) {
+    for (const [key, item] of nested.entries()) {
+      result.set(key, item);
+    }
+  }
+  return m(result);
+}
 
 /// Divide
 
-// TODO: partition
-// TODO: chunk
+/**
+ * Create an array of `Map`s which are chunks of given `collection` of given
+ * `size`.
+ *
+ * If the `collection` doesn't divide evenly, the final chunk will be smaller
+ * than the rest.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.chunk($Mp({a: 1, b: 2, c: 3}), 2) // [$Mp({a: 1, b: 2}), $Mp({c: 3})]
+ * @see Mp.partition
+ */
+export function chunk<K, V>(
+  collection: KeyedCollection<K, V>,
+  size: number,
+): $Array<$Map<K, V>> {
+  if (size < 1) {
+    throw new Error(`Expected \`size\` to be greater than 0, got \`${size}\`.`);
+  }
+  const result = [];
+  let chunk = new Map();
+  let i = 0;
+  for (const [key, item] of collection.entries()) {
+    if (i >= size) {
+      i = 0;
+      result.push(chunk);
+      chunk = new Map();
+    }
+    chunk.set(key, item);
+    i++;
+  }
+  if (chunk.size > 0) {
+    result.push(chunk);
+  }
+  return result;
+}
+
+/**
+ * Create a tuple of `Map`s containing keys and items of `collection`
+ * which match and don't match `predicateFn` respectively.
+ *
+ * More effecient than using multiple `Mp.filter` calls.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.partition($Mp({a: 2}), x => Mth.isOdd(x)) // [$Mp(), $Mp({a: 2})]
+ * @alias split
+ * @see Mp.group
+ */
+export function partition<K, V>(
+  collection: KeyedCollection<K, V>,
+  predicateFn: (V, K) => boolean,
+): [$Map<K, V>, $Map<K, V>] {
+  const positives = new Map();
+  const negatives = new Map();
+  for (const [key, item] of collection.entries()) {
+    if (predicateFn(item, key)) {
+      positives.set(key, item);
+    } else {
+      negatives.set(key, item);
+    }
+  }
+  return [m(positives), m(negatives)];
+}
 
 /// Ordering
 
-// TODO: reverse
-// TODO: sort
-// TODO: sortBy
-// TODO: numericalSort
-// TODO: numericalSortBy
+/**
+ * Create a `Map` containing the keys and items of `collection` in reverse
+ * order.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Mp.reverse($Mp({a: 1, b: 2, c: 3})) // $Mp({c: 3, b: 2, a: 1})
+ */
+export function reverse<K, V>(collection: KeyedCollection<K, V>): $Map<K, V> {
+  const keys = (Ar.keys(collection): any).reverse();
+  const values = Array.from(collection.values()).reverse();
+  return zip(keys, values);
+}
+
+/**
+ * Create a `Map` of keys and values in `collection` sorted by value.
+ *
+ * The result of calling `compareFn` on values `a` and `b` determines their
+ * order:
+ *   negative number: `a`, `b`
+ *   positive number: `b`, `a`
+ *   zero: the order stays the same as it was in `collection`
+ * The default `compareFn` is `(a, b) => a > b ? 1 : a < b ? -1 : 0`,
+ * which sorts numbers and strings in ascending order (from small to large,
+ * from early in the alphabet to later in the alphabet).
+ *
+ * @time Worst case O(n^2)
+ * @space O(n)
+ * @ex Mp.sort($Mp({a: 3, b: 1, c: 2})) // $Mp({b: 1, c: 2, a: 3})
+ * @ex Mp.sort($Mp({x: 'c', y: 'b', z: 'a'})) // $Mp({z: 'a', y: 'b', x: 'c'})
+ * @see Mp.sortBy
+ */
+export function sort<K, V>(
+  collection: KeyedCollection<K, V>,
+  compareFn?: (
+    aItem: V,
+    bItem: V,
+    aKey: K,
+    bKey: K,
+  ) => number = defaultCompareFn,
+): $Map<K, V> {
+  const inOrder: Array<[V, K, number]> = [];
+  let i = 0;
+  for (const [key, item] of collection.entries()) {
+    inOrder.push([item, key, i]);
+    i++;
+  }
+  const result = new Map();
+  inOrder
+    .sort(
+      ([aItem, aKey, ai], [bItem, bKey, bi]) =>
+        compareFn(aItem, bItem, aKey, bKey) || ai - bi,
+    )
+    .forEach(([item, key]) => {
+      result.set(key, item);
+    });
+
+  return m(result);
+}
+
+/**
+ * Create a `Map` of keys and values in `collection` sorted by the scalar
+ * computed by calling `scalarFn` on each value and key.
+ *
+ * The result of calling `compareFn` on scalars `a` and `b` determines the
+ * order of the corresponding values:
+ *   negative number: `a`, `b`
+ *   positive number: `b`, `a`
+ *   zero: the order stays the same as it was in `collection`
+ * The default `compareFn` is `(a, b) => a > b ? 1 : a < b ? -1 : 0`,
+ * which sorts numbers and strings in ascending order (from small to large,
+ * from early in the alphabet to later in the alphabet).
+ *
+ * @time Worst case O(n^2)
+ * @space O(n)
+ * @ex Mp.sortBy([3, 2, 4, 1], n => n % 3) // [3, 4, 1, 2]
+ * @see Mp.sort
+ */
+export function sortBy<K, V, S>(
+  collection: KeyedCollection<K, V>,
+  scalarFn: (V, K) => S,
+  compareFn?: (a: S, b: S) => number = defaultCompareFn,
+): $Map<K, V> {
+  const inOrder: Array<[V, K, S, number]> = [];
+  let i = 0;
+  for (const [key, item] of collection.entries()) {
+    inOrder.push([item, key, scalarFn(item, key), i]);
+    i++;
+  }
+  const result = new Map();
+  inOrder
+    .sort(
+      ([_aItem, _aKey, a, ai], [_bItem, _bKey, b, bi]) =>
+        compareFn(a, b) || ai - bi,
+    )
+    .forEach(([item, key]) => {
+      result.set(key, item);
+    });
+
+  return m((result: any));
+}

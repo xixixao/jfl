@@ -25,16 +25,15 @@ test('$St', async () => {
   eq($St(1, 2, 3), new Set([1, 2, 3]));
 });
 
-test('isSet', () => {
-  tru(St.isSet($St()));
-  tru(St.isSet(new Set()));
-  not.tru(St.isSet([]));
-  not.tru(St.isSet($Mp()));
-});
-
 test('from', () => {
   eq(St.from([2, 1, 2, 3]), $St(2, 1, 3));
   eq(St.from($Mp({a: 1, b: 2, c: 3})), $St(1, 2, 3));
+});
+
+test('keys', () => {
+  eq(St.keys([2, 1, 2, 3]), $St(0, 1, 2, 3));
+  eq(St.keys($Mp({a: 1, b: 2, c: 3})), $St('a', 'b', 'c'));
+  eq(St.keys($St('a', 'b', 'c')), $St('a', 'b', 'c'));
 });
 
 test('fromAsync', async () => {
@@ -47,10 +46,11 @@ test('mutable', () => {
   eq(x, $St(1, 2, 3, 4));
 });
 
-test('keys', () => {
-  eq(St.keys([2, 1, 2, 3]), $St(0, 1, 2, 3));
-  eq(St.keys($Mp({a: 1, b: 2, c: 3})), $St('a', 'b', 'c'));
-  eq(St.keys($St('a', 'b', 'c')), $St('a', 'b', 'c'));
+test('isSet', () => {
+  tru(St.isSet($St()));
+  tru(St.isSet(new Set()));
+  not.tru(St.isSet([]));
+  not.tru(St.isSet($Mp()));
 });
 
 test('add', () => {
@@ -73,27 +73,6 @@ test('flatten', () => {
   eq(St.flatten([$St(1, 2, 3), $St(2, 4), $St(1, 4)]), $St(1, 2, 3, 4));
 });
 
-test('map', () => {
-  eq(St.map($St(1, 2, -2), Math.abs), $St(1, 2));
-  is(
-    St.map($St(), x => x),
-    $St(),
-  );
-  eq(St.map([1, 2, -2], Math.abs), $St(1, 2));
-  eq(St.map($Mp({a: 1, b: 2, c: -2}), Math.abs), $St(1, 2));
-});
-
-test('mapFlat', () => {
-  eq(
-    St.mapFlat([1, 2], x => [x - 1, x]),
-    $St(0, 1, 2),
-  );
-});
-
-test('mapAsync', async () => {
-  eq(await St.mapAsync($St(1, 2, -2), async x => Math.abs(x)), $St(1, 2));
-});
-
 test('filter', () => {
   eq(
     St.filter($St(1, 2, 3), x => Mth.isOdd(x)),
@@ -114,6 +93,31 @@ test('filterKeys', () => {
     St.filterKeys($Mp({a: 1, b: 2, c: 3}), x => Mth.isOdd(x)),
     $St('a', 'c'),
   );
+});
+
+test('map', () => {
+  eq(St.map($St(1, 2, -2), Math.abs), $St(1, 2));
+  is(
+    St.map($St(), x => x),
+    $St(),
+  );
+  eq(St.map([1, 2, -2], Math.abs), $St(1, 2));
+  eq(St.map($Mp({a: 1, b: 2, c: -2}), Math.abs), $St(1, 2));
+});
+
+test('mapAsync', async () => {
+  eq(await St.mapAsync($St(1, 2, -2), async x => Math.abs(x)), $St(1, 2));
+});
+
+test('mapFlat', () => {
+  eq(
+    St.mapFlat([1, 2], x => [x - 1, x]),
+    $St(0, 1, 2),
+  );
+});
+
+test('remove', () => {
+  eq(St.remove($St(1, 2, 3), 2), $St(1, 3));
 });
 
 test('chunk', () => {

@@ -168,10 +168,10 @@ function checkTestsStructure(modules) {
           moduleName +
           ':\n' +
           '      declared: ' +
-          Str.join(Ar.takeFirst(functionsInModuleOrder, 5), ', ') +
+          Str.join(Ar.takeFirst(functionsInModuleOrder, 10), ', ') +
           '\n' +
           '      test: ' +
-          Str.join(Ar.takeFirst(functionsInTestOrder, 5), ', '),
+          Str.join(Ar.takeFirst(functionsInTestOrder, 10), ', '),
       );
     },
   );
