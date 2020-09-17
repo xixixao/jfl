@@ -138,10 +138,12 @@ test('uniqueBy', () => {
 
 test('takeFirst', () => {
   eq(Ar.takeFirst([1, 2, 3], 2), [1, 2]);
+  throws(() => Ar.takeFirst([1], -1));
 });
 
 test('dropFirst', () => {
   eq(Ar.dropFirst([1, 2, 3], 2), [3]);
+  throws(() => Ar.dropFirst([1], -1));
 });
 
 test('takeLast', () => {

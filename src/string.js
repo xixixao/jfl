@@ -121,7 +121,7 @@ export function fromNumberInLocale(
   number: number,
   locales?: string | Array<string>,
   options?: Intl$NumberFormatOptions,
-) {
+): string {
   return number.toLocaleString(locales, options);
 }
 
@@ -216,19 +216,35 @@ export function isEmpty(string: string): boolean {
  * @ex Str.length('aa') // 2
  * @see Str.isEmpty, Cl.count
  */
-export function length(string: string) {
+export function length(string: string): number {
   return string.length;
 }
 
-// TODO: 9858
-export function startsWith(string: string, prefix: string | RegExp) {
+/**
+ * Returns whether `string` begins with given `prefix`.
+ *
+ * @time O(n)
+ * @space O(p)
+ * @ex Str.startsWith('adam', 'ad') // true
+ * @ex Str.startsWith('adam', /\w{2}/) // true
+ * @see Str.endsWith
+ */
+export function startsWith(string: string, prefix: string | RegExp): boolean {
   if (isRegExp(prefix)) {
     return REx.prepend(prefix, '^').test(string);
   }
   return string.startsWith(prefix);
 }
 
-// TODO: 3545
+/**
+ * Returns whether `string` ends with given `suffix`.
+ *
+ * @time O(n)
+ * @space O(p)
+ * @ex Str.endsWith('adam', 'am') // true
+ * @ex Str.endsWith('adam', /m|M/) // true
+ * @see Str.startsWith
+ */
 export function endsWith(string: string, suffix: string | RegExp) {
   if (isRegExp(suffix)) {
     return REx.append(suffix, '$').test(string);
@@ -264,7 +280,7 @@ export function includes(
  * @space Worst case O(2^m)
  * @ex Str.equals("abcd", "abcd") // true
  * @ex Str.equals("abcd", /abcd/) // true
- * @ex Str.includes("abcde", /abcd/) // false
+ * @ex Str.equals("abcde", /abcd/) // false
  * @alias test, equals
  * @see Str.includes, Str.matchFirst
  */
@@ -309,8 +325,24 @@ export function indexOf(
   }
 }
 
-// TODO: 570 this is lastIndexOf
-export function lastIndexOf() {}
+/**
+ * Returns the index of the last occurence of `search` in `string` or null.
+ *
+ * If `fromIndex` is given then the occurence must be at or after it.
+ *
+ * @time O(n)
+ * @space O(p)
+ * @ex Str.lastIndexOf("cbcd", "c") // 2
+ * @see Str.firstIndexOf
+ */
+export function lastIndexOf(
+  string: string,
+  search: string,
+  fromIndex?: number,
+) {
+  const result = string.lastIndexOf(search, fromIndex);
+  return result === -1 ? null : result;
+}
 
 /**
  * Returns whether given `predicateFn` returns true for `string` and `search`
@@ -352,6 +384,7 @@ export function countMatches(string: string, search: string | RegExp): number {
   return count;
 }
 
+// TODO:
 export function compare() {}
 
 /// Select
@@ -405,8 +438,20 @@ export function matchFirst(
   return string.match(search);
 }
 
-// TODO: 8925 figure out how it plays with takeFirst and dropFirst - but should have
-// done it already for Ar
+/**
+ * Returns a substring of `string` starting with character at position
+ * `startIndex` and ending before character at position `endIndex` or
+ * at the end of `string` if no `endIndex` is given.
+ *
+ * Either index can be negative, in which case they are counted from the end
+ * of the `string`, with last character being at index `-1`.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Str.slice('abcdef', 1, 2) // 'bc'
+ * @ex Str.slice('abcdef', -3, -1) // 'de'
+ * @see Str.takeFirst, Str.dropFirst
+ */
 export function slice(
   string: string,
   startIndex: number,
@@ -415,17 +460,49 @@ export function slice(
   return string.slice(startIndex, endIndex);
 }
 
-// TODO: takes number
+/**
+ * Returns the first `n` characters in `string`.
+ *
+ * Throws if `n` is negative.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Str.takeFirst('abcdef', 3) // 'abc'
+ * @see Str.dropFirst, Str.slice
+ */
 export function takeFirst(string: string, n: number): string {
+  if (n < 0) {
+    throw new Error(`Expected \`n\` to not be negative, got \`${n}\`.`);
+  }
   return string.slice(0, n);
 }
 
-// TODO: more readable slice alias
+/**
+ * Returns the last `n` characters in `string`.
+ *
+ * Throws if `n` is negative.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Str.dropFirst('abcdef', 3) // 'def'
+ * @see Str.takeFirst, Str.slice
+ */
 export function dropFirst(string: string, n: number): string {
+  if (n < 0) {
+    throw new Error(`Expected \`n\` to not be negative, got \`${n}\`.`);
+  }
   return string.slice(n);
 }
 
-// TODO:
+/**
+ * Returns all characters from `string` preceding the character
+ * for which `predicateFn` returns false.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Str.takeFirstWhile('abcdefg', (ch) => ch < 'd') // 'abc'
+ * @see Str.takeFirst
+ */
 export function takeFirstWhile(
   string: string,
   predicateFn: string => boolean,
@@ -440,7 +517,15 @@ export function takeFirstWhile(
   return result;
 }
 
-// TODO:
+/**
+ * Returns all characters from `string` following and including the first
+ * character for which `predicateFn` returns true.
+ *
+ * @time O(n)
+ * @space O(n)
+ * @ex Str.dropFirstWhile('abcdefg', (ch) => ch < 'd') // 'defg'
+ * @see Str.dropFirst
+ */
 export function dropFirstWhile(
   string: string,
   predicateFn: string => boolean,
@@ -459,11 +544,16 @@ export function dropFirstWhile(
 /**
  * Returns `string` with whitespace stripped from the beginning and end.
  *
- * If `search` is given it will stripped instead from both ends. The beginning
- * will be trimmed first.
+ * If `search` is given it will be stripped instead from both ends.
+ * The beginning will be trimmed first.
  *
  * @time O(n)
  * @space Worst case O(2^m)
+ * @ex Str.trim('  abc    ') // 'abc'
+ * @ex Str.trim('hellodollyhello', 'hello') // 'dolly'
+ * @ex Str.trim('anana', 'ana') // 'na'
+ * @ex Str.trim('ya832da', /\w+/) // '832'
+ * @see Str.trimStart, Str.trimEnd
  */
 export function trim(string: string, search?: string | RegExp): string {
   if (search == null) {
@@ -475,10 +565,14 @@ export function trim(string: string, search?: string | RegExp): string {
 /**
  * Returns `string` with whitespace stripped from its beginning.
  *
- * If `prefix` is given it will stripped instead.
+ * If `prefix` is given it will be stripped instead.
  *
  * @time O(n)
  * @space Worst case O(2^m)
+ * @ex Str.trimStart('  abc    ') // 'abc    '
+ * @ex Str.trimStart('hellodollyhello', 'hello') // 'dollyhello'
+ * @ex Str.trimStart('ya832da', /\w+/) // '832da'
+ * @see Str.trim, Str.trimEnd
  */
 export function trimStart(string: string, prefix?: string | RegExp): string {
   if (prefix == null) {
@@ -493,10 +587,14 @@ export function trimStart(string: string, prefix?: string | RegExp): string {
 /**
  * Returns `string` with whitespace stripped from its end.
  *
- * If `suffix` is given it will stripped instead.
+ * If `suffix` is given it will be stripped instead.
  *
  * @time O(n)
  * @space Worst case O(2^m)
+ * @ex Str.trimEnd('  abc    ') // '  abc'
+ * @ex Str.trimEnd('hellodollyhello', 'hello') // 'hellodolly'
+ * @ex Str.trimEnd('ya832da', /\w+/) // 'ya832'
+ * @see Str.trim, Str.trimStart
  */
 export function trimEnd(string: string, suffix?: string | RegExp): string {
   if (suffix == null) {

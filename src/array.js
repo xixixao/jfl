@@ -539,17 +539,24 @@ export function uniqueBy<K, V>(
 /**
  * Create an `Array` containing the first `n` items of `collection`.
  *
+ * Throws if `n` is negative.
+ *
  * @time O(n)
  * @space O(n)
  * @ex Ar.takeFirst([1, 2, 3], 2) // [1, 2]
  * @see Ar.dropFirst, Ar.splitAt, Ar.takeFirstWhile
  */
 export function takeFirst<V>(collection: Collection<V>, n: number): $Array<V> {
+  if (n < 0) {
+    throw new Error(`Expected \`n\` to not be negative, got \`${n}\`.`);
+  }
   return slice(collection, 0, n);
 }
 
 /**
  * Create an `Array` containing all but the first `n` items of `collection`.
+ *
+ * Throws if `n` is negative.
  *
  * @time O(n)
  * @space O(n)
@@ -557,6 +564,9 @@ export function takeFirst<V>(collection: Collection<V>, n: number): $Array<V> {
  * @see Ar.takeFirst, Ar.splitAt, Ar.dropFirstWhile
  */
 export function dropFirst<V>(collection: Collection<V>, n: number): $Array<V> {
+  if (n < 0) {
+    throw new Error(`Expected \`n\` to not be negative, got \`${n}\`.`);
+  }
   return slice(collection, n);
 }
 
@@ -764,8 +774,8 @@ export function partition<K, V>(
  * @time O(n)
  * @space O(n)
  * @ex Ar.slice([1, 2, 3, 4, 5], 1, 2) // [2, 3]
- * @ex Ar.slice([1, 2, 3, 4, 5], -2, -1) // [3, 4]
- * @see Ar.takeFirst, Ar.dropFirst, Ar.sliceFromEnd, Ar.splice
+ * @ex Ar.slice([1, 2, 3, 4, 5], -3, -1) // [3, 4]
+ * @see Ar.takeFirst, Ar.dropFirst, Ar.splice
  */
 export function slice<V>(
   collection: Collection<V>,
